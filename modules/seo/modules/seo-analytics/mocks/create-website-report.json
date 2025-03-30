@@ -1,0 +1,1205 @@
+{
+  "url": "https://cqdeveloper.vercel.app/",
+  "speed": {
+    "mobile": [
+      {
+        "category": "performance",
+        "score": 90,
+        "metrics": [
+          {
+            "name": "First Contentful Paint",
+            "value": "1.8 s",
+            "score": 0.89,
+            "description": "First Contentful Paint marks the time at which the first text or image is painted. [Learn more about the First Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/first-contentful-paint/)."
+          },
+          {
+            "name": "Largest Contentful Paint",
+            "value": "3.4 s",
+            "score": 0.67,
+            "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn more about the Largest Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)"
+          },
+          {
+            "name": "Total Blocking Time",
+            "value": "30 ms",
+            "score": 1,
+            "description": "Sum of all time periods between FCP and Time to Interactive, when task length exceeded 50ms, expressed in milliseconds. [Learn more about the Total Blocking Time metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/)."
+          },
+          {
+            "name": "Cumulative Layout Shift",
+            "value": "0",
+            "score": 1,
+            "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+          },
+          {
+            "name": "Speed Index",
+            "value": "3.1 s",
+            "score": 0.93,
+            "description": "Speed Index shows how quickly the contents of a page are visibly populated. [Learn more about the Speed Index metric](https://developer.chrome.com/docs/lighthouse/performance/speed-index/)."
+          }
+        ],
+        "issues": [
+          {
+            "title": "Largest Contentful Paint element",
+            "description": "This is the largest contentful element painted within the viewport. [Learn more about the Largest Contentful Paint element](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)"
+          },
+          {
+            "title": "Serve images in next-gen formats",
+            "description": "Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption. [Learn more about modern image formats](https://developer.chrome.com/docs/lighthouse/performance/uses-webp-images/)."
+          },
+          {
+            "title": "Properly size images",
+            "description": "Serve images that are appropriately-sized to save cellular data and improve load time. [Learn how to size images](https://developer.chrome.com/docs/lighthouse/performance/uses-responsive-images/)."
+          }
+        ]
+      },
+      {
+        "category": "accessibility",
+        "score": 79,
+        "metrics": [
+          {
+            "name": "`[aria-*]` attributes match their roles",
+            "value": "Pass",
+            "score": 1,
+            "description": "Each ARIA `role` supports a specific subset of `aria-*` attributes. Mismatching these invalidates the `aria-*` attributes. [Learn how to match ARIA attributes to their roles](https://dequeuniversity.com/rules/axe/4.10/aria-allowed-attr)."
+          },
+          {
+            "name": "Uses ARIA roles only on compatible elements",
+            "value": "Pass",
+            "score": 1,
+            "description": "Many HTML elements can only be assigned certain ARIA roles. Using ARIA roles where they are not allowed can interfere with the accessibility of the web page. [Learn more about ARIA roles](https://dequeuniversity.com/rules/axe/4.10/aria-allowed-role)."
+          },
+          {
+            "name": "ARIA attributes are used as specified for the element's role",
+            "value": "Pass",
+            "score": 1,
+            "description": "Some ARIA attributes are only allowed on an element under certain conditions. [Learn more about conditional ARIA attributes](https://dequeuniversity.com/rules/axe/4.10/aria-conditional-attr)."
+          },
+          {
+            "name": "Deprecated ARIA roles were not used",
+            "value": "Pass",
+            "score": 1,
+            "description": "Deprecated ARIA roles may not be processed correctly by assistive technology. [Learn more about deprecated ARIA roles](https://dequeuniversity.com/rules/axe/4.10/aria-deprecated-role)."
+          },
+          {
+            "name": "`[aria-hidden=\"true\"]` is not present on the document `<body>`",
+            "value": "Pass",
+            "score": 1,
+            "description": "Assistive technologies, like screen readers, work inconsistently when `aria-hidden=\"true\"` is set on the document `<body>`. [Learn how `aria-hidden` affects the document body](https://dequeuniversity.com/rules/axe/4.10/aria-hidden-body)."
+          },
+          {
+            "name": "Elements use only permitted ARIA attributes",
+            "value": "Pass",
+            "score": 1,
+            "description": "Using ARIA attributes in roles where they are prohibited can mean that important information is not communicated to users of assistive technologies. [Learn more about prohibited ARIA roles](https://dequeuniversity.com/rules/axe/4.10/aria-prohibited-attr)."
+          },
+          {
+            "name": "`[role]`s have all required `[aria-*]` attributes",
+            "value": "Pass",
+            "score": 1,
+            "description": "Some ARIA roles have required attributes that describe the state of the element to screen readers. [Learn more about roles and required attributes](https://dequeuniversity.com/rules/axe/4.10/aria-required-attr)."
+          },
+          {
+            "name": "`[role]` values are valid",
+            "value": "Pass",
+            "score": 1,
+            "description": "ARIA roles must have valid values in order to perform their intended accessibility functions. [Learn more about valid ARIA roles](https://dequeuniversity.com/rules/axe/4.10/aria-roles)."
+          },
+          {
+            "name": "`[aria-*]` attributes have valid values",
+            "value": "Pass",
+            "score": 1,
+            "description": "Assistive technologies, like screen readers, can't interpret ARIA attributes with invalid values. [Learn more about valid values for ARIA attributes](https://dequeuniversity.com/rules/axe/4.10/aria-valid-attr-value)."
+          },
+          {
+            "name": "`[aria-*]` attributes are valid and not misspelled",
+            "value": "Pass",
+            "score": 1,
+            "description": "Assistive technologies, like screen readers, can't interpret ARIA attributes with invalid names. [Learn more about valid ARIA attributes](https://dequeuniversity.com/rules/axe/4.10/aria-valid-attr)."
+          },
+          {
+            "name": "Buttons have an accessible name",
+            "value": "Pass",
+            "score": 1,
+            "description": "When a button doesn't have an accessible name, screen readers announce it as \"button\", making it unusable for users who rely on screen readers. [Learn how to make buttons more accessible](https://dequeuniversity.com/rules/axe/4.10/button-name)."
+          },
+          {
+            "name": "Background and foreground colors do not have a sufficient contrast ratio.",
+            "value": "Fail",
+            "score": 0,
+            "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.10/color-contrast)."
+          },
+          {
+            "name": "Document has a `<title>` element",
+            "value": "Pass",
+            "score": 1,
+            "description": "The title gives screen reader users an overview of the page, and search engine users rely on it heavily to determine if a page is relevant to their search. [Learn more about document titles](https://dequeuniversity.com/rules/axe/4.10/document-title)."
+          },
+          {
+            "name": "Heading elements appear in a sequentially-descending order",
+            "value": "Pass",
+            "score": 1,
+            "description": "Properly ordered headings that do not skip levels convey the semantic structure of the page, making it easier to navigate and understand when using assistive technologies. [Learn more about heading order](https://dequeuniversity.com/rules/axe/4.10/heading-order)."
+          },
+          {
+            "name": "`<html>` element has a `[lang]` attribute",
+            "value": "Pass",
+            "score": 1,
+            "description": "If a page doesn't specify a `lang` attribute, a screen reader assumes that the page is in the default language that the user chose when setting up the screen reader. If the page isn't actually in the default language, then the screen reader might not announce the page's text correctly. [Learn more about the `lang` attribute](https://dequeuniversity.com/rules/axe/4.10/html-has-lang)."
+          },
+          {
+            "name": "`<html>` element has a valid value for its `[lang]` attribute",
+            "value": "Pass",
+            "score": 1,
+            "description": "Specifying a valid [BCP 47 language](https://www.w3.org/International/questions/qa-choosing-language-tags#question) helps screen readers announce text properly. [Learn how to use the `lang` attribute](https://dequeuniversity.com/rules/axe/4.10/html-lang-valid)."
+          },
+          {
+            "name": "Image elements have `[alt]` attributes",
+            "value": "Pass",
+            "score": 1,
+            "description": "Informative elements should aim for short, descriptive alternate text. Decorative elements can be ignored with an empty alt attribute. [Learn more about the `alt` attribute](https://dequeuniversity.com/rules/axe/4.10/image-alt)."
+          },
+          {
+            "name": "Image elements do not have `[alt]` attributes that are redundant text.",
+            "value": "Pass",
+            "score": 1,
+            "description": "Informative elements should aim for short, descriptive alternative text. Alternative text that is exactly the same as the text adjacent to the link or image is potentially confusing for screen reader users, because the text will be read twice. [Learn more about the `alt` attribute](https://dequeuniversity.com/rules/axe/4.10/image-redundant-alt)."
+          },
+          {
+            "name": "Form elements do not have associated labels",
+            "value": "Fail",
+            "score": 0,
+            "description": "Labels ensure that form controls are announced properly by assistive technologies, like screen readers. [Learn more about form element labels](https://dequeuniversity.com/rules/axe/4.10/label)."
+          },
+          {
+            "name": "Links rely on color to be distinguishable.",
+            "value": "Fail",
+            "score": 0,
+            "description": "Low-contrast text is difficult or impossible for many users to read. Link text that is discernible improves the experience for users with low vision. [Learn how to make links distinguishable](https://dequeuniversity.com/rules/axe/4.10/link-in-text-block)."
+          },
+          {
+            "name": "Links do not have a discernible name",
+            "value": "Fail",
+            "score": 0,
+            "description": "Link text (and alternate text for images, when used as links) that is discernible, unique, and focusable improves the navigation experience for screen reader users. [Learn how to make links accessible](https://dequeuniversity.com/rules/axe/4.10/link-name)."
+          },
+          {
+            "name": "`[user-scalable=\"no\"]` is not used in the `<meta name=\"viewport\">` element and the `[maximum-scale]` attribute is not less than 5.",
+            "value": "Pass",
+            "score": 1,
+            "description": "Disabling zooming is problematic for users with low vision who rely on screen magnification to properly see the contents of a web page. [Learn more about the viewport meta tag](https://dequeuniversity.com/rules/axe/4.10/meta-viewport)."
+          },
+          {
+            "name": "Touch targets do not have sufficient size or spacing.",
+            "value": "Fail",
+            "score": 0,
+            "description": "Touch targets with sufficient size and spacing help users who may have difficulty targeting small controls to activate the targets. [Learn more about touch targets](https://dequeuniversity.com/rules/axe/4.10/target-size)."
+          }
+        ],
+        "issues": [
+          {
+            "title": "Links rely on color to be distinguishable.",
+            "description": "Low-contrast text is difficult or impossible for many users to read. Link text that is discernible improves the experience for users with low vision. [Learn how to make links distinguishable](https://dequeuniversity.com/rules/axe/4.10/link-in-text-block)."
+          },
+          {
+            "title": "Links do not have a discernible name",
+            "description": "Link text (and alternate text for images, when used as links) that is discernible, unique, and focusable improves the navigation experience for screen reader users. [Learn how to make links accessible](https://dequeuniversity.com/rules/axe/4.10/link-name)."
+          },
+          {
+            "title": "Touch targets do not have sufficient size or spacing.",
+            "description": "Touch targets with sufficient size and spacing help users who may have difficulty targeting small controls to activate the targets. [Learn more about touch targets](https://dequeuniversity.com/rules/axe/4.10/target-size)."
+          }
+        ]
+      },
+      {
+        "category": "best-practices",
+        "score": 93,
+        "metrics": [
+          {
+            "name": "Uses HTTPS",
+            "value": "Pass",
+            "score": 1,
+            "description": "All sites should be protected with HTTPS, even ones that don't handle sensitive data. This includes avoiding [mixed content](https://developers.google.com/web/fundamentals/security/prevent-mixed-content/what-is-mixed-content), where some resources are loaded over HTTP despite the initial request being served over HTTPS. HTTPS prevents intruders from tampering with or passively listening in on the communications between your app and your users, and is a prerequisite for HTTP/2 and many new web platform APIs. [Learn more about HTTPS](https://developer.chrome.com/docs/lighthouse/pwa/is-on-https/)."
+          },
+          {
+            "name": "Avoids requesting the geolocation permission on page load",
+            "value": "Pass",
+            "score": 1,
+            "description": "Users are mistrustful of or confused by sites that request their location without context. Consider tying the request to a user action instead. [Learn more about the geolocation permission](https://developer.chrome.com/docs/lighthouse/best-practices/geolocation-on-start/)."
+          },
+          {
+            "name": "Avoids requesting the notification permission on page load",
+            "value": "Pass",
+            "score": 1,
+            "description": "Users are mistrustful of or confused by sites that request to send notifications without context. Consider tying the request to user gestures instead. [Learn more about responsibly getting permission for notifications](https://developer.chrome.com/docs/lighthouse/best-practices/notification-on-start/)."
+          },
+          {
+            "name": "Ensure CSP is effective against XSS attacks",
+            "value": "Pass",
+            "score": 1,
+            "description": "A strong Content Security Policy (CSP) significantly reduces the risk of cross-site scripting (XSS) attacks. [Learn how to use a CSP to prevent XSS](https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/)"
+          },
+          {
+            "name": "Allows users to paste into input fields",
+            "value": "Pass",
+            "score": 1,
+            "description": "Preventing input pasting is a bad practice for the UX, and weakens security by blocking password managers.[Learn more about user-friendly input fields](https://developer.chrome.com/docs/lighthouse/best-practices/paste-preventing-inputs/)."
+          },
+          {
+            "name": "Displays images with incorrect aspect ratio",
+            "value": "Fail",
+            "score": 0,
+            "description": "Image display dimensions should match natural aspect ratio. [Learn more about image aspect ratio](https://developer.chrome.com/docs/lighthouse/best-practices/image-aspect-ratio/)."
+          },
+          {
+            "name": "Serves images with appropriate resolution",
+            "value": "Pass",
+            "score": 1,
+            "description": "Image natural dimensions should be proportional to the display size and the pixel ratio to maximize image clarity. [Learn how to provide responsive images](https://web.dev/articles/serve-responsive-images)."
+          },
+          {
+            "name": "Has a `<meta name=\"viewport\">` tag with `width` or `initial-scale`",
+            "value": "Pass",
+            "score": 1,
+            "description": "A `<meta name=\"viewport\">` not only optimizes your app for mobile screen sizes, but also prevents [a 300 millisecond delay to user input](https://developer.chrome.com/blog/300ms-tap-delay-gone-away/). [Learn more about using the viewport meta tag](https://developer.chrome.com/docs/lighthouse/pwa/viewport/)."
+          },
+          {
+            "name": "Document uses legible font sizes",
+            "value": "100% legible text",
+            "score": 1,
+            "description": "Font sizes less than 12px are too small to be legible and require mobile visitors to “pinch to zoom” in order to read. Strive to have >60% of page text ≥12px. [Learn more about legible font sizes](https://developer.chrome.com/docs/lighthouse/seo/font-size/)."
+          },
+          {
+            "name": "Page has the HTML doctype",
+            "value": "Pass",
+            "score": 1,
+            "description": "Specifying a doctype prevents the browser from switching to quirks-mode. [Learn more about the doctype declaration](https://developer.chrome.com/docs/lighthouse/best-practices/doctype/)."
+          },
+          {
+            "name": "Properly defines charset",
+            "value": "Pass",
+            "score": 1,
+            "description": "A character encoding declaration is required. It can be done with a `<meta>` tag in the first 1024 bytes of the HTML or in the Content-Type HTTP response header. [Learn more about declaring the character encoding](https://developer.chrome.com/docs/lighthouse/best-practices/charset/)."
+          },
+          {
+            "name": "Avoids deprecated APIs",
+            "value": "Pass",
+            "score": 1,
+            "description": "Deprecated APIs will eventually be removed from the browser. [Learn more about deprecated APIs](https://developer.chrome.com/docs/lighthouse/best-practices/deprecations/)."
+          },
+          {
+            "name": "Avoids third-party cookies",
+            "value": "Pass",
+            "score": 1,
+            "description": "Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies. [Learn more about third-party cookies](https://developers.google.com/privacy-sandbox/cookies)."
+          },
+          {
+            "name": "Browser errors were logged to the console",
+            "value": "Fail",
+            "score": 0,
+            "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://developer.chrome.com/docs/lighthouse/best-practices/errors-in-console/)"
+          },
+          {
+            "name": "Page has valid source maps",
+            "value": "Pass",
+            "score": 1,
+            "description": "Source maps translate minified code to the original source code. This helps developers debug in production. In addition, Lighthouse is able to provide further insights. Consider deploying source maps to take advantage of these benefits. [Learn more about source maps](https://developer.chrome.com/docs/devtools/javascript/source-maps/)."
+          },
+          {
+            "name": "No issues in the `Issues` panel in Chrome Devtools",
+            "value": "Pass",
+            "score": 1,
+            "description": "Issues logged to the `Issues` panel in Chrome Devtools indicate unresolved problems. They can come from network request failures, insufficient security controls, and other browser concerns. Open up the Issues panel in Chrome DevTools for more details on each issue."
+          }
+        ],
+        "issues": [
+          {
+            "title": "Browser errors were logged to the console",
+            "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://developer.chrome.com/docs/lighthouse/best-practices/errors-in-console/)"
+          },
+          {
+            "title": "Displays images with incorrect aspect ratio",
+            "description": "Image display dimensions should match natural aspect ratio. [Learn more about image aspect ratio](https://developer.chrome.com/docs/lighthouse/best-practices/image-aspect-ratio/)."
+          }
+        ]
+      },
+      {
+        "category": "seo",
+        "score": 100,
+        "metrics": [
+          {
+            "name": "Page isn’t blocked from indexing",
+            "value": "Pass",
+            "score": 1,
+            "description": "Search engines are unable to include your pages in search results if they don't have permission to crawl them. [Learn more about crawler directives](https://developer.chrome.com/docs/lighthouse/seo/is-crawlable/)."
+          },
+          {
+            "name": "Document has a `<title>` element",
+            "value": "Pass",
+            "score": 1,
+            "description": "The title gives screen reader users an overview of the page, and search engine users rely on it heavily to determine if a page is relevant to their search. [Learn more about document titles](https://dequeuniversity.com/rules/axe/4.10/document-title)."
+          },
+          {
+            "name": "Document has a meta description",
+            "value": "Pass",
+            "score": 1,
+            "description": "Meta descriptions may be included in search results to concisely summarize page content. [Learn more about the meta description](https://developer.chrome.com/docs/lighthouse/seo/meta-description/)."
+          },
+          {
+            "name": "Page has successful HTTP status code",
+            "value": "Pass",
+            "score": 1,
+            "description": "Pages with unsuccessful HTTP status codes may not be indexed properly. [Learn more about HTTP status codes](https://developer.chrome.com/docs/lighthouse/seo/http-status-code/)."
+          },
+          {
+            "name": "Links have descriptive text",
+            "value": "Pass",
+            "score": 1,
+            "description": "Descriptive link text helps search engines understand your content. [Learn how to make links more accessible](https://developer.chrome.com/docs/lighthouse/seo/link-text/)."
+          },
+          {
+            "name": "Links are crawlable",
+            "value": "Pass",
+            "score": 1,
+            "description": "Search engines may use `href` attributes on links to crawl websites. Ensure that the `href` attribute of anchor elements links to an appropriate destination, so more pages of the site can be discovered. [Learn how to make links crawlable](https://support.google.com/webmasters/answer/9112205)"
+          },
+          {
+            "name": "Image elements have `[alt]` attributes",
+            "value": "Pass",
+            "score": 1,
+            "description": "Informative elements should aim for short, descriptive alternate text. Decorative elements can be ignored with an empty alt attribute. [Learn more about the `alt` attribute](https://dequeuniversity.com/rules/axe/4.10/image-alt)."
+          },
+          {
+            "name": "Document has a valid `hreflang`",
+            "value": "Pass",
+            "score": 1,
+            "description": "hreflang links tell search engines what version of a page they should list in search results for a given language or region. [Learn more about `hreflang`](https://developer.chrome.com/docs/lighthouse/seo/hreflang/)."
+          }
+        ],
+        "issues": []
+      }
+    ],
+    "desktop": [
+      {
+        "category": "performance",
+        "score": 100,
+        "metrics": [
+          {
+            "name": "First Contentful Paint",
+            "value": "0.5 s",
+            "score": 1,
+            "description": "First Contentful Paint marks the time at which the first text or image is painted. [Learn more about the First Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/first-contentful-paint/)."
+          },
+          {
+            "name": "Largest Contentful Paint",
+            "value": "0.7 s",
+            "score": 0.99,
+            "description": "Largest Contentful Paint marks the time at which the largest text or image is painted. [Learn more about the Largest Contentful Paint metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)"
+          },
+          {
+            "name": "Total Blocking Time",
+            "value": "20 ms",
+            "score": 1,
+            "description": "Sum of all time periods between FCP and Time to Interactive, when task length exceeded 50ms, expressed in milliseconds. [Learn more about the Total Blocking Time metric](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time/)."
+          },
+          {
+            "name": "Cumulative Layout Shift",
+            "value": "0",
+            "score": 1,
+            "description": "Cumulative Layout Shift measures the movement of visible elements within the viewport. [Learn more about the Cumulative Layout Shift metric](https://web.dev/articles/cls)."
+          },
+          {
+            "name": "Speed Index",
+            "value": "0.5 s",
+            "score": 1,
+            "description": "Speed Index shows how quickly the contents of a page are visibly populated. [Learn more about the Speed Index metric](https://developer.chrome.com/docs/lighthouse/performance/speed-index/)."
+          }
+        ],
+        "issues": [
+          {
+            "title": "Serve images in next-gen formats",
+            "description": "Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption. [Learn more about modern image formats](https://developer.chrome.com/docs/lighthouse/performance/uses-webp-images/)."
+          },
+          {
+            "title": "Largest Contentful Paint image was lazily loaded",
+            "description": "Above-the-fold images that are lazily loaded render later in the page lifecycle, which can delay the largest contentful paint. [Learn more about optimal lazy loading](https://web.dev/articles/lcp-lazy-loading)."
+          },
+          {
+            "title": "Properly size images",
+            "description": "Serve images that are appropriately-sized to save cellular data and improve load time. [Learn how to size images](https://developer.chrome.com/docs/lighthouse/performance/uses-responsive-images/)."
+          }
+        ]
+      },
+      {
+        "category": "accessibility",
+        "score": 79,
+        "metrics": [
+          {
+            "name": "`[aria-*]` attributes match their roles",
+            "value": "Pass",
+            "score": 1,
+            "description": "Each ARIA `role` supports a specific subset of `aria-*` attributes. Mismatching these invalidates the `aria-*` attributes. [Learn how to match ARIA attributes to their roles](https://dequeuniversity.com/rules/axe/4.10/aria-allowed-attr)."
+          },
+          {
+            "name": "Uses ARIA roles only on compatible elements",
+            "value": "Pass",
+            "score": 1,
+            "description": "Many HTML elements can only be assigned certain ARIA roles. Using ARIA roles where they are not allowed can interfere with the accessibility of the web page. [Learn more about ARIA roles](https://dequeuniversity.com/rules/axe/4.10/aria-allowed-role)."
+          },
+          {
+            "name": "ARIA attributes are used as specified for the element's role",
+            "value": "Pass",
+            "score": 1,
+            "description": "Some ARIA attributes are only allowed on an element under certain conditions. [Learn more about conditional ARIA attributes](https://dequeuniversity.com/rules/axe/4.10/aria-conditional-attr)."
+          },
+          {
+            "name": "Deprecated ARIA roles were not used",
+            "value": "Pass",
+            "score": 1,
+            "description": "Deprecated ARIA roles may not be processed correctly by assistive technology. [Learn more about deprecated ARIA roles](https://dequeuniversity.com/rules/axe/4.10/aria-deprecated-role)."
+          },
+          {
+            "name": "`[aria-hidden=\"true\"]` is not present on the document `<body>`",
+            "value": "Pass",
+            "score": 1,
+            "description": "Assistive technologies, like screen readers, work inconsistently when `aria-hidden=\"true\"` is set on the document `<body>`. [Learn how `aria-hidden` affects the document body](https://dequeuniversity.com/rules/axe/4.10/aria-hidden-body)."
+          },
+          {
+            "name": "Elements use only permitted ARIA attributes",
+            "value": "Pass",
+            "score": 1,
+            "description": "Using ARIA attributes in roles where they are prohibited can mean that important information is not communicated to users of assistive technologies. [Learn more about prohibited ARIA roles](https://dequeuniversity.com/rules/axe/4.10/aria-prohibited-attr)."
+          },
+          {
+            "name": "`[role]`s have all required `[aria-*]` attributes",
+            "value": "Pass",
+            "score": 1,
+            "description": "Some ARIA roles have required attributes that describe the state of the element to screen readers. [Learn more about roles and required attributes](https://dequeuniversity.com/rules/axe/4.10/aria-required-attr)."
+          },
+          {
+            "name": "`[role]` values are valid",
+            "value": "Pass",
+            "score": 1,
+            "description": "ARIA roles must have valid values in order to perform their intended accessibility functions. [Learn more about valid ARIA roles](https://dequeuniversity.com/rules/axe/4.10/aria-roles)."
+          },
+          {
+            "name": "`[aria-*]` attributes have valid values",
+            "value": "Pass",
+            "score": 1,
+            "description": "Assistive technologies, like screen readers, can't interpret ARIA attributes with invalid values. [Learn more about valid values for ARIA attributes](https://dequeuniversity.com/rules/axe/4.10/aria-valid-attr-value)."
+          },
+          {
+            "name": "`[aria-*]` attributes are valid and not misspelled",
+            "value": "Pass",
+            "score": 1,
+            "description": "Assistive technologies, like screen readers, can't interpret ARIA attributes with invalid names. [Learn more about valid ARIA attributes](https://dequeuniversity.com/rules/axe/4.10/aria-valid-attr)."
+          },
+          {
+            "name": "Buttons have an accessible name",
+            "value": "Pass",
+            "score": 1,
+            "description": "When a button doesn't have an accessible name, screen readers announce it as \"button\", making it unusable for users who rely on screen readers. [Learn how to make buttons more accessible](https://dequeuniversity.com/rules/axe/4.10/button-name)."
+          },
+          {
+            "name": "Background and foreground colors do not have a sufficient contrast ratio.",
+            "value": "Fail",
+            "score": 0,
+            "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.10/color-contrast)."
+          },
+          {
+            "name": "Document has a `<title>` element",
+            "value": "Pass",
+            "score": 1,
+            "description": "The title gives screen reader users an overview of the page, and search engine users rely on it heavily to determine if a page is relevant to their search. [Learn more about document titles](https://dequeuniversity.com/rules/axe/4.10/document-title)."
+          },
+          {
+            "name": "Heading elements appear in a sequentially-descending order",
+            "value": "Pass",
+            "score": 1,
+            "description": "Properly ordered headings that do not skip levels convey the semantic structure of the page, making it easier to navigate and understand when using assistive technologies. [Learn more about heading order](https://dequeuniversity.com/rules/axe/4.10/heading-order)."
+          },
+          {
+            "name": "`<html>` element has a `[lang]` attribute",
+            "value": "Pass",
+            "score": 1,
+            "description": "If a page doesn't specify a `lang` attribute, a screen reader assumes that the page is in the default language that the user chose when setting up the screen reader. If the page isn't actually in the default language, then the screen reader might not announce the page's text correctly. [Learn more about the `lang` attribute](https://dequeuniversity.com/rules/axe/4.10/html-has-lang)."
+          },
+          {
+            "name": "`<html>` element has a valid value for its `[lang]` attribute",
+            "value": "Pass",
+            "score": 1,
+            "description": "Specifying a valid [BCP 47 language](https://www.w3.org/International/questions/qa-choosing-language-tags#question) helps screen readers announce text properly. [Learn how to use the `lang` attribute](https://dequeuniversity.com/rules/axe/4.10/html-lang-valid)."
+          },
+          {
+            "name": "Image elements have `[alt]` attributes",
+            "value": "Pass",
+            "score": 1,
+            "description": "Informative elements should aim for short, descriptive alternate text. Decorative elements can be ignored with an empty alt attribute. [Learn more about the `alt` attribute](https://dequeuniversity.com/rules/axe/4.10/image-alt)."
+          },
+          {
+            "name": "Image elements do not have `[alt]` attributes that are redundant text.",
+            "value": "Pass",
+            "score": 1,
+            "description": "Informative elements should aim for short, descriptive alternative text. Alternative text that is exactly the same as the text adjacent to the link or image is potentially confusing for screen reader users, because the text will be read twice. [Learn more about the `alt` attribute](https://dequeuniversity.com/rules/axe/4.10/image-redundant-alt)."
+          },
+          {
+            "name": "Form elements do not have associated labels",
+            "value": "Fail",
+            "score": 0,
+            "description": "Labels ensure that form controls are announced properly by assistive technologies, like screen readers. [Learn more about form element labels](https://dequeuniversity.com/rules/axe/4.10/label)."
+          },
+          {
+            "name": "Links rely on color to be distinguishable.",
+            "value": "Fail",
+            "score": 0,
+            "description": "Low-contrast text is difficult or impossible for many users to read. Link text that is discernible improves the experience for users with low vision. [Learn how to make links distinguishable](https://dequeuniversity.com/rules/axe/4.10/link-in-text-block)."
+          },
+          {
+            "name": "Links do not have a discernible name",
+            "value": "Fail",
+            "score": 0,
+            "description": "Link text (and alternate text for images, when used as links) that is discernible, unique, and focusable improves the navigation experience for screen reader users. [Learn how to make links accessible](https://dequeuniversity.com/rules/axe/4.10/link-name)."
+          },
+          {
+            "name": "`[user-scalable=\"no\"]` is not used in the `<meta name=\"viewport\">` element and the `[maximum-scale]` attribute is not less than 5.",
+            "value": "Pass",
+            "score": 1,
+            "description": "Disabling zooming is problematic for users with low vision who rely on screen magnification to properly see the contents of a web page. [Learn more about the viewport meta tag](https://dequeuniversity.com/rules/axe/4.10/meta-viewport)."
+          },
+          {
+            "name": "Touch targets do not have sufficient size or spacing.",
+            "value": "Fail",
+            "score": 0,
+            "description": "Touch targets with sufficient size and spacing help users who may have difficulty targeting small controls to activate the targets. [Learn more about touch targets](https://dequeuniversity.com/rules/axe/4.10/target-size)."
+          }
+        ],
+        "issues": [
+          {
+            "title": "Links rely on color to be distinguishable.",
+            "description": "Low-contrast text is difficult or impossible for many users to read. Link text that is discernible improves the experience for users with low vision. [Learn how to make links distinguishable](https://dequeuniversity.com/rules/axe/4.10/link-in-text-block)."
+          },
+          {
+            "title": "Links do not have a discernible name",
+            "description": "Link text (and alternate text for images, when used as links) that is discernible, unique, and focusable improves the navigation experience for screen reader users. [Learn how to make links accessible](https://dequeuniversity.com/rules/axe/4.10/link-name)."
+          },
+          {
+            "title": "Background and foreground colors do not have a sufficient contrast ratio.",
+            "description": "Low-contrast text is difficult or impossible for many users to read. [Learn how to provide sufficient color contrast](https://dequeuniversity.com/rules/axe/4.10/color-contrast)."
+          }
+        ]
+      },
+      {
+        "category": "best-practices",
+        "score": 93,
+        "metrics": [
+          {
+            "name": "Uses HTTPS",
+            "value": "Pass",
+            "score": 1,
+            "description": "All sites should be protected with HTTPS, even ones that don't handle sensitive data. This includes avoiding [mixed content](https://developers.google.com/web/fundamentals/security/prevent-mixed-content/what-is-mixed-content), where some resources are loaded over HTTP despite the initial request being served over HTTPS. HTTPS prevents intruders from tampering with or passively listening in on the communications between your app and your users, and is a prerequisite for HTTP/2 and many new web platform APIs. [Learn more about HTTPS](https://developer.chrome.com/docs/lighthouse/pwa/is-on-https/)."
+          },
+          {
+            "name": "Avoids requesting the geolocation permission on page load",
+            "value": "Pass",
+            "score": 1,
+            "description": "Users are mistrustful of or confused by sites that request their location without context. Consider tying the request to a user action instead. [Learn more about the geolocation permission](https://developer.chrome.com/docs/lighthouse/best-practices/geolocation-on-start/)."
+          },
+          {
+            "name": "Avoids requesting the notification permission on page load",
+            "value": "Pass",
+            "score": 1,
+            "description": "Users are mistrustful of or confused by sites that request to send notifications without context. Consider tying the request to user gestures instead. [Learn more about responsibly getting permission for notifications](https://developer.chrome.com/docs/lighthouse/best-practices/notification-on-start/)."
+          },
+          {
+            "name": "Ensure CSP is effective against XSS attacks",
+            "value": "Pass",
+            "score": 1,
+            "description": "A strong Content Security Policy (CSP) significantly reduces the risk of cross-site scripting (XSS) attacks. [Learn how to use a CSP to prevent XSS](https://developer.chrome.com/docs/lighthouse/best-practices/csp-xss/)"
+          },
+          {
+            "name": "Allows users to paste into input fields",
+            "value": "Pass",
+            "score": 1,
+            "description": "Preventing input pasting is a bad practice for the UX, and weakens security by blocking password managers.[Learn more about user-friendly input fields](https://developer.chrome.com/docs/lighthouse/best-practices/paste-preventing-inputs/)."
+          },
+          {
+            "name": "Displays images with incorrect aspect ratio",
+            "value": "Fail",
+            "score": 0,
+            "description": "Image display dimensions should match natural aspect ratio. [Learn more about image aspect ratio](https://developer.chrome.com/docs/lighthouse/best-practices/image-aspect-ratio/)."
+          },
+          {
+            "name": "Serves images with appropriate resolution",
+            "value": "Pass",
+            "score": 1,
+            "description": "Image natural dimensions should be proportional to the display size and the pixel ratio to maximize image clarity. [Learn how to provide responsive images](https://web.dev/articles/serve-responsive-images)."
+          },
+          {
+            "name": "Has a `<meta name=\"viewport\">` tag with `width` or `initial-scale`",
+            "value": "Pass",
+            "score": 1,
+            "description": "A `<meta name=\"viewport\">` not only optimizes your app for mobile screen sizes, but also prevents [a 300 millisecond delay to user input](https://developer.chrome.com/blog/300ms-tap-delay-gone-away/). [Learn more about using the viewport meta tag](https://developer.chrome.com/docs/lighthouse/pwa/viewport/)."
+          },
+          {
+            "name": "Page has the HTML doctype",
+            "value": "Pass",
+            "score": 1,
+            "description": "Specifying a doctype prevents the browser from switching to quirks-mode. [Learn more about the doctype declaration](https://developer.chrome.com/docs/lighthouse/best-practices/doctype/)."
+          },
+          {
+            "name": "Properly defines charset",
+            "value": "Pass",
+            "score": 1,
+            "description": "A character encoding declaration is required. It can be done with a `<meta>` tag in the first 1024 bytes of the HTML or in the Content-Type HTTP response header. [Learn more about declaring the character encoding](https://developer.chrome.com/docs/lighthouse/best-practices/charset/)."
+          },
+          {
+            "name": "Avoids deprecated APIs",
+            "value": "Pass",
+            "score": 1,
+            "description": "Deprecated APIs will eventually be removed from the browser. [Learn more about deprecated APIs](https://developer.chrome.com/docs/lighthouse/best-practices/deprecations/)."
+          },
+          {
+            "name": "Avoids third-party cookies",
+            "value": "Pass",
+            "score": 1,
+            "description": "Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies. [Learn more about third-party cookies](https://developers.google.com/privacy-sandbox/cookies)."
+          },
+          {
+            "name": "Browser errors were logged to the console",
+            "value": "Fail",
+            "score": 0,
+            "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://developer.chrome.com/docs/lighthouse/best-practices/errors-in-console/)"
+          },
+          {
+            "name": "Page has valid source maps",
+            "value": "Pass",
+            "score": 1,
+            "description": "Source maps translate minified code to the original source code. This helps developers debug in production. In addition, Lighthouse is able to provide further insights. Consider deploying source maps to take advantage of these benefits. [Learn more about source maps](https://developer.chrome.com/docs/devtools/javascript/source-maps/)."
+          },
+          {
+            "name": "No issues in the `Issues` panel in Chrome Devtools",
+            "value": "Pass",
+            "score": 1,
+            "description": "Issues logged to the `Issues` panel in Chrome Devtools indicate unresolved problems. They can come from network request failures, insufficient security controls, and other browser concerns. Open up the Issues panel in Chrome DevTools for more details on each issue."
+          }
+        ],
+        "issues": [
+          {
+            "title": "Displays images with incorrect aspect ratio",
+            "description": "Image display dimensions should match natural aspect ratio. [Learn more about image aspect ratio](https://developer.chrome.com/docs/lighthouse/best-practices/image-aspect-ratio/)."
+          },
+          {
+            "title": "Browser errors were logged to the console",
+            "description": "Errors logged to the console indicate unresolved problems. They can come from network request failures and other browser concerns. [Learn more about this errors in console diagnostic audit](https://developer.chrome.com/docs/lighthouse/best-practices/errors-in-console/)"
+          }
+        ]
+      },
+      {
+        "category": "seo",
+        "score": 100,
+        "metrics": [
+          {
+            "name": "Page isn’t blocked from indexing",
+            "value": "Pass",
+            "score": 1,
+            "description": "Search engines are unable to include your pages in search results if they don't have permission to crawl them. [Learn more about crawler directives](https://developer.chrome.com/docs/lighthouse/seo/is-crawlable/)."
+          },
+          {
+            "name": "Document has a `<title>` element",
+            "value": "Pass",
+            "score": 1,
+            "description": "The title gives screen reader users an overview of the page, and search engine users rely on it heavily to determine if a page is relevant to their search. [Learn more about document titles](https://dequeuniversity.com/rules/axe/4.10/document-title)."
+          },
+          {
+            "name": "Document has a meta description",
+            "value": "Pass",
+            "score": 1,
+            "description": "Meta descriptions may be included in search results to concisely summarize page content. [Learn more about the meta description](https://developer.chrome.com/docs/lighthouse/seo/meta-description/)."
+          },
+          {
+            "name": "Page has successful HTTP status code",
+            "value": "Pass",
+            "score": 1,
+            "description": "Pages with unsuccessful HTTP status codes may not be indexed properly. [Learn more about HTTP status codes](https://developer.chrome.com/docs/lighthouse/seo/http-status-code/)."
+          },
+          {
+            "name": "Links have descriptive text",
+            "value": "Pass",
+            "score": 1,
+            "description": "Descriptive link text helps search engines understand your content. [Learn how to make links more accessible](https://developer.chrome.com/docs/lighthouse/seo/link-text/)."
+          },
+          {
+            "name": "Links are crawlable",
+            "value": "Pass",
+            "score": 1,
+            "description": "Search engines may use `href` attributes on links to crawl websites. Ensure that the `href` attribute of anchor elements links to an appropriate destination, so more pages of the site can be discovered. [Learn how to make links crawlable](https://support.google.com/webmasters/answer/9112205)"
+          },
+          {
+            "name": "Image elements have `[alt]` attributes",
+            "value": "Pass",
+            "score": 1,
+            "description": "Informative elements should aim for short, descriptive alternate text. Decorative elements can be ignored with an empty alt attribute. [Learn more about the `alt` attribute](https://dequeuniversity.com/rules/axe/4.10/image-alt)."
+          },
+          {
+            "name": "Document has a valid `hreflang`",
+            "value": "Pass",
+            "score": 1,
+            "description": "hreflang links tell search engines what version of a page they should list in search results for a given language or region. [Learn more about `hreflang`](https://developer.chrome.com/docs/lighthouse/seo/hreflang/)."
+          }
+        ],
+        "issues": []
+      }
+    ]
+  },
+  "seo": {
+    "crawl_progress": "finished",
+    "crawl_status": {
+      "max_crawl_pages": 10,
+      "pages_in_queue": 0,
+      "pages_crawled": 2
+    },
+    "crawl_gateway_address": "168.119.141.170",
+    "crawl_stop_reason": "empty_queue",
+    "domain_info": {
+      "name": "cqdeveloper.vercel.app",
+      "cms": null,
+      "ip": "216.198.79.65",
+      "server": "Vercel",
+      "crawl_start": "2024-12-30 19:33:42 +00:00",
+      "crawl_end": "2024-12-30 19:34:03 +00:00",
+      "extended_crawl_status": "no_errors",
+      "ssl_info": {
+        "valid_certificate": true,
+        "certificate_issuer": "R10",
+        "certificate_subject": "*.vercel.app",
+        "certificate_version": 3,
+        "certificate_hash": "70EE3A2401BC80E56594AB0F2E31E0AC29F7BCD4",
+        "certificate_expiration_date": "2025-03-18 19:16:15 +00:00"
+      },
+      "checks": {
+        "sitemap": false,
+        "robots_txt": false,
+        "start_page_deny_flag": false,
+        "ssl": true,
+        "http2": true,
+        "test_canonicalization": false,
+        "test_hidden_server_signature": true,
+        "test_page_not_found": true,
+        "test_directory_browsing": true,
+        "test_https_redirect": true
+      },
+      "total_pages": 2,
+      "page_not_found_status_code": 404,
+      "canonicalization_status_code": 308,
+      "directory_browsing_status_code": 308,
+      "www_redirect_status_code": null,
+      "main_domain": "cqdeveloper.vercel.app"
+    },
+    "page_metrics": {
+      "links_external": 7,
+      "links_internal": 3,
+      "duplicate_title": 2,
+      "duplicate_description": 2,
+      "duplicate_content": 0,
+      "broken_links": 0,
+      "broken_resources": 2,
+      "links_relation_conflict": 0,
+      "redirect_loop": 0,
+      "onpage_score": 86.46,
+      "non_indexable": 0,
+      "checks": {
+        "canonical": 2,
+        "duplicate_meta_tags": 0,
+        "no_description": 0,
+        "frame": 0,
+        "large_page_size": 0,
+        "irrelevant_description": 1,
+        "irrelevant_meta_keywords": 0,
+        "is_https": 2,
+        "is_http": 0,
+        "title_too_long": 0,
+        "low_content_rate": 2,
+        "small_page_size": 0,
+        "no_h1_tag": 1,
+        "recursive_canonical": 0,
+        "no_favicon": 0,
+        "no_image_alt": 2,
+        "no_image_title": 2,
+        "seo_friendly_url": 1,
+        "seo_friendly_url_characters_check": 2,
+        "seo_friendly_url_dynamic_check": 2,
+        "seo_friendly_url_keywords_check": 1,
+        "seo_friendly_url_relative_length_check": 2,
+        "title_too_short": 0,
+        "no_content_encoding": 0,
+        "high_waiting_time": 0,
+        "high_loading_time": 0,
+        "is_redirect": 0,
+        "is_broken": 0,
+        "is_4xx_code": 0,
+        "is_5xx_code": 0,
+        "is_www": 0,
+        "no_doctype": 0,
+        "no_encoding_meta_tag": 0,
+        "high_content_rate": 0,
+        "low_character_count": 1,
+        "high_character_count": 0,
+        "low_readability_rate": 0,
+        "irrelevant_title": 0,
+        "deprecated_html_tags": 0,
+        "duplicate_title_tag": 0,
+        "no_title": 0,
+        "flash": 0,
+        "lorem_ipsum": 0,
+        "has_misspelling": null,
+        "canonical_to_broken": 0,
+        "canonical_to_redirect": 0,
+        "has_links_to_redirects": 0,
+        "is_orphan_page": 0,
+        "has_meta_refresh_redirect": 0,
+        "meta_charset_consistency": 0,
+        "size_greater_than_3mb": 0,
+        "has_html_doctype": 2,
+        "https_to_http_links": 0,
+        "has_render_blocking_resources": 2,
+        "redirect_chain": 0,
+        "canonical_chain": 0,
+        "is_link_relation_conflict": 0
+      }
+    },
+    "pages_data": [
+      {
+        "resource_type": "html",
+        "status_code": 200,
+        "location": null,
+        "url": "https://cqdeveloper.vercel.app/",
+        "meta": {
+          "title": "Portfolio of Claudia Queipo - Software Developer",
+          "charset": 65001,
+          "follow": true,
+          "generator": null,
+          "htags": {
+            "h1": ["Hello, \nThis is  Claudia Queipo , I'm a  AI/ML Fullstack Developer ."]
+          },
+          "description": "I am a software developer passionate about integrating artificial intelligence into innovative applications. I handle both frontend and backend, and I also enjoy working with technologies like Langchain, scikit-learn, TensorFlow, and pandas. I am always learning new technologies, and I love tackling new challenges 🚀.",
+          "favicon": "https://cqdeveloper.vercel.app/favicon.ico",
+          "meta_keywords": null,
+          "canonical": null,
+          "internal_links_count": 2,
+          "external_links_count": 4,
+          "inbound_links_count": 2,
+          "images_count": 22,
+          "images_size": 158875,
+          "scripts_count": 11,
+          "scripts_size": 244687,
+          "stylesheets_count": 1,
+          "stylesheets_size": 9065,
+          "title_length": 48,
+          "description_length": 319,
+          "render_blocking_scripts_count": 1,
+          "render_blocking_stylesheets_count": 1,
+          "cumulative_layout_shift": 0,
+          "meta_title": null,
+          "content": {
+            "plain_text_size": 1430,
+            "plain_text_rate": 0.004065248662447905,
+            "plain_text_word_count": 208,
+            "automated_readability_index": 10.563047464940666,
+            "coleman_liau_readability_index": 14.410291262135917,
+            "dale_chall_readability_index": 8.845896871628913,
+            "flesch_kincaid_readability_index": 42.21718446601943,
+            "smog_readability_index": 11.429527900616531,
+            "description_to_content_consistency": 1,
+            "title_to_content_consistency": 0.8333333134651184,
+            "meta_keywords_to_content_consistency": null
+          },
+          "deprecated_tags": null,
+          "duplicate_meta_tags": null,
+          "spell": null,
+          "social_media_tags": null
+        },
+        "page_timing": {
+          "time_to_interactive": 169,
+          "dom_complete": 236,
+          "largest_contentful_paint": 0,
+          "first_input_delay": 0,
+          "connection_time": 91,
+          "time_to_secure_connection": 13,
+          "request_sent_time": 0,
+          "waiting_time": 13,
+          "download_time": 21,
+          "duration_time": 236,
+          "fetch_start": 0,
+          "fetch_end": 236
+        },
+        "onpage_score": 86.46,
+        "total_dom_size": 1554963,
+        "custom_js_response": null,
+        "custom_js_client_exception": null,
+        "resource_errors": {
+          "errors": [
+            {
+              "line": 72,
+              "column": 39472,
+              "message": "The closing tag and the currently open tag do not match.",
+              "status_code": 501
+            },
+            {
+              "line": 72,
+              "column": 49725,
+              "message": "The closing tag and the currently open tag do not match.",
+              "status_code": 501
+            },
+            {
+              "line": 72,
+              "column": 50026,
+              "message": "The closing tag and the currently open tag do not match.",
+              "status_code": 501
+            },
+            {
+              "line": 72,
+              "column": 50327,
+              "message": "The closing tag and the currently open tag do not match.",
+              "status_code": 501
+            }
+          ],
+          "warnings": null
+        },
+        "broken_resources": true,
+        "broken_links": false,
+        "duplicate_title": true,
+        "duplicate_description": true,
+        "duplicate_content": false,
+        "click_depth": 0,
+        "size": 351772,
+        "encoded_size": 70196,
+        "total_transfer_size": 70196,
+        "fetch_time": "2024-12-30 21:33:59 +00:00",
+        "cache_control": {
+          "cachable": true,
+          "ttl": 0
+        },
+        "checks": {
+          "no_content_encoding": false,
+          "high_loading_time": false,
+          "is_redirect": false,
+          "is_4xx_code": false,
+          "is_5xx_code": false,
+          "is_broken": false,
+          "is_www": false,
+          "is_https": true,
+          "is_http": false,
+          "high_waiting_time": false,
+          "has_micromarkup": false,
+          "has_micromarkup_errors": false,
+          "no_doctype": false,
+          "has_html_doctype": true,
+          "canonical": true,
+          "no_encoding_meta_tag": false,
+          "no_h1_tag": false,
+          "https_to_http_links": false,
+          "size_greater_than_3mb": false,
+          "meta_charset_consistency": false,
+          "has_meta_refresh_redirect": false,
+          "has_render_blocking_resources": true,
+          "low_content_rate": true,
+          "high_content_rate": false,
+          "low_character_count": false,
+          "high_character_count": false,
+          "small_page_size": false,
+          "large_page_size": false,
+          "low_readability_rate": false,
+          "irrelevant_description": false,
+          "irrelevant_title": false,
+          "irrelevant_meta_keywords": false,
+          "title_too_long": false,
+          "has_meta_title": false,
+          "title_too_short": false,
+          "deprecated_html_tags": false,
+          "duplicate_meta_tags": false,
+          "duplicate_title_tag": false,
+          "no_image_alt": true,
+          "no_image_title": true,
+          "no_description": false,
+          "no_title": false,
+          "no_favicon": false,
+          "seo_friendly_url": true,
+          "flash": false,
+          "frame": false,
+          "lorem_ipsum": false,
+          "seo_friendly_url_characters_check": true,
+          "seo_friendly_url_dynamic_check": true,
+          "seo_friendly_url_keywords_check": true,
+          "seo_friendly_url_relative_length_check": true,
+          "recursive_canonical": false,
+          "canonical_chain": false,
+          "canonical_to_redirect": false,
+          "canonical_to_broken": false,
+          "has_links_to_redirects": false,
+          "is_orphan_page": false,
+          "is_link_relation_conflict": false,
+          "redirect_chain": false
+        },
+        "content_encoding": "br",
+        "media_type": "text/html",
+        "server": "Vercel",
+        "is_resource": false,
+        "url_length": 31,
+        "relative_url_length": 1,
+        "last_modified": null
+      },
+      {
+        "resource_type": "html",
+        "status_code": 200,
+        "location": null,
+        "url": "https://cqdeveloper.vercel.app/projects",
+        "meta": {
+          "title": "Portfolio of Claudia Queipo - Software Developer",
+          "charset": 65001,
+          "follow": true,
+          "generator": null,
+          "htags": null,
+          "description": "I am a software developer passionate about integrating artificial intelligence into innovative applications. I handle both frontend and backend, and I also enjoy working with technologies like Langchain, scikit-learn, TensorFlow, and pandas. I am always learning new technologies, and I love tackling new challenges 🚀.",
+          "favicon": "https://cqdeveloper.vercel.app/favicon.ico",
+          "meta_keywords": null,
+          "canonical": null,
+          "internal_links_count": 1,
+          "external_links_count": 3,
+          "inbound_links_count": 1,
+          "images_count": 5,
+          "images_size": 95901,
+          "scripts_count": 6,
+          "scripts_size": 122778,
+          "stylesheets_count": 1,
+          "stylesheets_size": 9065,
+          "title_length": 48,
+          "description_length": 319,
+          "render_blocking_scripts_count": 1,
+          "render_blocking_stylesheets_count": 1,
+          "cumulative_layout_shift": 0,
+          "meta_title": null,
+          "content": {
+            "plain_text_size": 73,
+            "plain_text_rate": 0.004394413676860101,
+            "plain_text_word_count": 10,
+            "automated_readability_index": 11.829999999999998,
+            "coleman_liau_readability_index": 16.52,
+            "dale_chall_readability_index": 11.549000000000001,
+            "flesch_kincaid_readability_index": 18.825000000000017,
+            "smog_readability_index": 13.023866798666859,
+            "description_to_content_consistency": 0.05714285746216774,
+            "title_to_content_consistency": 0.3333333432674408,
+            "meta_keywords_to_content_consistency": null
+          },
+          "deprecated_tags": null,
+          "duplicate_meta_tags": null,
+          "spell": null,
+          "social_media_tags": null
+        },
+        "page_timing": {
+          "time_to_interactive": 41,
+          "dom_complete": 85,
+          "largest_contentful_paint": 0,
+          "first_input_delay": 0,
+          "connection_time": 0,
+          "time_to_secure_connection": 0,
+          "request_sent_time": 2,
+          "waiting_time": 7,
+          "download_time": 7,
+          "duration_time": 85,
+          "fetch_start": 0,
+          "fetch_end": 85
+        },
+        "onpage_score": 79.15,
+        "total_dom_size": 697368,
+        "custom_js_response": null,
+        "custom_js_client_exception": null,
+        "resource_errors": {
+          "errors": null,
+          "warnings": null
+        },
+        "broken_resources": true,
+        "broken_links": false,
+        "duplicate_title": true,
+        "duplicate_description": true,
+        "duplicate_content": false,
+        "click_depth": 1,
+        "size": 16618,
+        "encoded_size": 4872,
+        "total_transfer_size": 4872,
+        "fetch_time": "2024-12-30 21:34:03 +00:00",
+        "cache_control": {
+          "cachable": true,
+          "ttl": 0
+        },
+        "checks": {
+          "no_content_encoding": false,
+          "high_loading_time": false,
+          "is_redirect": false,
+          "is_4xx_code": false,
+          "is_5xx_code": false,
+          "is_broken": false,
+          "is_www": false,
+          "is_https": true,
+          "is_http": false,
+          "high_waiting_time": false,
+          "has_micromarkup": false,
+          "has_micromarkup_errors": false,
+          "no_doctype": false,
+          "has_html_doctype": true,
+          "canonical": true,
+          "no_encoding_meta_tag": false,
+          "no_h1_tag": true,
+          "https_to_http_links": false,
+          "size_greater_than_3mb": false,
+          "meta_charset_consistency": false,
+          "has_meta_refresh_redirect": false,
+          "has_render_blocking_resources": true,
+          "low_content_rate": true,
+          "high_content_rate": false,
+          "low_character_count": true,
+          "high_character_count": false,
+          "small_page_size": false,
+          "large_page_size": false,
+          "low_readability_rate": false,
+          "irrelevant_description": true,
+          "irrelevant_title": false,
+          "irrelevant_meta_keywords": false,
+          "title_too_long": false,
+          "has_meta_title": false,
+          "title_too_short": false,
+          "deprecated_html_tags": false,
+          "duplicate_meta_tags": false,
+          "duplicate_title_tag": false,
+          "no_image_alt": true,
+          "no_image_title": true,
+          "no_description": false,
+          "no_title": false,
+          "no_favicon": false,
+          "seo_friendly_url": false,
+          "flash": false,
+          "frame": false,
+          "lorem_ipsum": false,
+          "seo_friendly_url_characters_check": true,
+          "seo_friendly_url_dynamic_check": true,
+          "seo_friendly_url_keywords_check": false,
+          "seo_friendly_url_relative_length_check": true,
+          "recursive_canonical": false,
+          "canonical_chain": false,
+          "canonical_to_redirect": false,
+          "canonical_to_broken": false,
+          "has_links_to_redirects": false,
+          "is_orphan_page": false,
+          "is_link_relation_conflict": false,
+          "redirect_chain": false
+        },
+        "content_encoding": "br",
+        "media_type": "text/html",
+        "server": "Vercel",
+        "is_resource": false,
+        "url_length": 39,
+        "relative_url_length": 9,
+        "last_modified": null
+      }
+    ]
+  }
+}
