@@ -13,9 +13,9 @@ const markupData = [
 ];
 
 const indicators = [
-  { label: 'Páginas con marcado válido', value: '92%', trend: '+3.5%', positive: true },
-  { label: 'Tipos implementados', value: '4/6', trend: '+1', positive: true },
-  { label: 'Errores detectados', value: '15', trend: '-40%', positive: true },
+  { label: 'Valid marking pages', value: '92%', trend: '+3.5%', positive: true },
+  { label: 'Implemented types', value: '4/6', trend: '+1', positive: true },
+  { label: 'Detected errors', value: '15', trend: '-40%', positive: true },
 ];
 
 export const MarkupCard = memo(function MarkupCard() {
@@ -53,8 +53,8 @@ export const MarkupCard = memo(function MarkupCard() {
             <div className="flex-1">
               <RootHorizontalBarChart
                 data={markupData}
-                title="Implementación de Marcado"
-                subtitle="Porcentaje de implementación por tipo"
+                title="Marking implementation"
+                subtitle="Percentage of implementation by type"
                 height={140}
                 valueFormatter={(value) => `${value}%`}
                 showLegend={false}

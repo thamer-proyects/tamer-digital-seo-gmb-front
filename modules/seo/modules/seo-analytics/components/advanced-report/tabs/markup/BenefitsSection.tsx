@@ -8,40 +8,40 @@ const benefits = [
     icon: Search,
     title: 'Rich Snippets',
     description:
-      'Mejora la visibilidad en los resultados de búsqueda con fragmentos enriquecidos que destacan información clave.',
+      'Enhance visibility in search results with rich snippets that highlight key information.',
     examples: [
-      'Estrellas de valoración para productos',
-      'Precios y disponibilidad',
-      'Breadcrumbs en los resultados',
+      'Star ratings for products',
+      'Prices and availability',
+      'Breadcrumbs in search results',
     ],
   },
   {
     icon: Star,
-    title: 'Mejor CTR',
+    title: 'Better CTR',
     description:
-      'Aumenta la tasa de clics (CTR) al mostrar información más relevante y atractiva en los resultados de búsqueda.',
+      'Increase click-through rate (CTR) by displaying more relevant and engaging information in search results.',
     examples: [
-      'Mayor visibilidad en la SERP',
-      'Información más detallada',
-      'Destaca entre la competencia',
+      'Higher visibility in the SERP',
+      'More detailed information',
+      'Stand out from the competition',
     ],
   },
   {
     icon: TrendingUp,
-    title: 'Posicionamiento',
+    title: 'Ranking Improvement',
     description:
-      'Mejora el posicionamiento al ayudar a los motores de búsqueda a entender mejor el contenido de tu sitio.',
-    examples: ['Mejor comprensión del contenido', 'Indexación más precisa', 'Relevancia mejorada'],
+      'Boost ranking by helping search engines better understand your site’s content.',
+    examples: ['Better content comprehension', 'More accurate indexing', 'Enhanced relevance'],
   },
   {
     icon: MousePointerClick,
-    title: 'Experiencia de Usuario',
+    title: 'User Experience',
     description:
-      'Proporciona una mejor experiencia al usuario al mostrar información relevante directamente en los resultados.',
+      'Provide a better user experience by displaying relevant information directly in search results.',
     examples: [
-      'Información más accesible',
-      'Decisiones más informadas',
-      'Menor fricción en la búsqueda',
+      'More accessible information',
+      'More informed decisions',
+      'Less friction in search',
     ],
   },
 ];

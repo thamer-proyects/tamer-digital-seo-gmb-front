@@ -42,7 +42,7 @@ export const StructuredDataSection = memo(function StructuredDataSection({
     <div className="grid grid-cols-1 gap-6">
       <RootCard>
         <CardBody className="p-6">
-          <h3 className="text-lg font-medium mb-4">Elementos Implementados</h3>
+          <h3 className="text-lg font-medium mb-4">Implemented elements</h3>
           <Table
             aria-label="Elementos de datos estructurados"
             classNames={{
@@ -50,9 +50,9 @@ export const StructuredDataSection = memo(function StructuredDataSection({
             }}
           >
             <TableHeader>
-              <TableColumn>TIPO</TableColumn>
-              <TableColumn>VÁLIDOS</TableColumn>
-              <TableColumn>INVÁLIDOS</TableColumn>
+              <TableColumn>TYPE</TableColumn>
+              <TableColumn>VALID</TableColumn>
+              <TableColumn>INVALID</TableColumn>
               <TableColumn>TOTAL</TableColumn>
             </TableHeader>
             <TableBody>

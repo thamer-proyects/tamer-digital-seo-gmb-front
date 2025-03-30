@@ -4,17 +4,18 @@ import RootCard from '@/components/ui/root-card';
 import { RootHorizontalBarChart } from '@/components/charts/RootHorizontalBarChart';
 
 const backlinkTypesData = [
-  { label: 'Enlaces de texto', value: 65, color: '#4CAF50' },
-  { label: 'Enlaces de imagen', value: 20, color: '#2196F3' },
-  { label: 'Redirecciones', value: 10, color: '#FFA726' },
-  { label: 'Contenido embedido', value: 5, color: '#9C27B0' },
+  { label: 'Text Links', value: 65, color: '#4CAF50' },
+  { label: 'Image Links', value: 20, color: '#2196F3' },
+  { label: 'Redirects', value: 10, color: '#FFA726' },
+  { label: 'Embedded Content', value: 5, color: '#9C27B0' },
 ];
 
 const indicators = [
-  { label: 'Enlaces de texto vs. imagen', value: '3.25:1', trend: '+0.15', positive: true },
-  { label: 'Contenido multimedia', value: '5%', trend: '+1.2%', positive: true },
-  { label: 'Redirecciones', value: '10%', trend: '-2.5%', positive: true },
+  { label: 'Text Links vs. Image Links', value: '3.25:1', trend: '+0.15', positive: true },
+  { label: 'Multimedia Content', value: '5%', trend: '+1.2%', positive: true },
+  { label: 'Redirects', value: '10%', trend: '-2.5%', positive: true },
 ];
+
 
 export const BacklinksTypeSection = memo(function BacklinksTypeSection() {
   return (
@@ -23,7 +24,7 @@ export const BacklinksTypeSection = memo(function BacklinksTypeSection() {
       <div className="lg:col-span-8">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Distribución por Tipo de Enlace</h3>
+            <h3 className="text-lg font-medium mb-4">Link type distribution</h3>
             <RootHorizontalBarChart
               data={backlinkTypesData}
               height={180}
@@ -37,7 +38,7 @@ export const BacklinksTypeSection = memo(function BacklinksTypeSection() {
       <div className="lg:col-span-4">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Métricas por Tipo</h3>
+            <h3 className="text-lg font-medium mb-4">Metrics by type</h3>
             <div className="space-y-6">
               {indicators.map((indicator, index) => (
                 <div key={index} className="flex justify-between items-center">

@@ -30,7 +30,7 @@ export const TabSummaryCard = memo(function TabSummaryCard({
             onPress={() => onViewDetails(key)}
             className="min-w-[120px]"
           >
-            Ver detalles
+        See details
           </Button>
         </div>
 

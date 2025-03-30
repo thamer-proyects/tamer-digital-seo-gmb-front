@@ -52,7 +52,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: data.color }} />
         <span className="font-medium">{data.name}</span>
       </div>
-      <p className="text-sm text-default-500">Porcentaje: {data.value}%</p>
+      <p className="text-sm text-default-500">Percentage: {data.value}%</p>
     </div>
   );
 };
@@ -113,7 +113,7 @@ export const HttpStatusSection = memo(function HttpStatusSection({
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Distribución de Códigos HTTP</h3>
+            <h3 className="text-lg font-medium mb-4">HTTP code distribution</h3>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -151,12 +151,12 @@ export const HttpStatusSection = memo(function HttpStatusSection({
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Páginas con Error</h3>
+            <h3 className="text-lg font-medium mb-4">Pages with error</h3>
             <Table aria-label="Páginas con error">
               <TableHeader>
                 <TableColumn>URL</TableColumn>
-                <TableColumn>ESTADO</TableColumn>
-                <TableColumn>MENSAJE</TableColumn>
+                <TableColumn>STATE</TableColumn>
+                <TableColumn>MESSAGE</TableColumn>
               </TableHeader>
               <TableBody>
                 {httpStatus.errorPages.map((page, index) => (

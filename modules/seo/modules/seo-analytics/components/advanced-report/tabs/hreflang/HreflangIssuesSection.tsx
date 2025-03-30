@@ -22,28 +22,29 @@ const hreflangIssues: HreflangIssue[] = [
   {
     url: '/products/smartphone-x',
     type: 'error',
-    issue: 'Conflicto de idioma',
-    details: 'Múltiples hreflangs apuntando al mismo idioma',
+    issue: 'Language conflict',
+    details: 'Multiple hreflangs pointing to the same language',
   },
   {
     url: '/blog/tech-news',
     type: 'error',
-    issue: 'Retorno no recíproco',
-    details: 'La página en inglés no enlaza de vuelta a la española',
+    issue: 'Non-reciprocal return',
+    details: 'The English page does not link back to the Spanish one',
   },
   {
     url: '/services/consulting',
     type: 'warning',
-    issue: 'Código de idioma inválido',
-    details: 'Uso de "en-uk" en lugar de "en-GB"',
+    issue: 'Invalid language code',
+    details: 'Using "en-uk" instead of "en-GB"',
   },
   {
     url: '/about/company',
     type: 'warning',
-    issue: 'Falta x-default',
-    details: 'No se ha especificado una versión por defecto',
+    issue: 'Missing x-default',
+    details: 'No default version has been specified',
   },
 ];
+
 
 const missingHreflangPages = [
   { url: '/blog/post-1', languages: ['fr', 'de'] },
@@ -58,7 +59,7 @@ export const HreflangIssuesSection = memo(function HreflangIssuesSection() {
       {/* Issues Table */}
       <RootCard>
         <CardBody className="p-6">
-          <h3 className="text-lg font-medium mb-4">Conflictos Detectados</h3>
+          <h3 className="text-lg font-medium mb-4">Conflicts detected</h3>
           <Table
             aria-label="Problemas con hreflang"
             classNames={{
@@ -67,8 +68,8 @@ export const HreflangIssuesSection = memo(function HreflangIssuesSection() {
           >
             <TableHeader>
               <TableColumn>URL</TableColumn>
-              <TableColumn>PROBLEMA</TableColumn>
-              <TableColumn>DETALLES</TableColumn>
+              <TableColumn>PROBLEM</TableColumn>
+              <TableColumn>DETAILS</TableColumn>
             </TableHeader>
             <TableBody>
               {hreflangIssues.map((issue, index) => (
@@ -100,16 +101,16 @@ export const HreflangIssuesSection = memo(function HreflangIssuesSection() {
       {/* Missing Hreflang Pages */}
       <RootCard>
         <CardBody className="p-6">
-          <h3 className="text-lg font-medium mb-4">Páginas sin Hreflang</h3>
+          <h3 className="text-lg font-medium mb-4">Pages their Hrefring</h3>
           <Table
-            aria-label="Páginas sin hreflang"
+            aria-label="Pigins their hreflang"
             classNames={{
               wrapper: 'shadow-none',
             }}
           >
             <TableHeader>
               <TableColumn>URL</TableColumn>
-              <TableColumn>IDIOMAS FALTANTES</TableColumn>
+              <TableColumn>Missing languages</TableColumn>
             </TableHeader>
             <TableBody>
               {missingHreflangPages.map((page, index) => (

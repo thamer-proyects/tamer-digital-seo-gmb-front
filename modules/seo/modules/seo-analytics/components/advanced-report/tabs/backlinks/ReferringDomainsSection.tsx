@@ -15,35 +15,35 @@ interface ReferringDomain {
   domain: string;
   authority: number;
   backlinks: number;
-  relevance: 'Alta' | 'Media' | 'Baja';
+  relevance: 'High' | 'Medium' | 'Low';
 }
 
 const referringDomains: ReferringDomain[] = [
-  { domain: 'example.com', authority: 85, backlinks: 156, relevance: 'Alta' },
-  { domain: 'blog.site.com', authority: 78, backlinks: 89, relevance: 'Alta' },
-  { domain: 'news.portal.com', authority: 72, backlinks: 67, relevance: 'Media' },
-  { domain: 'tech.blog.com', authority: 68, backlinks: 45, relevance: 'Alta' },
-  { domain: 'review.site.com', authority: 65, backlinks: 34, relevance: 'Media' },
-  { domain: 'forum.example.com', authority: 62, backlinks: 28, relevance: 'Baja' },
-  { domain: 'directory.com', authority: 58, backlinks: 23, relevance: 'Baja' },
-  { domain: 'social.network.com', authority: 55, backlinks: 19, relevance: 'Media' },
-  { domain: 'industry.news.com', authority: 52, backlinks: 15, relevance: 'Alta' },
-  { domain: 'blog.platform.com', authority: 48, backlinks: 12, relevance: 'Media' },
+  { domain: 'example.com', authority: 85, backlinks: 156, relevance: 'High' },
+  { domain: 'blog.site.com', authority: 78, backlinks: 89, relevance: 'High' },
+  { domain: 'news.portal.com', authority: 72, backlinks: 67, relevance: 'Medium' },
+  { domain: 'tech.blog.com', authority: 68, backlinks: 45, relevance: 'High' },
+  { domain: 'review.site.com', authority: 65, backlinks: 34, relevance: 'Medium' },
+  { domain: 'forum.example.com', authority: 62, backlinks: 28, relevance: 'Low' },
+  { domain: 'directory.com', authority: 58, backlinks: 23, relevance: 'Low' },
+  { domain: 'social.network.com', authority: 55, backlinks: 19, relevance: 'Medium' },
+  { domain: 'industry.news.com', authority: 52, backlinks: 15, relevance: 'High' },
+  { domain: 'blog.platform.com', authority: 48, backlinks: 12, relevance: 'Medium' },
 ];
 
 const indicators = [
-  { label: 'Dominios únicos', value: '3,245', trend: '+12.5%', positive: true },
-  { label: 'Dominios spam', value: '2.3%', trend: '-0.8%', positive: true },
-  { label: 'Relevancia promedio', value: '78%', trend: '+4.2%', positive: true },
+  { label: 'Unique domains', value: '3,245', trend: '+12.5%', positive: true },
+  { label: 'Spam domains', value: '2.3%', trend: '-0.8%', positive: true },
+  { label: 'Average relevance', value: '78%', trend: '+4.2%', positive: true },
 ];
 
 const getRelevanceColor = (relevance: ReferringDomain['relevance']) => {
   switch (relevance) {
-    case 'Alta':
+    case 'High':
       return 'success';
-    case 'Media':
+    case 'Medium':
       return 'warning';
-    case 'Baja':
+    case 'Low':
       return 'danger';
     default:
       return 'default';
@@ -57,19 +57,20 @@ export const ReferringDomainsSection = memo(function ReferringDomainsSection() {
       <div className="lg:col-span-8">
         <RootCard>
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Top 10 Dominios de Referencia</h3>
+            <h3 className="text-lg font-medium mb-4">Top 10 Referring Domains</h3>
             <Table
-              aria-label="Dominios de referencia"
+              aria-label="Referring Domains"
               classNames={{
                 wrapper: 'shadow-none',
               }}
             >
               <TableHeader>
-                <TableColumn>DOMINIO</TableColumn>
-                <TableColumn>AUTORIDAD</TableColumn>
+                <TableColumn>DOMAIN</TableColumn>
+                <TableColumn>AUTHORITY</TableColumn>
                 <TableColumn>BACKLINKS</TableColumn>
-                <TableColumn>RELEVANCIA</TableColumn>
+                <TableColumn>RELEVANCE</TableColumn>
               </TableHeader>
+
               <TableBody>
                 {referringDomains.map((domain, index) => (
                   <TableRow key={index}>
@@ -99,7 +100,7 @@ export const ReferringDomainsSection = memo(function ReferringDomainsSection() {
       <div className="lg:col-span-4">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Métricas de Dominios</h3>
+            <h3 className="text-lg font-medium mb-4">Domain metrics</h3>
             <div className="space-y-6">
               {indicators.map((indicator, index) => (
                 <div key={index} className="flex justify-between items-center">

@@ -50,11 +50,11 @@ export const InternalLinkingContent = memo(function InternalLinkingContent() {
     <div className="p-6 space-y-12">
       <div className="text-center max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400">
-          Análisis de Enlaces Internos
+          Internal link analysis
         </h1>
         <p className="text-default-600">
-          Optimiza la estructura de enlaces internos de tu sitio para mejorar la navegación y
-          distribución del valor SEO.
+       Optimize the internal link structure of your site to improve navigation and
+          SEO value distribution.
         </p>
       </div>
 
@@ -62,7 +62,7 @@ export const InternalLinkingContent = memo(function InternalLinkingContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Enlaces y Distribución</h2>
+            <h2 className="text-2xl font-semibold">Links and distribution</h2>
           </div>
           <InternalLinksSection
             incomingLinks={transformIncomingLinks(internalLinkingData.incomingLinks)}
@@ -74,7 +74,7 @@ export const InternalLinkingContent = memo(function InternalLinkingContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Profundidad de Navegación</h2>
+            <h2 className="text-2xl font-semibold">Navigation depth</h2>
           </div>
           <ClickDepthSection navigationDepth={internalLinkingData.navigationDepth} />
         </section>
@@ -82,7 +82,7 @@ export const InternalLinkingContent = memo(function InternalLinkingContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Problemas Detectados</h2>
+            <h2 className="text-2xl font-semibold">Problems detected</h2>
           </div>
           <IssuesSection detectedIssues={internalLinkingData.detectedIssues} />
         </section>

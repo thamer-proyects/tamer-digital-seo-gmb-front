@@ -18,17 +18,17 @@ const canonicalData = [
 
 const indicators: CanonicalizationIndicator[] = [
   {
-    label: 'Páginas con rel="canonical"',
+    label: 'Pages with rel = "canonical"',
     value: '85%',
     color: 'text-success-500',
   },
   {
-    label: 'Etiquetas duplicadas',
+    label: 'Duplicate labels',
     value: '4.5%',
     color: 'text-warning-500',
   },
   {
-    label: 'Errores de canonicidad',
+    label: 'Canonicity errors',
     value: '156',
     color: 'text-danger-500',
   },
@@ -81,7 +81,7 @@ export const CanonicalizationCard = memo(function CanonicalizationCard() {
         <div>
           <Divider className="mb-4" />
           <div>
-            <h4 className="text-base font-semibold mb-4">Distribución de Canonicalización</h4>
+            <h4 className="text-base font-semibold mb-4">Canonicalization distribution</h4>
             <RootHorizontalBarChart
               data={canonicalData}
               height={180}

@@ -12,25 +12,25 @@ interface CrawlabilityIndicator {
 }
 
 const wastedBudgetData = [
-  { label: 'Páginas duplicadas', value: 35, color: '#FF6B6B' },
-  { label: 'Recursos bloqueados', value: 25, color: '#4ECDC4' },
-  { label: 'URLs no canónicas', value: 20, color: '#45B7D1' },
-  { label: 'Redirecciones', value: 15, color: '#96CEB4' },
+  { label: 'Duplicate pages', value: 35, color: '#FF6B6B' },
+  { label: 'Blocked resources', value: 25, color: '#4ECDC4' },
+  { label: 'Non canonical urls', value: 20, color: '#45B7D1' },
+  { label: 'Redirections', value: 15, color: '#96CEB4' },
 ];
 
 const indicators: CrawlabilityIndicator[] = [
   {
-    label: 'Páginas rastreadas',
+    label: 'Tracked pages',
     value: '92%',
     color: 'text-success-500',
   },
   {
-    label: 'Páginas bloqueadas',
+    label: 'Blocked pages',
     value: '5%',
     color: 'text-warning-500',
   },
   {
-    label: 'Errores críticos',
+    label: 'Critical errors',
     value: 23,
     color: 'text-danger-500',
   },
@@ -84,8 +84,8 @@ export const CrawlabilityCard = memo(function CrawlabilityCard() {
         <div className="flex-1 flex flex-col justify-center">
           <RootHorizontalBarChart
             data={wastedBudgetData}
-            title="Presupuesto de rastreo"
-            subtitle="Distribución del presupuesto desperdiciado"
+            title="Tracking budget"
+            subtitle="Dispressed budget distribution"
             height={180}
             valueFormatter={(value) => `${value}%`}
           />

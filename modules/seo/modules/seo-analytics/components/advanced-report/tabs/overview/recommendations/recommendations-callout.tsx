@@ -25,7 +25,7 @@ export const RecommendationsCallout = memo(function RecommendationsCallout({
               <h3 className="text-2xl font-bold">{title}</h3>
             </div>
             <p className="text-lg text-default-600">
-              ¡Potencia tu presencia en línea y alcanza nuevas alturas!
+              Power your online presence and reach new heights!
             </p>
           </div>
 
@@ -38,8 +38,8 @@ export const RecommendationsCallout = memo(function RecommendationsCallout({
                   <Rocket className="w-5 h-5 text-success-500" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-sm">Mayor Visibilidad</h4>
-                  <p className="text-xs text-default-500 truncate">Top en Google</p>
+                  <h4 className="font-semibold text-sm">Greater visibility</h4>
+                  <p className="text-xs text-default-500 truncate">TOP AND Google</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 h-[72px]">
@@ -47,8 +47,8 @@ export const RecommendationsCallout = memo(function RecommendationsCallout({
                   <Users className="w-5 h-5 text-primary" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-sm">Más Tráfico</h4>
-                  <p className="text-xs text-default-500 truncate">Visitas cualificadas</p>
+                  <h4 className="font-semibold text-sm">More traffic</h4>
+                  <p className="text-xs text-default-500 truncate">Qualified visits</p>
                 </div>
               </div>
             </div>
@@ -60,8 +60,8 @@ export const RecommendationsCallout = memo(function RecommendationsCallout({
                   <Star className="w-5 h-5 text-warning-500" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-sm">Mejor Experiencia</h4>
-                  <p className="text-xs text-default-500 truncate">Sitio optimizado</p>
+                  <h4 className="font-semibold text-sm">Best experience</h4>
+                  <p className="text-xs text-default-500 truncate">Optimized site</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 h-[72px]">
@@ -69,8 +69,8 @@ export const RecommendationsCallout = memo(function RecommendationsCallout({
                   <ChartBar className="w-5 h-5 text-success-500" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-sm">Más Conversiones</h4>
-                  <p className="text-xs text-default-500 truncate">Ventas efectivas</p>
+                  <h4 className="font-semibold text-sm">More conversions</h4>
+                  <p className="text-xs text-default-500 truncate">Effective sales</p>
                 </div>
               </div>
             </div>
@@ -82,8 +82,8 @@ export const RecommendationsCallout = memo(function RecommendationsCallout({
                   <Globe className="w-5 h-5 text-blue-500" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-sm">Alcance Global</h4>
-                  <p className="text-xs text-default-500 truncate">Mercado mundial</p>
+                  <h4 className="font-semibold text-sm">Global range</h4>
+                  <p className="text-xs text-default-500 truncate"> World Market</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 h-[72px]">
@@ -91,8 +91,8 @@ export const RecommendationsCallout = memo(function RecommendationsCallout({
                   <Target className="w-5 h-5 text-purple-500" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-sm">Ventaja Competitiva</h4>
-                  <p className="text-xs text-default-500 truncate">Lidera tu sector</p>
+                  <h4 className="font-semibold text-sm">Competitive advantage</h4>
+                  <p className="text-xs text-default-500 truncate">Lead Your Industry</p>
                 </div>
               </div>
             </div>
@@ -107,15 +107,15 @@ export const RecommendationsCallout = memo(function RecommendationsCallout({
               endContent={<ArrowRight className="w-6 h-6" />}
               onPress={() => onViewDetails(key)}
             >
-              Optimizar mi sitio web ahora
+             Optimize my website now
             </Button>
 
             <div className="text-center space-y-2">
               <p className="text-sm font-medium text-default-600">
-                Obtén un plan de acción personalizado
+               Get a personalized action plan
               </p>
               <p className="text-xs text-default-500">
-                ¡No esperes más! Cada día sin optimizar es una oportunidad perdida
+               Don't wait any longer! Every day without optimizing is a lost opportunity
               </p>
             </div>
           </div>

@@ -44,7 +44,7 @@ export const DuplicateContentSection = memo(function DuplicateContentSection() {
             >
               <TableHeader>
                 <TableColumn>URL</TableColumn>
-                <TableColumn>TIPO</TableColumn>
+                <TableColumn>TYPE</TableColumn>
               </TableHeader>
               <TableBody>
                 <>
@@ -53,7 +53,7 @@ export const DuplicateContentSection = memo(function DuplicateContentSection() {
                       <span className="text-sm font-medium text-success">{group.canonical}</span>
                     </TableCell>
                     <TableCell>
-                      <span className="text-sm text-success">URL Canónica</span>
+                      <span className="text-sm text-success">Canonical URL</span>
                     </TableCell>
                   </TableRow>
                   {group.duplicates.map((url) => (
@@ -62,7 +62,7 @@ export const DuplicateContentSection = memo(function DuplicateContentSection() {
                         <span className="text-sm text-default-600">{url}</span>
                       </TableCell>
                       <TableCell>
-                        <span className="text-sm text-warning">Duplicado</span>
+                        <span className="text-sm text-warning">Duplicate</span>
                       </TableCell>
                     </TableRow>
                   ))}

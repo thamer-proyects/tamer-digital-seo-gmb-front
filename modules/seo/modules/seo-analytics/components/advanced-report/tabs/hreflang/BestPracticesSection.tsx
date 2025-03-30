@@ -6,44 +6,44 @@ import RootCard from '@/components/ui/root-card';
 const bestPractices = [
   {
     icon: Globe2,
-    title: 'Implementación Correcta',
+    title: 'Correct Implementation',
     description:
-      'Las etiquetas hreflang son esenciales para sitios multilingües y orientados a diferentes regiones.',
+      'Hreflang tags are essential for multilingual websites and those targeting different regions.',
     tips: [
-      'Usa códigos de idioma ISO 639-1',
-      'Incluye códigos de país cuando sea necesario',
-      'Implementa enlaces recíprocos entre todas las versiones',
+      'Use ISO 639-1 language codes',
+      'Include country codes when necessary',
+      'Implement reciprocal links between all versions',
     ],
   },
   {
     icon: Link2,
-    title: 'Enlaces Recíprocos',
-    description: 'Todas las páginas alternativas deben enlazarse entre sí, incluyendo a sí mismas.',
+    title: 'Reciprocal Links',
+    description: 'All alternative pages must link to each other, including to themselves.',
     tips: [
-      'Asegura que todas las URLs se enlacen mutuamente',
-      'Incluye self-referencing hreflang',
-      'Verifica la reciprocidad de los enlaces',
+      'Ensure all URLs link to each other',
+      'Include self-referencing hreflang',
+      'Verify link reciprocity',
     ],
   },
   {
     icon: Languages,
-    title: 'Uso de x-default',
+    title: 'Using x-default',
     description:
-      'La etiqueta x-default indica la versión por defecto cuando no hay coincidencia de idioma.',
+      'The x-default tag indicates the default version when there is no language match.',
     tips: [
-      'Implementa x-default para la página principal',
-      'Usa x-default para páginas de selección de idioma',
-      'Mantén consistencia en su implementación',
+      'Implement x-default for the main page',
+      'Use x-default for language selection pages',
+      'Maintain consistency in implementation',
     ],
   },
   {
     icon: AlertTriangle,
-    title: 'Errores Comunes',
-    description: 'Evita estos errores comunes en la implementación de hreflang.',
+    title: 'Common Errors',
+    description: 'Avoid these common errors in hreflang implementation.',
     tips: [
-      'No uses códigos de idioma incorrectos',
-      'Evita cadenas de redirección',
-      'No olvides los enlaces recíprocos',
+      'Don\'t use incorrect language codes',
+      'Avoid redirect chains',
+      'Don\'t forget reciprocal links',
     ],
   },
 ];

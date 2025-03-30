@@ -46,9 +46,9 @@ const toxicBacklinks: ToxicBacklink[] = [
 ];
 
 const indicators = [
-  { label: 'Total backlinks tóxicos', value: '156' },
-  { label: 'Impacto en ranking', value: 'Moderado' },
-  { label: 'Tendencia', value: '-12.5%', positive: true },
+  { label: 'Total toxic backlinks', value: '156' },
+  { label: 'Ranking impact', value: 'Moderate' },
+  { label: 'Trend', value: '-12.5%', positive: true },
 ];
 
 interface CustomTooltipProps {
@@ -65,7 +65,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   return (
     <div className="bg-content1 p-3 rounded-lg shadow-lg border border-default-200">
       <p className="font-medium">{label}</p>
-      <p className="text-sm text-default-500">Enlaces tóxicos: {payload[0].value}</p>
+      <p className="text-sm text-default-500">Toxic links: {payload[0].value}</p>
     </div>
   );
 };
@@ -79,13 +79,13 @@ export const ToxicBacklinksSection = memo(function ToxicBacklinksSection() {
           <RootCard>
             <CardBody className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-medium">Evolución de Backlinks Tóxicos</h3>
+                <h3 className="text-lg font-medium">Toxic Backlink Evolution</h3>
                 <Button
                   color="primary"
                   variant="flat"
                   startContent={<FileDown className="w-4 h-4" />}
                 >
-                  Generar archivo disavow
+                  Generate disavow file
                 </Button>
               </div>
               <div className="h-[300px]">
@@ -113,7 +113,7 @@ export const ToxicBacklinksSection = memo(function ToxicBacklinksSection() {
         <div className="lg:col-span-4">
           <RootCard className="h-full">
             <CardBody className="p-6">
-              <h3 className="text-lg font-medium mb-6">Métricas de Toxicidad</h3>
+              <h3 className="text-lg font-medium mb-6">Toxicity Metrics</h3>
               <div className="space-y-6">
                 {indicators.map((indicator, index) => (
                   <div key={index} className="flex justify-between items-center">
@@ -140,7 +140,7 @@ export const ToxicBacklinksSection = memo(function ToxicBacklinksSection() {
       {/* Toxic Backlinks Table */}
       <RootCard>
         <CardBody className="p-6">
-          <h3 className="text-lg font-medium mb-4">Enlaces Tóxicos Detectados</h3>
+          <h3 className="text-lg font-medium mb-4">Detected Toxic Links</h3>
           <Table
             aria-label="Enlaces tóxicos"
             classNames={{
@@ -148,10 +148,10 @@ export const ToxicBacklinksSection = memo(function ToxicBacklinksSection() {
             }}
           >
             <TableHeader>
-              <TableColumn>DOMINIO</TableColumn>
+              <TableColumn>DOMAIN</TableColumn>
               <TableColumn>URL</TableColumn>
-              <TableColumn>TOXICIDAD</TableColumn>
-              <TableColumn>RAZÓN</TableColumn>
+              <TableColumn>TOXICITY</TableColumn>
+              <TableColumn>REASON</TableColumn>
             </TableHeader>
             <TableBody>
               {toxicBacklinks.map((link, index) => (

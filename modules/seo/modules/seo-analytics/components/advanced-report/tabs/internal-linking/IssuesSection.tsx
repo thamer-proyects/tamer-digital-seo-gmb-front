@@ -32,11 +32,11 @@ interface IssuesSectionProps {
 
 const getChipColor = (category: string) => {
   switch (category) {
-    case 'Errores críticos':
+    case 'Critical errors':
       return 'danger';
-    case 'Advertencias':
+    case 'Warnings':
       return 'warning';
-    case 'Avisos':
+    case 'Notices':
       return 'primary';
     default:
       return 'default';
@@ -46,17 +46,17 @@ const getChipColor = (category: string) => {
 export const IssuesSection = memo(function IssuesSection({ detectedIssues }: IssuesSectionProps) {
   const issueGroups = [
     {
-      category: 'Errores críticos',
+      category: 'Critical errors',
       issues: detectedIssues.criticalErrors,
       type: 'error',
     },
     {
-      category: 'Advertencias',
+      category: 'Warnings',
       issues: detectedIssues.warnings,
       type: 'warning',
     },
     {
-      category: 'Avisos',
+      category: 'Notices',
       issues: detectedIssues.notices,
       type: 'info',
     },
@@ -71,8 +71,8 @@ export const IssuesSection = memo(function IssuesSection({ detectedIssues }: Iss
             <Table aria-label={`Tabla de ${category}`} classNames={{ wrapper: 'shadow-none' }}>
               <TableHeader>
                 <TableColumn>URL</TableColumn>
-                <TableColumn>TIPO</TableColumn>
-                <TableColumn>DESCRIPCIÓN</TableColumn>
+                <TableColumn>TYPE</TableColumn>
+                <TableColumn>DESCRIPTION</TableColumn>
               </TableHeader>
               <TableBody>
                 {issues.map((issue, index) => (
@@ -82,7 +82,7 @@ export const IssuesSection = memo(function IssuesSection({ detectedIssues }: Iss
                     </TableCell>
                     <TableCell>
                       <Chip size="sm" color={getChipColor(category)} variant="flat">
-                        {type === 'error' ? 'Error' : type === 'warning' ? 'Advertencia' : 'Aviso'}
+                        {type === 'error' ? 'Error' : type === 'warning' ? 'Warnings' : 'Notices'}
                       </Chip>
                     </TableCell>
                     <TableCell>

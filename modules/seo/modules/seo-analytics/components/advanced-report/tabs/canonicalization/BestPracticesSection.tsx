@@ -6,46 +6,44 @@ import RootCard from '@/components/ui/root-card';
 const bestPractices = [
   {
     icon: Shield,
-    title: 'Prevención de Contenido Duplicado',
+    title: 'Duplicate Content Prevention',
     description:
-      'Las etiquetas canónicas ayudan a evitar penalizaciones por contenido duplicado al indicar la versión preferida de una página.',
+      'Canonical tags help prevent penalties for duplicate content by indicating the preferred version of a page.',
     tips: [
-      'Implementa etiquetas canónicas en todas las páginas',
-      'Asegúrate de que apunten a la URL correcta',
-      'Mantén consistencia en la estructura de URLs',
+      'Implement canonical tags on all pages',
+      'Ensure they point to the correct URL',
+      'Maintain consistency in URL structure',
     ],
   },
   {
     icon: Link2,
-    title: 'Implementación Correcta',
-    description:
-      'Una implementación adecuada de las etiquetas canónicas es crucial para su efectividad.',
+    title: 'Correct Implementation',
+    description: 'Proper implementation of canonical tags is crucial for their effectiveness.',
     tips: [
-      'Usa URLs absolutas en las etiquetas canónicas',
-      'Verifica que las URLs canónicas sean accesibles',
-      'Evita cadenas de redirección en URLs canónicas',
+      'Use absolute URLs in canonical tags',
+      'Verify that canonical URLs are accessible',
+      'Avoid redirect chains in canonical URLs',
     ],
   },
   {
     icon: Search,
-    title: 'Optimización del Rastreo',
-    description:
-      'Las etiquetas canónicas ayudan a los motores de búsqueda a rastrear e indexar tu sitio de manera más eficiente.',
+    title: 'Crawl Optimization',
+    description: 'Canonical tags help search engines crawl and index your site more efficiently.',
     tips: [
-      'Consolida el valor SEO en la URL canónica',
-      'Mejora la eficiencia del presupuesto de rastreo',
-      'Facilita la indexación de contenido importante',
+      'Consolidate SEO value on the canonical URL',
+      'Improve crawl budget efficiency',
+      'Facilitate indexing of important content',
     ],
   },
   {
     icon: AlertTriangle,
-    title: 'Errores Comunes a Evitar',
+    title: 'Common Errors to Avoid',
     description:
-      'Conocer y evitar los errores comunes en la implementación de canonicalización es esencial.',
+      'Knowing and avoiding common errors in canonicalization implementation is essential.',
     tips: [
-      'No uses múltiples etiquetas canónicas',
-      'Evita canonicalizar a páginas de error',
-      'No crees bucles de canonicalización',
+      'Do not use multiple canonical labels',
+      'Avoid canonicalize error pages',
+      'Do not create canonicalization loops',
     ],
   },
 ];

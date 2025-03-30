@@ -10,17 +10,18 @@ interface HreflangData {
 }
 
 const hreflangStatusData: HreflangData[] = [
-  { name: 'Implementación correcta', value: 75, color: '#4CAF50' },
-  { name: 'Conflictos detectados', value: 15, color: '#FFA726' },
-  { name: 'Sin implementación', value: 10, color: '#EF5350' },
+  { name: 'Correct Implementation', value: 75, color: '#4CAF50' },
+  { name: 'Conflicts Detected', value: 15, color: '#FFA726' },
+  { name: 'Not Implemented', value: 10, color: '#EF5350' },
 ];
 
 const languageMetrics = [
-  { language: 'Español (es)', pages: 85, coverage: 95 },
-  { language: 'Inglés (en)', pages: 82, coverage: 92 },
-  { language: 'Francés (fr)', pages: 78, coverage: 88 },
-  { language: 'Alemán (de)', pages: 75, coverage: 85 },
+  { language: 'Spanish (es)', pages: 85, coverage: 95 },
+  { language: 'English (en)', pages: 82, coverage: 92 },
+  { language: 'French (fr)', pages: 78, coverage: 88 },
+  { language: 'German (de)', pages: 75, coverage: 85 },
 ];
+
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -41,7 +42,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: data.color }} />
         <span className="font-medium">{data.name}</span>
       </div>
-      <p className="text-sm text-default-500">Páginas: {data.value}%</p>
+      <p className="text-sm text-default-500">Pages: {data.value}%</p>
     </div>
   );
 };
@@ -53,7 +54,7 @@ export const HreflangOverviewSection = memo(function HreflangOverviewSection() {
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Estado de Implementación</h3>
+            <h3 className="text-lg font-medium mb-4">Implementation status</h3>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -94,7 +95,7 @@ export const HreflangOverviewSection = memo(function HreflangOverviewSection() {
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Cobertura por Idioma</h3>
+            <h3 className="text-lg font-medium mb-4">Language coverage</h3>
             <div className="space-y-6">
               {languageMetrics.map((lang, index) => (
                 <div key={index} className="space-y-2">
@@ -111,7 +112,7 @@ export const HreflangOverviewSection = memo(function HreflangOverviewSection() {
                       indicator: 'bg-primary',
                     }}
                   />
-                  <p className="text-xs text-default-500">{lang.pages} páginas implementadas</p>
+                  <p className="text-xs text-default-500">{lang.pages} implemented pages</p>
                 </div>
               ))}
             </div>

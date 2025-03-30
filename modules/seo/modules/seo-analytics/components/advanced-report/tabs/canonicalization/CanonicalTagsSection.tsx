@@ -19,15 +19,15 @@ interface CanonicalData {
 }
 
 const canonicalDistributionData = [
-  { label: 'Sin etiquetas rel="canonical"', value: 35, color: '#EF5350' },
-  { label: 'Con etiquetas self-canonical', value: 45, color: '#4CAF50' },
-  { label: 'Canonical a otra página', value: 20, color: '#2196F3' },
+  { label: 'Without rel="canonical" tags', value: 35, color: '#EF5350' },
+  { label: 'With self-canonical tags', value: 45, color: '#4CAF50' },
+  { label: 'Canonical to another page', value: 20, color: '#2196F3' },
 ];
 
 const canonicalStatusData: CanonicalData[] = [
-  { name: 'Implementación correcta', value: 75, color: '#4CAF50' },
-  { name: 'Etiquetas duplicadas', value: 15, color: '#FFA726' },
-  { name: 'Etiquetas faltantes', value: 10, color: '#EF5350' },
+  { name: 'Correct implementation', value: 75, color: '#4CAF50' },
+  { name: 'Duplicate tags', value: 15, color: '#FFA726' },
+  { name: 'Missing tags', value: 10, color: '#EF5350' },
 ];
 
 interface CustomTooltipProps {
@@ -49,16 +49,16 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: data.color }} />
         <span className="font-medium">{data.name}</span>
       </div>
-      <p className="text-sm text-default-500">Páginas: {data.value}%</p>
+      <p className="text-sm text-default-500">Pages: {data.value}%</p>
     </div>
   );
 };
 
 const pagesWithIssues = [
-  { url: '/products/item-1', issue: 'Etiquetas canónicas duplicadas' },
-  { url: '/blog/post-1', issue: 'Falta etiqueta canónica' },
-  { url: '/services/web-design', issue: 'Canonical inválido' },
-  { url: '/about/team', issue: 'Etiquetas canónicas duplicadas' },
+  { url: '/products/item-1', issue: 'Duplicate canonical tags' },
+  { url: '/blog/post-1', issue: 'Missing canonical tag' },
+  { url: '/services/web-design', issue: 'Invalid canonical' },
+  { url: '/about/team', issue: 'Duplicate canonical tags' },
 ];
 
 export const CanonicalTagsSection = memo(function CanonicalTagsSection() {
@@ -67,7 +67,7 @@ export const CanonicalTagsSection = memo(function CanonicalTagsSection() {
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Distribución de Etiquetas Canónicas</h3>
+            <h3 className="text-lg font-medium mb-4">Canonical Tags Distributio</h3>
             <RootHorizontalBarChart
               data={canonicalDistributionData}
               height={180}
@@ -81,7 +81,7 @@ export const CanonicalTagsSection = memo(function CanonicalTagsSection() {
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Estado de Implementación</h3>
+            <h3 className="text-lg font-medium mb-4">Implementation Status</h3>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -122,16 +122,16 @@ export const CanonicalTagsSection = memo(function CanonicalTagsSection() {
       <div className="lg:col-span-12">
         <RootCard>
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Páginas con Problemas</h3>
+            <h3 className="text-lg font-medium mb-4">Pages with Issues</h3>
             <Table
-              aria-label="Páginas con problemas de canonicalización"
+              aria-label="Pages with canonicalization issues"
               classNames={{
                 wrapper: 'shadow-none',
               }}
             >
               <TableHeader>
                 <TableColumn>URL</TableColumn>
-                <TableColumn>PROBLEMA</TableColumn>
+                <TableColumn>ISSUE</TableColumn>
               </TableHeader>
               <TableBody>
                 {pagesWithIssues.map((page, index) => (

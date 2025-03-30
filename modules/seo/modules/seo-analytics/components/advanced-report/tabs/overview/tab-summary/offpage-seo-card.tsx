@@ -38,7 +38,7 @@ const indicators: OffPageIndicator[] = [
     color: 'text-warning-500',
   },
   {
-    label: 'Menciones sin enlaces',
+    label: 'Mentions without links',
     value: '342',
     color: 'text-danger-500',
   },
@@ -118,8 +118,8 @@ export const OffPageSeoCard = memo(function OffPageSeoCard() {
         <div className="space-y-4">
           <Divider className="mb-4" />
           <div>
-            <h4 className="text-base font-semibold mb-2">Calidad de Backlinks</h4>
-            <p className="text-sm text-default-500 mb-4">Distribución por nivel de calidad</p>
+            <h4 className="text-base font-semibold mb-2">Backlinks quality</h4>
+            <p className="text-sm text-default-500 mb-4">Distribution by quality level</p>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
@@ -149,7 +149,7 @@ export const OffPageSeoCard = memo(function OffPageSeoCard() {
                     style={{ backgroundColor: entry.color }}
                   />
                   <span className="text-xs text-default-600">
-                    Calidad {entry.name} ({entry.value})
+                    Quality {entry.name} ({entry.value})
                   </span>
                 </div>
               ))}

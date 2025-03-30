@@ -12,18 +12,18 @@ interface AmpIndicator {
 }
 
 const ampCompatibilityData = [
-  { label: 'Páginas con AMP', value: 65, color: '#4CAF50' },
-  { label: 'Páginas sin AMP', value: 35, color: '#EF5350' },
+  { label: 'Pages AMP', value: 65, color: '#4CAF50' },
+  { label: 'Smalling AMP', value: 35, color: '#EF5350' },
 ];
 
 const indicators: AmpIndicator[] = [
   {
-    label: 'Enlaces AMP válidos',
+    label: 'Valid AMP links',
     value: '92%',
     color: 'text-success-500',
   },
   {
-    label: 'Errores AMP detectados',
+    label: 'AMP errors detected',
     value: '15',
     color: 'text-warning-500',
   },
@@ -54,7 +54,7 @@ export const TechnicalSeoCard = memo(function TechnicalSeoCard() {
             onPress={handleViewDetails}
             className="min-w-[120px]"
           >
-            Ir a AMP Links
+          Ir a AMP Links
           </Button>
         </div>
 

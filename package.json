@@ -19,6 +19,7 @@
     "@heroui/react": "2.6.12",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-slot": "^1.0.2",
+    "@types/jspdf": "^2.0.0",
     "axios": "^1.7.9",
     "chart.js": "^4.4.8",
     "class-variance-authority": "^0.7.0",
