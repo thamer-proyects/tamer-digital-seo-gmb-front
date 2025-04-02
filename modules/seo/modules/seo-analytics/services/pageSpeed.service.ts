@@ -29,6 +29,7 @@ export const fetchSpeedResults = async (inputUrl: string, strategy: 'mobile' | '
     );
 
     return responses.map((response) => {
+      
       const { lighthouseResult, loadingExperience } = response.data;
       const { categories, audits } = lighthouseResult;
 
