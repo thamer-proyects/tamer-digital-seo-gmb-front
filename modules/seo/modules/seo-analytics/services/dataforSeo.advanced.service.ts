@@ -1,12 +1,12 @@
 import axios from 'axios';
 import AdvancedReportData from '../types/advanced/advancedReport';
-import config from '@/config/config';
+//import config from '@/config/config';
 
 export const getAdvancedSeoReport = async (targetUrl: string): Promise<AdvancedReportData> => {
   try {
     console.log('Requesting report for:', targetUrl);
     const response = await axios.post(
-      config.apiUrl ??
+    //  config.apiUrl ??
       'http://localhost:8000/seo/advanced-report',
       { targetUrl },
       {

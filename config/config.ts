@@ -9,10 +9,14 @@ class Config {
   public readonly dataForSeoMaxPages: number | undefined;
   public readonly dataForSeoPollInterval: number | undefined;
   public readonly dataForSeoMaxAttempts: number | undefined;
+  public readonly dataIApiUrl: string | undefined;
+  public readonly datakeyIA: string | undefined;
 
   private constructor() {
     this.pagesSpeedInsightsApiKey = process.env.NEXT_PUBLIC_PAGES_SPEED_INSIGHTS_API_KEY;
     this.pagesSpeedInsightsApiUrl = process.env.NEXT_PUBLIC_PAGES_SPEED_INSIGHTS_API_URL;
+    this.dataIApiUrl = process.env.NEXT_PUBLIC_DATA_IA_API_URL;
+    this.datakeyIA = process.env.NEXT_PUBLIC_DATA_KEY_IA;
     this.apiUrl = process.env.NEXT_PUBLIC_API_URL;
     this.dataForSeoLogin = process.env.NEXT_PUBLIC_DATAFORSEO_LOGIN ?? '';
     this.dataForSeoPassword = process.env.NEXT_PUBLIC_DATAFORSEO_PASSWORD ?? '';
