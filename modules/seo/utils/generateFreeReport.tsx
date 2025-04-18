@@ -226,44 +226,44 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     // Fondo blanco base
     pdf.setFillColor("#FFFFFF")
     pdf.rect(0, 0, pageWidth, pageHeight, "F")
-  
+
     // Configuración de colores principales
     const primaryColor = "#0F2C52" // Azul oscuro
     const accentColor = "#3164AD" // Azul medio
     const lightGray = "#F6F6F8" // Gris claro para fondos
     const textColor = "#333333" // Color texto principal
-  
+
     // Añadir logo en la esquina superior izquierda
     try {
       const logoWidth = 40
       const logoHeight = 40
       const logoX = 20
       const logoY = 20
-  
+
       if (pageAnalysis.companyInfo?.logo) {
         pdf.addImage(pageAnalysis.companyInfo.logo, "PNG", logoX, logoY, logoWidth, logoHeight)
       } else {
         // Logo por defecto con círculos de colores
         const ctx = pdf.context2d
-        
+
         // Primer círculo (naranja)
         ctx.beginPath()
-        ctx.arc(logoX + 15, logoY + 20, 15, 0, Math.PI * 2)
+        ctx.arc(logoX + 15, logoY + 20, 15, 0, Math.PI * 2, false)
         ctx.fillStyle = "#F97316"
         ctx.fill()
-        
+
         // Segundo círculo (azul)
         ctx.beginPath()
-        ctx.arc(logoX + 25, logoY + 20, 15, 0, Math.PI * 2)
+        ctx.arc(logoX + 25, logoY + 20, 15, 0, Math.PI * 2, false)
         ctx.fillStyle = "#3164AD"
         ctx.fill()
-        
+
         // Tercer círculo (verde)
         ctx.beginPath()
-        ctx.arc(logoX + 20, logoY + 10, 12, 0, Math.PI * 2)
+        ctx.arc(logoX + 20, logoY + 10, 12, 0, Math.PI * 2, false)
         ctx.fillStyle = "#16A34A"
         ctx.fill()
-        
+
         // Texto "Report" junto al logo
         pdf.setFontSize(16)
         pdf.setTextColor("#000000")
@@ -273,13 +273,13 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     } catch (error) {
       console.error("Error loading logo:", error)
     }
-  
+
     // Información de encabezado (derecha)
     const headerInfoX = pageWidth - 20
     pdf.setFontSize(10)
     pdf.setTextColor("#666666")
     pdf.setFont("helvetica", "normal")
-    
+
     // Añadir fecha actual
     const date = new Date().toLocaleDateString("es-ES", {
       year: "numeric",
@@ -287,11 +287,11 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
       day: "numeric"
     })
     pdf.text(date, headerInfoX, 25, { align: "right" })
-    
+
     // Añadir ID de informe
     const reportId = `REF-${Date.now().toString().substring(6)}`
     pdf.text(reportId, headerInfoX, 35, { align: "right" })
-  
+
     // Gran letra de marca de agua de fondo (estilo imagen 2)
     const ctx = pdf.context2d
     ctx.save()
@@ -301,166 +301,166 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     ctx.textAlign = "center"
     ctx.fillText("S", pageWidth / 2, pageHeight / 2 + 100)
     ctx.restore()
-  
+
     // Título principal grande
     const mainY = 150
-    
+
     // Subtítulo
     pdf.setFontSize(16)
     pdf.setTextColor(accentColor)
     pdf.setFont("helvetica", "normal")
     pdf.text("Informes para SEO", pageWidth / 2, mainY - 20, { align: "center" })
-    
+
     // Título principal
     pdf.setFontSize(45)
     pdf.setTextColor(primaryColor)
     pdf.setFont("helvetica", "bold")
-    
+
     const mainTitle = "SEO reports"
     const secondLine = "to showcase"
-    
+
     pdf.text(mainTitle, pageWidth / 2, mainY, { align: "center" })
     pdf.text(secondLine, pageWidth / 2, mainY + 45, { align: "center" })
-  
+
     // Párrafo descriptivo con alineación centrada
     pdf.setFontSize(12)
     pdf.setTextColor("#666666")
     pdf.setFont("helvetica", "normal")
-    
-    const description = 
-      "Análisis completo del rendimiento de su sitio web, optimización SEO, " + 
+
+    const description =
+      "Análisis completo del rendimiento de su sitio web, optimización SEO, " +
       "accesibilidad y mejores prácticas con recomendaciones específicas para mejorar " +
       "su presencia online y posicionamiento en buscadores."
-    
+
     const descLines = pdf.splitTextToSize(description, pageWidth - 200)
     pdf.text(descLines, pageWidth / 2, mainY + 80, { align: "center" })
-  
+
     // URL analizada dentro de un recuadro suave
     const urlBoxY = mainY + 130
-    
+
     // Recuadro suave
     pdf.setFillColor(lightGray)
     pdf.setDrawColor("#FFFFFF") // Sin borde
     pdf.roundedRect(pageWidth / 2 - 150, urlBoxY, 300, 60, 3, 3, "F")
-    
+
     // Etiqueta y URL
     pdf.setFontSize(10)
     pdf.setTextColor("#999999")
     pdf.setFont("helvetica", "normal")
     pdf.text("SITIO ANALIZADO:", pageWidth / 2, urlBoxY + 20, { align: "center" })
-    
+
     pdf.setFontSize(14)
     pdf.setTextColor(textColor)
     pdf.setFont("helvetica", "normal")
     const urlLines = pdf.splitTextToSize(pageAnalysis.url, 280)
     pdf.text(urlLines, pageWidth / 2, urlBoxY + 35, { align: "center" })
-  
+
     // Información de pie de página
     const footerY = pageHeight - 80
-    
+
     // Tres columnas de información
-    const colWidth = (pageWidth - 100) / 3
-    
+   // const colWidth = (pageWidth - 100) / 3
+
     // Primera columna: Tipo de fuente
     pdf.setFontSize(12)
     pdf.setTextColor(accentColor)
     pdf.setFont("helvetica", "bold")
     pdf.text("Open Sans", 50, footerY)
-    
+
     pdf.setFontSize(10)
     pdf.setTextColor("#666666")
     pdf.setFont("helvetica", "normal")
     pdf.text("Elegant et stunnant. Utilisées", 50, footerY + 15)
     pdf.text("pour tous les versions.", 50, footerY + 25)
-    
+
     // Segunda columna: Retroalimentación de marca
     pdf.setFontSize(12)
     pdf.setTextColor(accentColor)
     pdf.setFont("helvetica", "bold")
     pdf.text("Brands feedback", pageWidth / 2, footerY)
-    
+
     pdf.setFontSize(10)
     pdf.setTextColor("#666666")
     pdf.setFont("helvetica", "normal")
     pdf.text("Instashout vitipsum cum", pageWidth / 2, footerY + 15)
     pdf.text("mulfluer ipsum etams cumba", pageWidth / 2, footerY + 25)
-    
+
     // Tercera columna: Contactos
     pdf.setFontSize(12)
     pdf.setTextColor(accentColor)
     pdf.setFont("helvetica", "bold")
     pdf.text("Contactos", pageWidth - 50, footerY)
-    
+
     pdf.setFontSize(10)
     pdf.setTextColor("#666666")
     pdf.setFont("helvetica", "normal")
     pdf.text("Web host or problem, coordia", pageWidth - 50, footerY + 15)
     pdf.text("norevorp info@comp.com", pageWidth - 50, footerY + 25)
-  
+
     // Número de página y firma de página
     pdf.setFontSize(10)
     pdf.setTextColor("#999999")
     pdf.text(`Suite 21`, 50, pageHeight - 30)
     pdf.text(`362lavem oftreward Polaris`, 50, pageHeight - 20)
     pdf.text(`+032 355 627899`, 50, pageHeight - 10)
-  
+
     // Pasar a la siguiente página
     pdf.addPage()
     pageNumber++
   }
-  
+
   // Mantener la función drawHeader como estaba, pero con colores actualizados
   const drawHeader = () => {
     // Fondo blanco para el encabezado
     pdf.setFillColor("#FFFFFF")
     pdf.rect(0, 0, pageWidth, 20, "F")
-  
+
     // Línea decorativa en la parte inferior del encabezado
     pdf.setDrawColor("#E2E8F0")
     pdf.setLineWidth(0.5)
     pdf.line(0, 20, pageWidth, 20)
-  
+
     // Logo simplificado
     try {
       const logoWidth = 15
       const logoHeight = 15
       const logoX = 10
       const logoY = 2.5
-  
+
       if (pageAnalysis.companyInfo?.logo) {
         pdf.addImage(pageAnalysis.companyInfo.logo, "PNG", logoX, logoY, logoWidth, logoHeight)
       } else {
         // Logo simplificado
         const ctx = pdf.context2d
-        
+
         // Círculo principal
         ctx.beginPath()
-        ctx.arc(logoX + logoWidth / 2, logoY + logoHeight / 2, logoWidth / 2, 0, Math.PI * 2)
+        ctx.arc(logoX + logoWidth / 2, logoY + logoHeight / 2, logoWidth / 2, 0, Math.PI * 2, false)
         ctx.fillStyle = "#3164AD"
         ctx.fill()
-        
+
         // Círculo secundario
         ctx.beginPath()
-        ctx.arc(logoX + logoWidth / 2 + 3, logoY + logoHeight / 2, logoWidth / 2 - 3, 0, Math.PI * 2)
+        ctx.arc(logoX + logoWidth / 2 + 3, logoY + logoHeight / 2, logoWidth / 2 - 3, 0, Math.PI * 2, false)
         ctx.fillStyle = "#F97316"
         ctx.fill()
       }
     } catch (error) {
       console.error("Error loading logo in header:", error)
     }
-  
+
     // Título del reporte
     pdf.setTextColor("#0F2C52")
     pdf.setFontSize(12)
     pdf.setFont("helvetica", "bold")
     pdf.text("Website Performance Report", 30, 13)
-  
+
     // URL analizada
     pdf.setFontSize(8)
     pdf.setFont("helvetica", "normal")
     pdf.setTextColor("#666666")
     pdf.text(`URL: ${truncateText(pageAnalysis.url, 60)}`, 30, 18)
-  
+
     // Fecha de generación
     const date = new Date().toLocaleDateString()
     pdf.text(`Generated: ${date}`, pageWidth - 15, 13, { align: "right" })
