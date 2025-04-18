@@ -197,216 +197,175 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     pdf.text(analysisLines, 20, currentY + 4)
     currentY += analysisLines.length * 5 + 8
 
-    // Dibujar las recomendaciones
-    if (analysisData.recommendations && analysisData.recommendations.length > 0) {
-      pdf.setFillColor(colors.lightBg)
-      pdf.rect(15, currentY, pageWidth - 30, 8, "F")
-      pdf.setTextColor(colors.primary)
-      pdf.setFontSize(10)
-      pdf.setFont("helvetica", "bold")
-      pdf.text("Recomendaciones IA:", 20, currentY + 6)
-      currentY += 12
-
-      pdf.setFont("helvetica", "normal")
-      pdf.setTextColor(colors.text)
-
-      analysisData.recommendations.forEach((rec, index) => {
-        const recLines = pdf.splitTextToSize(`${index + 1}. ${rec}`, pageWidth - 45)
-        checkSpace(recLines.length * 5 + 4) // Verificar espacio para cada recomendación
-        pdf.text(recLines, 25, currentY + 4)
-        currentY += recLines.length * 5 + 4
-      })
-    }
-
+    // Ya no mostramos recomendaciones aquí, ya que ahora se mostrarán en la sección general de recomendaciones
     currentY += 10 // Espacio adicional después de la sección
   }
 
-  // Nueva función para dibujar la portada (diseño mejorado)
+  // Implementar la nueva función drawCoverPage() con el diseño profesional
   const drawCoverPage = () => {
-    // Fondo blanco base
+    // Asegurarnos de que estamos en la primera página
+    pdf.setPage(1)
+
+    // Limpiar completamente la página (fondo blanco)
     pdf.setFillColor("#FFFFFF")
     pdf.rect(0, 0, pageWidth, pageHeight, "F")
 
-    // Configuración de colores principales
-    const primaryColor = "#0F2C52" // Azul oscuro
-    const accentColor = "#3164AD" // Azul medio
-    const lightGray = "#F6F6F8" // Gris claro para fondos
-    const textColor = "#333333" // Color texto principal
-
-    // Añadir logo en la esquina superior izquierda
+    // Company logo
     try {
-      const logoWidth = 40
-      const logoHeight = 40
-      const logoX = 20
-      const logoY = 20
+      const logoWidth = 60
+      const logoHeight = 60
+      const logoX = pageWidth / 2 - logoWidth / 2
+      const logoY = 35
 
+      // Use the uploaded logo if available
       if (pageAnalysis.companyInfo?.logo) {
         pdf.addImage(pageAnalysis.companyInfo.logo, "PNG", logoX, logoY, logoWidth, logoHeight)
       } else {
-        // Logo por defecto con círculos de colores
-        const ctx = pdf.context2d
-
-        // Primer círculo (naranja)
-        ctx.beginPath()
-        ctx.arc(logoX + 15, logoY + 20, 15, 0, Math.PI * 2, false)
-        ctx.fillStyle = "#F97316"
-        ctx.fill()
-
-        // Segundo círculo (azul)
-        ctx.beginPath()
-        ctx.arc(logoX + 25, logoY + 20, 15, 0, Math.PI * 2, false)
-        ctx.fillStyle = "#3164AD"
-        ctx.fill()
-
-        // Tercer círculo (verde)
-        ctx.beginPath()
-        ctx.arc(logoX + 20, logoY + 10, 12, 0, Math.PI * 2, false)
-        ctx.fillStyle = "#16A34A"
-        ctx.fill()
-
-        // Texto "Report" junto al logo
-        pdf.setFontSize(16)
-        pdf.setTextColor("#000000")
-        pdf.setFont("helvetica", "bold")
-        pdf.text("Report", logoX + 45, logoY + 25)
+        // Fallback to default logo
+        pdf.addImage(
+          "https://pplx-res.cloudinary.com/image/upload/v1743881513/user_uploads/kxfXyhGFItaKuNC/logo.jpg",
+          "PNG",
+          logoX,
+          logoY,
+          logoWidth,
+          logoHeight,
+        )
       }
     } catch (error) {
       console.error("Error loading logo:", error)
+
+      // Backup arrows if logo fails to load
+      pdf.setFillColor("#1E88E5")
+
+      // Small arrow
+      pdf.setLineWidth(0.1)
+      const arrow1X = pageWidth / 2 - 15
+      const arrow1Y = 60
+      pdf.triangle(arrow1X, arrow1Y, arrow1X - 10, arrow1Y + 15, arrow1X + 10, arrow1Y + 15, "F")
+      pdf.rect(arrow1X - 5, arrow1Y + 15, 10, 15, "F")
+
+      // Large arrow
+      const arrow2X = pageWidth / 2 + 15
+      const arrow2Y = 50
+      pdf.triangle(arrow2X, arrow2Y, arrow2X - 15, arrow2Y + 20, arrow2X + 15, arrow2Y + 20, "F")
+      pdf.rect(arrow2X - 7, arrow2Y + 20, 14, 20, "F")
     }
 
-    // Información de encabezado (derecha)
-    const headerInfoX = pageWidth - 20
-    pdf.setFontSize(10)
-    pdf.setTextColor("#666666")
-    pdf.setFont("helvetica", "normal")
-
-    // Añadir fecha actual
-    const date = new Date().toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    })
-    pdf.text(date, headerInfoX, 25, { align: "right" })
-
-    // Añadir ID de informe
-    const reportId = `REF-${Date.now().toString().substring(6)}`
-    pdf.text(reportId, headerInfoX, 35, { align: "right" })
-
-    // Gran letra de marca de agua de fondo (estilo imagen 2)
-    const ctx = pdf.context2d
-    ctx.save()
-    ctx.globalAlpha = 0.03
-    ctx.font = "bold 400px helvetica"
-    ctx.fillStyle = accentColor
-    ctx.textAlign = "center"
-    ctx.fillText("S", pageWidth / 2, pageHeight / 2 + 100)
-    ctx.restore()
-
-    // Título principal grande
-    const mainY = 150
-
-    // Subtítulo
-    pdf.setFontSize(16)
-    pdf.setTextColor(accentColor)
-    pdf.setFont("helvetica", "normal")
-    pdf.text("Informes para SEO", pageWidth / 2, mainY - 20, { align: "center" })
-
-    // Título principal
-    pdf.setFontSize(45)
-    pdf.setTextColor(primaryColor)
+    // Company name - use the provided name or default
+    const companyName = pageAnalysis.companyInfo?.name || "Tamer Digital"
+    pdf.setFontSize(24)
+    pdf.setTextColor("#333333")
     pdf.setFont("helvetica", "bold")
+    pdf.text(companyName, pageWidth / 2, 110, { align: "center" })
 
-    const mainTitle = "SEO reports"
-    const secondLine = "to showcase"
-
-    pdf.text(mainTitle, pageWidth / 2, mainY, { align: "center" })
-    pdf.text(secondLine, pageWidth / 2, mainY + 45, { align: "center" })
-
-    // Párrafo descriptivo con alineación centrada
+    // Slogan
     pdf.setFontSize(12)
     pdf.setTextColor("#666666")
-    pdf.setFont("helvetica", "normal")
+    pdf.setFont("helvetica", "italic")
+    pdf.text("Web Optimization and SEO Specialists", pageWidth / 2, 122, { align: "center" })
 
-    const description =
-      "Análisis completo del rendimiento de su sitio web, optimización SEO, " +
-      "accesibilidad y mejores prácticas con recomendaciones específicas para mejorar " +
-      "su presencia online y posicionamiento en buscadores."
+    // Decorative line
+    pdf.setDrawColor("#3498DB")
+    pdf.setLineWidth(1)
+    pdf.line(pageWidth / 2 - 60, 132, pageWidth / 2 + 60, 132)
 
-    const descLines = pdf.splitTextToSize(description, pageWidth - 200)
-    pdf.text(descLines, pageWidth / 2, mainY + 80, { align: "center" })
+    // SEO decorative icons
+    const drawSeoIcon = (x: number, y: number, size: number) => {
+      pdf.setDrawColor("#3498DB")
+      pdf.setLineWidth(0.7)
+      pdf.setFillColor("#F5F9FD")
 
-    // URL analizada dentro de un recuadro suave
-    const urlBoxY = mainY + 130
+      // Simple bar chart
+      pdf.rect(x, y, size / 4, size / 2, "FD")
+      pdf.rect(x + size / 3, y - size / 4, size / 4, (size * 3) / 4, "FD")
+      pdf.rect(x + (size * 2) / 3, y - size / 2, size / 4, size, "FD")
 
-    // Recuadro suave
-    pdf.setFillColor(lightGray)
-    pdf.setDrawColor("#FFFFFF") // Sin borde
-    pdf.roundedRect(pageWidth / 2 - 150, urlBoxY, 300, 60, 3, 3, "F")
+      // Trend line
+      pdf.setDrawColor("#0CCE6B")
+      pdf.setLineWidth(1)
+      pdf.line(x - size / 10, y + size / 3, x + size / 4, y)
+      pdf.line(x + size / 4, y, x + size / 2, y + size / 6)
+      pdf.line(x + size / 2, y + size / 6, x + (size * 3) / 4, y - size / 4)
+      pdf.line(x + (size * 3) / 4, y - size / 4, x + size + size / 10, y - size / 2)
+    }
 
-    // Etiqueta y URL
-    pdf.setFontSize(10)
-    pdf.setTextColor("#999999")
-    pdf.setFont("helvetica", "normal")
-    pdf.text("SITIO ANALIZADO:", pageWidth / 2, urlBoxY + 20, { align: "center" })
+    // Draw decorative icons
+    drawSeoIcon(pageWidth / 4, 155, 20)
+    drawSeoIcon((pageWidth * 3) / 4, 155, 20)
+
+    // Report title
+    pdf.setFillColor("#0D47A1")
+    pdf.roundedRect(pageWidth / 2 - 100, 175, 200, 40, 3, 3, "F")
+
+    pdf.setFontSize(22)
+    pdf.setTextColor("#FFFFFF")
+    pdf.setFont("helvetica", "bold")
+    pdf.text("WEB ANALYSIS", pageWidth / 2, 195, { align: "center" })
 
     pdf.setFontSize(14)
-    pdf.setTextColor(textColor)
+    pdf.text("Performance Report", pageWidth / 2, 207, { align: "center" })
+
+    // Analyzed URL with decorative frame
+    pdf.setFillColor("#F5F9FD")
+    pdf.setDrawColor("#3498DB")
+    pdf.setLineWidth(0.5)
+    pdf.roundedRect(pageWidth / 2 - 90, 225, 180, 30, 2, 2, "FD")
+
+    pdf.setFontSize(10)
+    pdf.setTextColor("#0D47A1")
     pdf.setFont("helvetica", "normal")
-    const urlLines = pdf.splitTextToSize(pageAnalysis.url, 280)
-    pdf.text(urlLines, pageWidth / 2, urlBoxY + 35, { align: "center" })
+    pdf.text("ANALYZED URL:", pageWidth / 2, 235, { align: "center" })
 
-    // Información de pie de página
-    const footerY = pageHeight - 80
-
-    // Tres columnas de información
-   // const colWidth = (pageWidth - 100) / 3
-
-    // Primera columna: Tipo de fuente
-    pdf.setFontSize(12)
-    pdf.setTextColor(accentColor)
+    pdf.setFontSize(11)
+    pdf.setTextColor("#333333")
     pdf.setFont("helvetica", "bold")
-    pdf.text("Open Sans", 50, footerY)
+    const urlLines = pdf.splitTextToSize(pageAnalysis.url, 160)
+    pdf.text(urlLines, pageWidth / 2, 245, { align: "center" })
+
+    // Generation date
+    const date = new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
 
     pdf.setFontSize(10)
     pdf.setTextColor("#666666")
+    pdf.setFont("helvetica", "italic")
+    pdf.text(`Generated on: ${date}`, pageWidth / 2, 265, { align: "center" })
+
+    // Contact information box - use provided contact info or default
+    pdf.setFillColor("#F5F9FD")
+    pdf.setDrawColor("#E0E0E0")
+    pdf.setLineWidth(0.5)
+    pdf.roundedRect(pageWidth / 2 - 75, pageHeight - 80, 150, 50, 3, 3, "FD")
+
+    pdf.setFontSize(9)
+    pdf.setTextColor("#333333")
     pdf.setFont("helvetica", "normal")
-    pdf.text("Elegant et stunnant. Utilisées", 50, footerY + 15)
-    pdf.text("pour tous les versions.", 50, footerY + 25)
+    pdf.text("CONTACT", pageWidth / 2, pageHeight - 70, { align: "center" })
+    pdf.setTextColor("#555555")
 
-    // Segunda columna: Retroalimentación de marca
-    pdf.setFontSize(12)
-    pdf.setTextColor(accentColor)
-    pdf.setFont("helvetica", "bold")
-    pdf.text("Brands feedback", pageWidth / 2, footerY)
+    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com"
+    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890"
+    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com"
 
-    pdf.setFontSize(10)
-    pdf.setTextColor("#666666")
-    pdf.setFont("helvetica", "normal")
-    pdf.text("Instashout vitipsum cum", pageWidth / 2, footerY + 15)
-    pdf.text("mulfluer ipsum etams cumba", pageWidth / 2, footerY + 25)
+    pdf.text(`Email: ${email}`, pageWidth / 2, pageHeight - 60, { align: "center" })
+    pdf.text(`Phone: ${phone}`, pageWidth / 2, pageHeight - 50, { align: "center" })
+    pdf.text(`Web: ${website}`, pageWidth / 2, pageHeight - 40, { align: "center" })
 
-    // Tercera columna: Contactos
-    pdf.setFontSize(12)
-    pdf.setTextColor(accentColor)
-    pdf.setFont("helvetica", "bold")
-    pdf.text("Contactos", pageWidth - 50, footerY)
+    // Confidentiality notice
+    pdf.setFillColor("#EFEFEF")
+    pdf.rect(0, pageHeight - 20, pageWidth, 20, "F")
 
-    pdf.setFontSize(10)
-    pdf.setTextColor("#666666")
-    pdf.setFont("helvetica", "normal")
-    pdf.text("Web host or problem, coordia", pageWidth - 50, footerY + 15)
-    pdf.text("norevorp info@comp.com", pageWidth - 50, footerY + 25)
-
-    // Número de página y firma de página
-    pdf.setFontSize(10)
-    pdf.setTextColor("#999999")
-    pdf.text(`Suite 21`, 50, pageHeight - 30)
-    pdf.text(`362lavem oftreward Polaris`, 50, pageHeight - 20)
-    pdf.text(`+032 355 627899`, 50, pageHeight - 10)
-
-    // Pasar a la siguiente página
-    pdf.addPage()
-    pageNumber++
+    pdf.setFontSize(8)
+    pdf.setTextColor("#777777")
+    pdf.text(
+      "CONFIDENTIAL - This document contains proprietary and confidential information.",
+      pageWidth / 2,
+      pageHeight - 10,
+      { align: "center" },
+    )
   }
 
   // Mantener la función drawHeader como estaba, pero con colores actualizados
@@ -435,13 +394,17 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
 
         // Círculo principal
         ctx.beginPath()
-        ctx.arc(logoX + logoWidth / 2, logoY + logoHeight / 2, logoWidth / 2, 0, Math.PI * 2, false)
+        const pointX = pageWidth / 2 - 20 // Ajusta según sea necesario
+        const pointY = currentY + 10 // Ajusta según sea necesario
+        ctx.arc(pointX, pointY, 1.5, 0, Math.PI * 2, false)
         ctx.fillStyle = "#3164AD"
         ctx.fill()
 
         // Círculo secundario
         ctx.beginPath()
-        ctx.arc(logoX + logoWidth / 2 + 3, logoY + logoHeight / 2, logoWidth / 2 - 3, 0, Math.PI * 2, false)
+        const point2X = pageWidth / 2 + 20 // Ajusta según sea necesario
+        const point2Y = currentY + 10 // Ajusta según sea necesario
+        ctx.arc(point2X, point2Y, 1.5, 0, Math.PI * 2, false)
         ctx.fillStyle = "#F97316"
         ctx.fill()
       }
@@ -468,13 +431,17 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
 
   // Draw footer
   const drawFooter = (pageNum: number, totalPgs: number) => {
+    // No dibujar el pie de página en la portada (página 1)
+    if (pageNum === 1) return
+
     pdf.setDrawColor(colors.border)
     pdf.setLineWidth(0.5)
     pdf.line(10, pageHeight - 10, pageWidth - 10, pageHeight - 10)
     pdf.setTextColor(colors.lightText)
     pdf.setFontSize(8)
     pdf.text(pageAnalysis.companyInfo?.name || "SEO Analysis Report", 10, pageHeight - 5)
-    pdf.text(`Page ${pageNum} of ${totalPgs}`, pageWidth - 10, pageHeight - 5, { align: "right" })
+    // Ajustar la numeración para que la portada no cuente
+    pdf.text(`Page ${pageNum - 1} of ${totalPgs - 1}`, pageWidth - 10, pageHeight - 5, { align: "right" })
   }
 
   // Draw section header
@@ -507,23 +474,57 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     pdf.text("Recommendations for Improvement", 20, currentY + 6)
     currentY += 12
 
-    const recommendations = getRecommendations(category, score)
+    // Normalizar la categoría igual que en el resto del código
+    const normalizedCategory = category.replace(/-/g, "_").toUpperCase()
+
+    // Verificar si tenemos recomendaciones de la IA para esta categoría
+    let recommendations: string[] = []
+
+    if (aiAnalysisResult.recommendations && aiAnalysisResult.recommendations[normalizedCategory]) {
+      console.log(`Usando recomendaciones IA para categoría: ${normalizedCategory}`)
+      recommendations = aiAnalysisResult.recommendations[normalizedCategory]
+    } else {
+      console.log(`No se encontraron recomendaciones IA para: ${normalizedCategory}`)
+      console.log(`Categorías disponibles:`, Object.keys(aiAnalysisResult.recommendations || {}))
+
+      // Intentar buscar con variaciones de la clave
+      const alternativeKeys = Object.keys(aiAnalysisResult.recommendations || {}).filter(
+        (key) => key.includes(normalizedCategory) || normalizedCategory.includes(key),
+      )
+
+      if (alternativeKeys.length > 0) {
+        console.log(`Encontradas claves alternativas para recomendaciones: ${alternativeKeys.join(", ")}`)
+        const alternativeKey = alternativeKeys[0]
+        console.log(`Usando clave alternativa para recomendaciones: ${alternativeKey}`)
+        recommendations = aiAnalysisResult.recommendations[alternativeKey]
+      } else {
+        // Si no hay recomendaciones de IA, usar las predeterminadas
+        console.log(`Usando recomendaciones predeterminadas para: ${category}`)
+        recommendations = getRecommendations(category, score)
+      }
+    }
 
     pdf.setTextColor(colors.text)
     pdf.setFontSize(9)
     pdf.setFont("helvetica", "normal")
 
-    recommendations.forEach((recommendation, index) => {
-      checkSpace(10)
-      const bulletPoint = `${index + 1}. `
-      const textWidth = pageWidth - 50
-      const recommendationLines = pdf.splitTextToSize(recommendation, textWidth - pdf.getTextWidth(bulletPoint))
+    if (recommendations.length === 0) {
+      const noRecommendationText = "No specific recommendations available for this category."
+      pdf.text(noRecommendationText, 20, currentY + 4)
+      currentY += 10
+    } else {
+      recommendations.forEach((recommendation, index) => {
+        checkSpace(10)
+        const bulletPoint = `${index + 1}. `
+        const textWidth = pageWidth - 50
+        const recommendationLines = pdf.splitTextToSize(recommendation, textWidth - pdf.getTextWidth(bulletPoint))
 
-      pdf.text(bulletPoint, 20, currentY + 4)
-      pdf.text(recommendationLines, 20 + pdf.getTextWidth(bulletPoint), currentY + 4)
+        pdf.text(bulletPoint, 20, currentY + 4)
+        pdf.text(recommendationLines, 20 + pdf.getTextWidth(bulletPoint), currentY + 4)
 
-      currentY += recommendationLines.length * 5 + 3
-    })
+        currentY += recommendationLines.length * 5 + 3
+      })
+    }
 
     currentY += 5 // Add extra space after recommendations
   }
@@ -726,11 +727,26 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
 
     const metricsExplanation = [
       { abbr: "Initial", desc: "Initial load of the page when the browser begins processing." },
-      { abbr: "FCP", desc: "First Contentful Paint - Time until first content (text, image) is rendered." },
-      { abbr: "LCP", desc: "Largest Contentful Paint - Time until largest content element is visible." },
-      { abbr: "TTI", desc: "Time to Interactive - When the page becomes fully interactive for the user." },
-      { abbr: "CLS", desc: "Cumulative Layout Shift - Measures visual stability during page load (lower is better)." },
-      { abbr: "FID", desc: "First Input Delay - Time from first interaction to browser's response." },
+      {
+        abbr: "FCP",
+        desc: "First Contentful Paint - Time until first content (text, image) is rendered.",
+      },
+      {
+        abbr: "LCP",
+        desc: "Largest Contentful Paint - Time until largest content element is visible.",
+      },
+      {
+        abbr: "TTI",
+        desc: "Time to Interactive - When the page becomes fully interactive for the user.",
+      },
+      {
+        abbr: "CLS",
+        desc: "Cumulative Layout Shift - Measures visual stability during page load (lower is better).",
+      },
+      {
+        abbr: "FID",
+        desc: "First Input Delay - Time from first interaction to browser's response.",
+      },
       { abbr: "Overall", desc: "Combined score of all performance metrics." },
     ]
 
@@ -800,7 +816,7 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     // Draw full circle background (gray)
     ctx.beginPath()
     ctx.arc(x, currentY + radius, radius, 0, Math.PI * 2, false)
-    ctx.fillStyle = "#f1f5f9" // Light gray
+    ctx.fillStyle = "#f1f5f9"
     ctx.fill()
 
     // Create gradient for the progress arc
@@ -1080,10 +1096,16 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     pdf.text(contactInfo, pageWidth - 15, pageHeight - 10, { align: "right" })
   }
 
+  // Reemplazar la parte del código principal que genera el PDF
   // Start the PDF with cover page
   drawCoverPage()
 
-  // Regular content pages start here
+  // Añadir una nueva página para el contenido real
+  pdf.addPage()
+  pageNumber = 2
+  currentY = 25
+
+  // Dibujar el encabezado en la segunda página (primera página de contenido)
   drawHeader()
 
   // Title
@@ -1344,7 +1366,7 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     })
 
     // Añadir análisis de IA para SEO
-    drawAIAnalysis("seo", "desktop")
+    // drawAIAnalysis('seo', 'desktop');
   }
 
   // Add conclusion page
@@ -1355,7 +1377,7 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
   // Update total pages count
   totalPages = pageNumber
 
-  // Add footers to all pages
+  // Add footers to all pages EXCEPT the cover page (page 1)
   for (let i = 1; i <= totalPages; i++) {
     pdf.setPage(i)
     drawFooter(i, totalPages)
