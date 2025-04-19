@@ -70,61 +70,7 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
   }
 
   // Get improvement recommendations based on category and score
-  const getRecommendations = (category: string, score: number): string[] => {
-    const recommendations: string[] = []
 
-    // General recommendations based on score
-    if (score < 0.5) {
-      recommendations.push(
-        "Immediate action is required to improve this area as it significantly impacts your website performance.",
-      )
-    } else if (score < 0.9) {
-      recommendations.push(
-        "There's room for improvement in this area which could help enhance your website performance.",
-      )
-    }
-
-    // Category-specific recommendations
-    switch (category.toLowerCase()) {
-      case "performance":
-        if (score < 0.7) {
-          recommendations.push("Consider optimizing images and implementing lazy loading for better page load times.")
-          recommendations.push("Minimize and combine CSS/JavaScript files to reduce HTTP requests.")
-          recommendations.push(
-            "Implement browser caching for static resources to improve load times for returning visitors.",
-          )
-        }
-        break
-      case "accessibility":
-        if (score < 0.8) {
-          recommendations.push("Ensure all images have appropriate alt text for screen readers.")
-          recommendations.push("Improve color contrast for better readability.")
-          recommendations.push("Add proper ARIA labels to interactive elements.")
-        }
-        break
-      case "best practices":
-        if (score < 0.8) {
-          recommendations.push("Update any deprecated HTML, CSS, or JavaScript features.")
-          recommendations.push("Ensure secure connections with HTTPS implementation.")
-          recommendations.push("Fix any JavaScript errors that occur during page load.")
-        }
-        break
-      case "seo":
-        if (score < 0.8) {
-          recommendations.push("Optimize meta titles and descriptions for better click-through rates.")
-          recommendations.push("Ensure content is properly structured with appropriate heading tags (H1, H2, etc.).")
-          recommendations.push("Improve mobile responsiveness as it affects SEO rankings.")
-          recommendations.push("Create a comprehensive XML sitemap and submit it to search engines.")
-        }
-        break
-      default:
-        recommendations.push(
-          "Review the specific issues identified in this section and address them according to best practices.",
-        )
-    }
-
-    return recommendations
-  }
 
   // Check if we need a new page
   const checkSpace = (requiredHeight: number) => {

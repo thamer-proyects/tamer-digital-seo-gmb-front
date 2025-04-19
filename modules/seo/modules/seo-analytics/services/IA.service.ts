@@ -122,23 +122,19 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
   const categoryRecommendations: Record<string, string[]> = {};
   let fullAnalysis = "";
 
-  console.log("Categorías disponibles en pageAnalysis:", 
-    pageAnalysis.speed.mobile.map(cat => cat.category));
-
   for (const category of categories) {
     const categoryRecs = new Set<string>();
-
+    
     for (const deviceType of deviceTypes) {
       const prompt = generatePromptFromMetrics(pageAnalysis, category, deviceType as "mobile" | "desktop");
       
       if (!prompt) {
-        console.log(`No se pudo generar prompt para ${deviceType} ${category}`);
+        console.log(`Generando prompt para ${deviceType} ${category}`);
         continue;
       }
 
       const sectionKey = `${deviceType.toUpperCase()}_${normalizeCategory(category)}`;
-      console.log(`Generando análisis para sección: ${sectionKey}`);
-
+      
       try {
         const response = await fetchWithRetry(
           "http://145.223.126.1:10000/ai/openai/v1/api/generate",
@@ -157,50 +153,34 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
                 prompt: prompt,
               },
             }),
-          },
-          3 // máximo 3 reintentos
+          }
         );
 
         const aiAnalysis: AIAnalysisResponse = await response.json();
         
-        if (!aiAnalysis.data?.data?.content) {
-          throw new Error('Respuesta de IA vacía o inválida');
+        if (aiAnalysis.data?.data?.content) {
+          const parsedResponse = parseAIResponse(aiAnalysis.data.data.content);
+          sections[sectionKey] = parsedResponse;
+          fullAnalysis += `\n${aiAnalysis.data.data.content}`;
+          
+          parsedResponse.recommendations.forEach(rec => categoryRecs.add(rec));
         }
-
-        const parsedResponse = parseAIResponse(aiAnalysis.data.data.content);
-        sections[sectionKey] = parsedResponse;
-        fullAnalysis += `\n${aiAnalysis.data.data.content}`;
-        
-        // Agregar recomendaciones al conjunto de la categoría
-        parsedResponse.recommendations.forEach(rec => categoryRecs.add(rec));
-
       } catch (error) {
-        console.error(`Error en ${deviceType} ${category}:`, error);
-        // Proporcionar un análisis por defecto en caso de error
+        console.error(`Error en análisis de ${deviceType} ${category}:`, error);
         sections[sectionKey] = {
-          analysis: `No se pudo generar el análisis de IA para ${deviceType} ${category}. Por favor, intente nuevamente más tarde.`,
+          analysis: `Error al generar análisis de IA para ${deviceType} ${category}`,
           recommendations: [],
         };
       }
     }
 
-    // Guardar las recomendaciones de la categoría
     const normalizedCategory = normalizeCategory(category);
-    if (categoryRecs.size > 0) {
-      categoryRecommendations[normalizedCategory] = Array.from(categoryRecs);
-    } else {
-      // Proporcionar recomendaciones por defecto si no hay ninguna
-      categoryRecommendations[normalizedCategory] = [
-        `Realizar un análisis detallado de ${category} para identificar áreas de mejora.`,
-        `Implementar las mejores prácticas de ${category} según los estándares actuales.`,
-        `Monitorear y optimizar continuamente el rendimiento de ${category}.`
-      ];
-    }
+    categoryRecommendations[normalizedCategory] = Array.from(categoryRecs);
   }
 
   return {
     sections,
     recommendations: categoryRecommendations,
-    fullAnalysis: fullAnalysis || "No se pudo generar el análisis completo.",
+    fullAnalysis,
   };
 }
