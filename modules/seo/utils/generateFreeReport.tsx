@@ -173,33 +173,43 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
   }
 
   // Función auxiliar para dibujar el contenido del análisis de IA
-  const drawAIAnalysisContent = (
-    analysisData: { analysis: string; recommendations: string[] },
-    category: string,
-    deviceType: string,
-  ) => {
-    checkSpace(40)
+// In the drawAIAnalysisContent function:
+const drawAIAnalysisContent = (
+  analysisData: { analysis: string; recommendations: string[] },
+  category: string,
+  deviceType: string,
+) => {
+  checkSpace(40);
 
-    // Encabezado de la sección de análisis IA
-    pdf.setFillColor(colors.secondary)
-    pdf.rect(15, currentY, pageWidth - 30, 8, "F")
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFontSize(11)
-    pdf.setFont("helvetica", "bold")
-    pdf.text(`Análisis IA - ${deviceType} ${category}`, 20, currentY + 6)
-    currentY += 12
+  // Draw analysis section header
+  pdf.setFillColor(colors.secondary);
+  pdf.rect(15, currentY, pageWidth - 30, 8, "F");
+  pdf.setTextColor("#FFFFFF");
+  pdf.setFontSize(11);
+  pdf.setFont("helvetica", "bold");
+  pdf.text(`AI Analysis - ${deviceType} ${category}`, 20, currentY + 6);
+  currentY += 12;
 
-    // Dibujar el análisis
-    pdf.setTextColor(colors.text)
-    pdf.setFontSize(9)
-    pdf.setFont("helvetica", "normal")
-    const analysisLines = pdf.splitTextToSize(analysisData.analysis, pageWidth - 40)
-    pdf.text(analysisLines, 20, currentY + 4)
-    currentY += analysisLines.length * 5 + 8
+  // Draw the analysis text
+  pdf.setTextColor(colors.text);
+  pdf.setFontSize(9);
+  pdf.setFont("helvetica", "normal");
+  const analysisLines = pdf.splitTextToSize(analysisData.analysis, pageWidth - 40);
+  pdf.text(analysisLines, 20, currentY + 4);
+  currentY += analysisLines.length * 5 + 8;
 
-    // Ya no mostramos recomendaciones aquí, ya que ahora se mostrarán en la sección general de recomendaciones
-    currentY += 10 // Espacio adicional después de la sección
+  // Move recommendations to the recommendations section
+  if (analysisData.recommendations && analysisData.recommendations.length > 0) {
+    const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
+    if (!aiAnalysisResult.recommendations[normalizedCategory]) {
+      aiAnalysisResult.recommendations[normalizedCategory] = [];
+    }
+    aiAnalysisResult.recommendations[normalizedCategory].push(
+      ...analysisData.recommendations
+    );
   }
+};
+
 
   // Implementar la nueva función drawCoverPage() con el diseño profesional
   const drawCoverPage = () => {
@@ -465,69 +475,70 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
 
   // Draw recommendations section
   const drawRecommendations = (category: string, score: number) => {
+    // Si el score es menor a 90, forzamos la generación de recomendaciones
+    const shouldForceRecommendations = score < 90;
+
     checkSpace(15)
     pdf.setFillColor(colors.good)
     pdf.rect(15, currentY, pageWidth - 30, 8, "F")
     pdf.setTextColor("#FFFFFF")
     pdf.setFontSize(10)
     pdf.setFont("helvetica", "bold")
-    pdf.text("Recommendations for Improvement", 20, currentY + 6)
+    pdf.text("Recomendaciones para Mejorar", 20, currentY + 6)
     currentY += 12
 
-    // Normalizar la categoría igual que en el resto del código
     const normalizedCategory = category.replace(/-/g, "_").toUpperCase()
-
-    // Verificar si tenemos recomendaciones de la IA para esta categoría
     let recommendations: string[] = []
 
+    // Agregamos un log para debug
+    console.log(`Generando recomendaciones para ${normalizedCategory} con score ${score}`)
+    console.log('Recomendaciones disponibles:', aiAnalysisResult.recommendations)
+
     if (aiAnalysisResult.recommendations && aiAnalysisResult.recommendations[normalizedCategory]) {
-      console.log(`Usando recomendaciones IA para categoría: ${normalizedCategory}`)
-      recommendations = aiAnalysisResult.recommendations[normalizedCategory]
+        recommendations = aiAnalysisResult.recommendations[normalizedCategory]
     } else {
-      console.log(`No se encontraron recomendaciones IA para: ${normalizedCategory}`)
-      console.log(`Categorías disponibles:`, Object.keys(aiAnalysisResult.recommendations || {}))
-
-      // Intentar buscar con variaciones de la clave
-      const alternativeKeys = Object.keys(aiAnalysisResult.recommendations || {}).filter(
-        (key) => key.includes(normalizedCategory) || normalizedCategory.includes(key),
-      )
-
-      if (alternativeKeys.length > 0) {
-        console.log(`Encontradas claves alternativas para recomendaciones: ${alternativeKeys.join(", ")}`)
-        const alternativeKey = alternativeKeys[0]
-        console.log(`Usando clave alternativa para recomendaciones: ${alternativeKey}`)
-        recommendations = aiAnalysisResult.recommendations[alternativeKey]
-      } else {
-        // Si no hay recomendaciones de IA, usar las predeterminadas
-        console.log(`Usando recomendaciones predeterminadas para: ${category}`)
-        recommendations = getRecommendations(category, score)
-      }
+        const alternativeKeys = Object.keys(aiAnalysisResult.recommendations || {}).filter(
+            (key) => key.includes(normalizedCategory) || normalizedCategory.includes(key)
+        )
+        
+        if (alternativeKeys.length > 0) {
+            const alternativeKey = alternativeKeys[0]
+            recommendations = aiAnalysisResult.recommendations[alternativeKey]
+        }
     }
 
     pdf.setTextColor(colors.text)
     pdf.setFontSize(9)
     pdf.setFont("helvetica", "normal")
 
-    if (recommendations.length === 0) {
-      const noRecommendationText = "No specific recommendations available for this category."
-      pdf.text(noRecommendationText, 20, currentY + 4)
-      currentY += 10
+    if (recommendations.length === 0 && shouldForceRecommendations) {
+        // Si no hay recomendaciones y el score es bajo, mostramos un mensaje de alerta
+        const noRecommendationText = "Se detectó una puntuación baja. Por favor, contacta con soporte para un análisis detallado."
+        pdf.text(noRecommendationText, 20, currentY + 4)
+        currentY += 10
+        
+        // Agregamos un log para identificar estos casos
+        console.warn(`Score bajo (${score}) sin recomendaciones para ${normalizedCategory}`)
+    } else if (recommendations.length === 0) {
+        const noRecommendationText = "No hay recomendaciones adicionales para esta categoría."
+        pdf.text(noRecommendationText, 20, currentY + 4)
+        currentY += 10
     } else {
-      recommendations.forEach((recommendation, index) => {
-        checkSpace(10)
-        const bulletPoint = `${index + 1}. `
-        const textWidth = pageWidth - 50
-        const recommendationLines = pdf.splitTextToSize(recommendation, textWidth - pdf.getTextWidth(bulletPoint))
-
-        pdf.text(bulletPoint, 20, currentY + 4)
-        pdf.text(recommendationLines, 20 + pdf.getTextWidth(bulletPoint), currentY + 4)
-
-        currentY += recommendationLines.length * 5 + 3
-      })
+        recommendations.forEach((recommendation, index) => {
+            checkSpace(10)
+            const bulletPoint = `${index + 1}. `
+            const textWidth = pageWidth - 50
+            const recommendationLines = pdf.splitTextToSize(recommendation, textWidth - pdf.getTextWidth(bulletPoint))
+            pdf.text(bulletPoint, 20, currentY + 4)
+            pdf.text(recommendationLines, 20 + pdf.getTextWidth(bulletPoint), currentY + 4)
+            currentY += recommendationLines.length * 5 + 3
+        })
     }
 
-    currentY += 5 // Add extra space after recommendations
-  }
+    currentY += 5
+}
+
+
 
   // Draw device comparison chart - Corregido para evitar que se corte
   const drawDeviceComparisonChart = (mobileScore: number, desktopScore: number, category: string) => {

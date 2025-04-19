@@ -76,30 +76,25 @@ Recommendations:
 }
 
 function parseAIResponse(content: string): AIAnalysisSection {
-  const parts = content.split(/Recommendations:|Suggested Actions:|Priority Actions:/i);
+  const analysisMatch = content.match(/\*\*Análisis:\*\*([\s\S]*?)(?=\*\*Recomendaciones:\*\*|$)/);
+  const recommendationsMatch = content.match(/\*\*Recomendaciones:\*\*([\s\S]*?)(?=\*\*|$)/);
   
-  const analysis = parts[0].replace(/^Analysis:\s*/i, "").trim();
-  const recommendations = parts.length > 1 
-    ? parseRecommendations(parts[1])
-    : [];
+  const analysis = analysisMatch ? analysisMatch[1].trim() : content.trim();
+  let recommendations: string[] = [];
+  
+  if (recommendationsMatch) {
+      recommendations = recommendationsMatch[1]
+          .split(/\d+\.\s+/)
+          .filter(item => item.trim().length > 0)
+          .map(item => item.trim());
+  }
 
   return {
-    analysis,
-    recommendations
+      analysis,
+      recommendations
   };
 }
 
-function parseRecommendations(content: string): string[] {
-  const recommendations = content
-    .split(/\d+\.\s+/)
-    .map(item => item.trim())
-    .filter(item => item.length > 0);
-
-  return recommendations.length > 0 ? recommendations : content
-    .split(/\n+/)
-    .map(item => item.replace(/^[-•*]\s*/, '').trim())
-    .filter(item => item.length > 0);
-}
 
 // Añadir una función de reintento
 async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3): Promise<Response> {
