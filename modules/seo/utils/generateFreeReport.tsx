@@ -69,9 +69,6 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     return text?.length > maxLength ? text.substring(0, maxLength) + "..." : text || ""
   }
 
-  // Get improvement recommendations based on category and score
-
-
   // Check if we need a new page
   const checkSpace = (requiredHeight: number) => {
     if (currentY + requiredHeight > pageHeight - 25) {
@@ -82,248 +79,165 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     }
   }
 
-  // Función para dibujar el análisis de IA - Corregida para manejar correctamente las claves
-  const drawAIAnalysis = (category: string, deviceType: string) => {
-    // Normalizar la categoría para que coincida con las claves en aiAnalysisResult
-    // Importante: Usar el mismo formato que en el servicio IA.service.ts
-    const normalizedCategory = category.replace(/-/g, "_").toUpperCase()
-    const sectionKey = `${deviceType.toUpperCase()}_${normalizedCategory}`
-
-    console.log(`Buscando análisis IA para: ${sectionKey}`)
-    console.log(`Secciones disponibles:`, Object.keys(aiAnalysisResult.sections))
-
-    // Verificar si existe el análisis para esta sección
-    if (!aiAnalysisResult.sections || !aiAnalysisResult.sections[sectionKey]) {
-      console.log(`No AI analysis found for: ${sectionKey}`)
-
-      // Intentar buscar con otras variaciones de la clave
-      const alternativeKeys = Object.keys(aiAnalysisResult.sections).filter(
-        (key) => key.includes(deviceType.toUpperCase()) && key.includes(category.toUpperCase().replace(/-/g, "_")),
-      )
-
-      if (alternativeKeys.length > 0) {
-        console.log(`Encontradas claves alternativas: ${alternativeKeys.join(", ")}`)
-        const alternativeKey = alternativeKeys[0]
-        console.log(`Usando clave alternativa: ${alternativeKey}`)
-        const analysisData = aiAnalysisResult.sections[alternativeKey]
-        drawAIAnalysisContent(analysisData, category, deviceType)
-      } else {
-        console.log(`No se encontraron claves alternativas para ${category} ${deviceType}`)
-      }
-      return
-    }
-
-    const analysisData = aiAnalysisResult.sections[sectionKey]
-    console.log(`Drawing AI analysis for ${sectionKey}:`, analysisData)
-    drawAIAnalysisContent(analysisData, category, deviceType)
-  }
-
-  // Función auxiliar para dibujar el contenido del análisis de IA
-// In the drawAIAnalysisContent function:
-const drawAIAnalysisContent = (
-  analysisData: { analysis: string; recommendations: string[] },
-  category: string,
-  deviceType: string,
-) => {
-  checkSpace(40);
-
-  // Draw analysis section header
-  pdf.setFillColor(colors.secondary);
-  pdf.rect(15, currentY, pageWidth - 30, 8, "F");
-  pdf.setTextColor("#FFFFFF");
-  pdf.setFontSize(11);
-  pdf.setFont("helvetica", "bold");
-  pdf.text(`AI Analysis - ${deviceType} ${category}`, 20, currentY + 6);
-  currentY += 12;
-
-  // Draw the analysis text
-  pdf.setTextColor(colors.text);
-  pdf.setFontSize(9);
-  pdf.setFont("helvetica", "normal");
-  const analysisLines = pdf.splitTextToSize(analysisData.analysis, pageWidth - 40);
-  pdf.text(analysisLines, 20, currentY + 4);
-  currentY += analysisLines.length * 5 + 8;
-
-  // Move recommendations to the recommendations section
-  if (analysisData.recommendations && analysisData.recommendations.length > 0) {
-    const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
-    if (!aiAnalysisResult.recommendations[normalizedCategory]) {
-      aiAnalysisResult.recommendations[normalizedCategory] = [];
-    }
-    aiAnalysisResult.recommendations[normalizedCategory].push(
-      ...analysisData.recommendations
-    );
-  }
-};
-
+  // Función para obtener el análisis de IA para una categoría y dispositivo
 
   // Implementar la nueva función drawCoverPage() con el diseño profesional
   const drawCoverPage = () => {
     // Asegurarnos de que estamos en la primera página
     pdf.setPage(1)
-
+  
     // Limpiar completamente la página (fondo blanco)
     pdf.setFillColor("#FFFFFF")
     pdf.rect(0, 0, pageWidth, pageHeight, "F")
-
-    // Company logo
+  
+    // Obtener el contexto para dibujar formas más complejas
+    const ctx = pdf.context2d
+  
+    // Dibujar formas geométricas azules y grises
+    // Triángulo azul oscuro
+    ctx.fillStyle = "#0A4D8C"
+    ctx.beginPath()
+    ctx.moveTo(0, 0)
+    ctx.lineTo(pageWidth * 0.5, 0)
+    ctx.lineTo(0, pageHeight)
+    ctx.closePath()
+    ctx.fill()
+  
+    // Triángulo azul claro
+    ctx.fillStyle = "#1E90FF"
+    ctx.beginPath()
+    ctx.moveTo(0, pageHeight * 0.7)
+    ctx.lineTo(pageWidth * 0.4, 0)
+    ctx.lineTo(pageWidth * 0.5, 0)
+    ctx.lineTo(0, pageHeight)
+    ctx.closePath()
+    ctx.fill()
+  
+    // Triángulo gris
+    ctx.fillStyle = "#D3D3D3"
+    ctx.beginPath()
+    ctx.moveTo(pageWidth * 0.4, 0)
+    ctx.lineTo(pageWidth * 0.5, 0)
+    ctx.lineTo(pageWidth * 0.1, pageHeight)
+    ctx.lineTo(0, pageHeight)
+    ctx.closePath()
+    ctx.fill()
+  
+    // Logo y nombre de la compañía (en la esquina superior derecha)
     try {
-      const logoWidth = 60
-      const logoHeight = 60
-      const logoX = pageWidth / 2 - logoWidth / 2
-      const logoY = 35
-
-      // Use the uploaded logo if available
+      const logoSize = 20
+      const logoX = pageWidth - 30
+      const logoY = 20
+  
       if (pageAnalysis.companyInfo?.logo) {
-        pdf.addImage(pageAnalysis.companyInfo.logo, "PNG", logoX, logoY, logoWidth, logoHeight)
-      } else {
-        // Fallback to default logo
         pdf.addImage(
-          "https://pplx-res.cloudinary.com/image/upload/v1743881513/user_uploads/kxfXyhGFItaKuNC/logo.jpg",
+          pageAnalysis.companyInfo.logo,
           "PNG",
-          logoX,
-          logoY,
-          logoWidth,
-          logoHeight,
+          logoX - logoSize / 2,
+          logoY - logoSize / 2,
+          logoSize,
+          logoSize
         )
+      } else {
+        // Logo circular predeterminado
+        ctx.strokeStyle = "#0088CC"
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.arc(logoX, logoY, logoSize / 2, 0, Math.PI * 2, false)
+        ctx.stroke()
       }
+  
+      // Texto "YOUR LOGO"
+      pdf.setTextColor("#666666")
+      pdf.setFontSize(10)
+      pdf.setFont("helvetica", "bold")
+      pdf.text("YOUR LOGO", logoX - 60, logoY - 5)
+  
+      // Texto "COMPANY NAME"
+      const companyName = pageAnalysis.companyInfo?.name || "COMPANY NAME"
+      pdf.setTextColor("#666666")
+      pdf.setFontSize(9)
+      pdf.setFont("helvetica", "normal")
+      pdf.text(companyName, logoX - 60, logoY + 5)
     } catch (error) {
       console.error("Error loading logo:", error)
-
-      // Backup arrows if logo fails to load
-      pdf.setFillColor("#1E88E5")
-
-      // Small arrow
-      pdf.setLineWidth(0.1)
-      const arrow1X = pageWidth / 2 - 15
-      const arrow1Y = 60
-      pdf.triangle(arrow1X, arrow1Y, arrow1X - 10, arrow1Y + 15, arrow1X + 10, arrow1Y + 15, "F")
-      pdf.rect(arrow1X - 5, arrow1Y + 15, 10, 15, "F")
-
-      // Large arrow
-      const arrow2X = pageWidth / 2 + 15
-      const arrow2Y = 50
-      pdf.triangle(arrow2X, arrow2Y, arrow2X - 15, arrow2Y + 20, arrow2X + 15, arrow2Y + 20, "F")
-      pdf.rect(arrow2X - 7, arrow2Y + 20, 14, 20, "F")
     }
-
-    // Company name - use the provided name or default
-    const companyName = pageAnalysis.companyInfo?.name || "Tamer Digital"
-    pdf.setFontSize(24)
+  
+    // Título "BROCHURE"
     pdf.setTextColor("#333333")
+    pdf.setFontSize(50)
     pdf.setFont("helvetica", "bold")
-    pdf.text(companyName, pageWidth / 2, 110, { align: "center" })
-
-    // Slogan
-    pdf.setFontSize(12)
+    pdf.text("BROCHURE", pageWidth * 0.55, pageHeight * 0.4)
+  
+    // Título "DESIGN" en azul
+    pdf.setTextColor("#0088CC")
+    pdf.setFontSize(50)
+    pdf.setFont("helvetica", "bold")
+    pdf.text("DESIGN", pageWidth * 0.55, pageHeight * 0.5)
+  
+    // Subtítulo
     pdf.setTextColor("#666666")
-    pdf.setFont("helvetica", "italic")
-    pdf.text("Web Optimization and SEO Specialists", pageWidth / 2, 122, { align: "center" })
-
-    // Decorative line
-    pdf.setDrawColor("#3498DB")
-    pdf.setLineWidth(1)
-    pdf.line(pageWidth / 2 - 60, 132, pageWidth / 2 + 60, 132)
-
-    // SEO decorative icons
-    const drawSeoIcon = (x: number, y: number, size: number) => {
-      pdf.setDrawColor("#3498DB")
-      pdf.setLineWidth(0.7)
-      pdf.setFillColor("#F5F9FD")
-
-      // Simple bar chart
-      pdf.rect(x, y, size / 4, size / 2, "FD")
-      pdf.rect(x + size / 3, y - size / 4, size / 4, (size * 3) / 4, "FD")
-      pdf.rect(x + (size * 2) / 3, y - size / 2, size / 4, size, "FD")
-
-      // Trend line
-      pdf.setDrawColor("#0CCE6B")
-      pdf.setLineWidth(1)
-      pdf.line(x - size / 10, y + size / 3, x + size / 4, y)
-      pdf.line(x + size / 4, y, x + size / 2, y + size / 6)
-      pdf.line(x + size / 2, y + size / 6, x + (size * 3) / 4, y - size / 4)
-      pdf.line(x + (size * 3) / 4, y - size / 4, x + size + size / 10, y - size / 2)
-    }
-
-    // Draw decorative icons
-    drawSeoIcon(pageWidth / 4, 155, 20)
-    drawSeoIcon((pageWidth * 3) / 4, 155, 20)
-
-    // Report title
-    pdf.setFillColor("#0D47A1")
-    pdf.roundedRect(pageWidth / 2 - 100, 175, 200, 40, 3, 3, "F")
-
-    pdf.setFontSize(22)
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFont("helvetica", "bold")
-    pdf.text("WEB ANALYSIS", pageWidth / 2, 195, { align: "center" })
-
     pdf.setFontSize(14)
-    pdf.text("Performance Report", pageWidth / 2, 207, { align: "center" })
-
-    // Analyzed URL with decorative frame
-    pdf.setFillColor("#F5F9FD")
-    pdf.setDrawColor("#3498DB")
-    pdf.setLineWidth(0.5)
-    pdf.roundedRect(pageWidth / 2 - 90, 225, 180, 30, 2, 2, "FD")
-
-    pdf.setFontSize(10)
-    pdf.setTextColor("#0D47A1")
     pdf.setFont("helvetica", "normal")
-    pdf.text("ANALYZED URL:", pageWidth / 2, 235, { align: "center" })
-
-    pdf.setFontSize(11)
-    pdf.setTextColor("#333333")
-    pdf.setFont("helvetica", "bold")
-    const urlLines = pdf.splitTextToSize(pageAnalysis.url, 160)
-    pdf.text(urlLines, pageWidth / 2, 245, { align: "center" })
-
-    // Generation date
-    const date = new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-
+    pdf.text("TEMPLATE FLYER YOUR TEXT HERE", pageWidth * 0.55, pageHeight * 0.57)
+  
+    // Texto Lorem ipsum
+    pdf.setTextColor("#999999")
     pdf.setFontSize(10)
-    pdf.setTextColor("#666666")
     pdf.setFont("helvetica", "italic")
-    pdf.text(`Generated on: ${date}`, pageWidth / 2, 265, { align: "center" })
-
-    // Contact information box - use provided contact info or default
-    pdf.setFillColor("#F5F9FD")
-    pdf.setDrawColor("#E0E0E0")
-    pdf.setLineWidth(0.5)
-    pdf.roundedRect(pageWidth / 2 - 75, pageHeight - 80, 150, 50, 3, 3, "FD")
-
-    pdf.setFontSize(9)
-    pdf.setTextColor("#333333")
-    pdf.setFont("helvetica", "normal")
-    pdf.text("CONTACT", pageWidth / 2, pageHeight - 70, { align: "center" })
-    pdf.setTextColor("#555555")
-
-    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com"
-    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890"
-    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com"
-
-    pdf.text(`Email: ${email}`, pageWidth / 2, pageHeight - 60, { align: "center" })
-    pdf.text(`Phone: ${phone}`, pageWidth / 2, pageHeight - 50, { align: "center" })
-    pdf.text(`Web: ${website}`, pageWidth / 2, pageHeight - 40, { align: "center" })
-
-    // Confidentiality notice
-    pdf.setFillColor("#EFEFEF")
-    pdf.rect(0, pageHeight - 20, pageWidth, 20, "F")
-
+    const loremText =
+      '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."'
+    const loremLines = pdf.splitTextToSize(loremText, pageWidth * 0.4)
+    pdf.text(loremLines, pageWidth * 0.55, pageHeight * 0.63)
+  
+    // Círculos inferiores con texto
+    const circleY = pageHeight * 0.85
+    const circleRadius = 5
+    const circleSpacing = 30
+  
+    // Círculo 1
+    ctx.beginPath()
+    ctx.arc(pageWidth * 0.55, circleY, circleRadius, 0, Math.PI * 2, false)
+    ctx.fillStyle = "#666666"
+    ctx.fill()
+  
+    // Círculo 2
+    ctx.beginPath()
+    ctx.arc(pageWidth * 0.55 + circleSpacing, circleY, circleRadius, 0, Math.PI * 2, false)
+    ctx.fillStyle = "#666666"
+    ctx.fill()
+  
+    // Círculo 3
+    ctx.beginPath()
+    ctx.arc(pageWidth * 0.55 + circleSpacing * 2, circleY, circleRadius, 0, Math.PI * 2, false)
+    ctx.fillStyle = "#666666"
+    ctx.fill()
+  
+    // Textos debajo de los círculos
+    pdf.setTextColor("#666666")
     pdf.setFontSize(8)
-    pdf.setTextColor("#777777")
+    pdf.setFont("helvetica", "normal")
+    pdf.text("CREATIVE", pageWidth * 0.55 - 15, circleY + 15)
+    pdf.text("INNOVATION", pageWidth * 0.55 + circleSpacing - 15, circleY + 15)
+    pdf.text("TEAMWORK", pageWidth * 0.55 + circleSpacing * 2 - 15, circleY + 15)
+  
+    // Información de contacto en la parte inferior
+    const contactInfo = {
+      email: pageAnalysis.companyInfo?.contactEmail || "contact@example.com",
+      phone: pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890",
+      website: pageAnalysis.companyInfo?.website || "www.example.com",
+    }
+  
+    // Añadir información de contacto de manera sutil en la parte inferior
+    pdf.setFontSize(8)
+    pdf.setTextColor("#999999")
     pdf.text(
-      "CONFIDENTIAL - This document contains proprietary and confidential information.",
-      pageWidth / 2,
+      `Email: ${contactInfo.email} | Phone: ${contactInfo.phone} | Web: ${contactInfo.website}`,
+      pageWidth * 0.5,
       pageHeight - 10,
-      { align: "center" },
+      { align: "center" }
     )
   }
-
   // Mantener la función drawHeader como estaba, pero con colores actualizados
   const drawHeader = () => {
     // Fondo blanco para el encabezado
@@ -418,74 +332,75 @@ const drawAIAnalysisContent = (
     pdf.text(title, 15, currentY + 7)
     currentY += 15
   }
-
+  const getAIAnalysisForSection = (category: string, deviceType: string) => {
+    const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
+    const sectionKey = `${deviceType.toUpperCase()}_${normalizedCategory}`;
+  
+    console.log(`Buscando análisis IA para: ${sectionKey}`);
+  
+    if (!aiAnalysisResult.sections || !aiAnalysisResult.sections[sectionKey]) {
+      const alternativeKeys = Object.keys(aiAnalysisResult.sections || {}).filter(
+        (key) => key.includes(deviceType.toUpperCase()) && key.includes(category.toUpperCase().replace(/-/g, "_"))
+      );
+  
+      if (alternativeKeys.length > 0) {
+        const alternativeKey = alternativeKeys[0];
+        console.log(`Usando clave alternativa: ${alternativeKey}`);
+        return aiAnalysisResult.sections[alternativeKey];
+      }
+  
+      console.log(`No se encontraron análisis para ${category} ${deviceType}`);
+      return null;
+    }
+  
+    return aiAnalysisResult.sections[sectionKey];
+  };
   // Draw recommendations section
   const drawRecommendations = (category: string, score: number) => {
-    // Si el score es menor a 90, forzamos la generación de recomendaciones
-    const shouldForceRecommendations = score < 90;
-
-    checkSpace(15)
-    pdf.setFillColor(colors.good)
-    pdf.rect(15, currentY, pageWidth - 30, 8, "F")
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFontSize(10)
-    pdf.setFont("helvetica", "bold")
-    pdf.text("Recomendaciones para Mejorar", 20, currentY + 6)
-    currentY += 12
-
-    const normalizedCategory = category.replace(/-/g, "_").toUpperCase()
-    let recommendations: string[] = []
-
-    // Agregamos un log para debug
-    console.log(`Generando recomendaciones para ${normalizedCategory} con score ${score}`)
-    console.log('Recomendaciones disponibles:', aiAnalysisResult.recommendations)
-
+    checkSpace(15);
+    pdf.setFillColor(colors.good);
+    pdf.rect(15, currentY, pageWidth - 30, 8, "F");
+    pdf.setTextColor("#FFFFFF");
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Recomendaciones para Mejorar", 20, currentY + 6);
+    currentY += 12;
+  
+    const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
+    let recommendations: string[] = [];
+  
+    // Obtener recomendaciones para esta categoría
     if (aiAnalysisResult.recommendations && aiAnalysisResult.recommendations[normalizedCategory]) {
-        recommendations = aiAnalysisResult.recommendations[normalizedCategory]
+      const uniqueRecommendations = Array.from(new Set(aiAnalysisResult.recommendations[normalizedCategory]));
+      recommendations = uniqueRecommendations;
     } else {
-        const alternativeKeys = Object.keys(aiAnalysisResult.recommendations || {}).filter(
-            (key) => key.includes(normalizedCategory) || normalizedCategory.includes(key)
-        )
-        
-        if (alternativeKeys.length > 0) {
-            const alternativeKey = alternativeKeys[0]
-            recommendations = aiAnalysisResult.recommendations[alternativeKey]
-        }
+      console.log(`No se encontraron recomendaciones para ${normalizedCategory}`);
     }
-
-    pdf.setTextColor(colors.text)
-    pdf.setFontSize(9)
-    pdf.setFont("helvetica", "normal")
-
-    if (recommendations.length === 0 && shouldForceRecommendations) {
-        // Si no hay recomendaciones y el score es bajo, mostramos un mensaje de alerta
-        const noRecommendationText = "Se detectó una puntuación baja. Por favor, contacta con soporte para un análisis detallado."
-        pdf.text(noRecommendationText, 20, currentY + 4)
-        currentY += 10
-        
-        // Agregamos un log para identificar estos casos
-        console.warn(`Score bajo (${score}) sin recomendaciones para ${normalizedCategory}`)
-    } else if (recommendations.length === 0) {
-        const noRecommendationText = "No hay recomendaciones adicionales para esta categoría."
-        pdf.text(noRecommendationText, 20, currentY + 4)
-        currentY += 10
+  
+    pdf.setTextColor(colors.text);
+    pdf.setFontSize(9);
+    pdf.setFont("helvetica", "normal");
+  
+    if (recommendations.length === 0) {
+      const noRecommendationText = "No hay recomendaciones específicas para esta categoría.";
+      pdf.text(noRecommendationText, 20, currentY + 4);
+      currentY += 10;
     } else {
-        recommendations.forEach((recommendation, index) => {
-            checkSpace(10)
-            const bulletPoint = `${index + 1}. `
-            const textWidth = pageWidth - 50
-            const recommendationLines = pdf.splitTextToSize(recommendation, textWidth - pdf.getTextWidth(bulletPoint))
-            pdf.text(bulletPoint, 20, currentY + 4)
-            pdf.text(recommendationLines, 20 + pdf.getTextWidth(bulletPoint), currentY + 4)
-            currentY += recommendationLines.length * 5 + 3
-        })
+      recommendations.forEach((recommendation, index) => {
+        checkSpace(10);
+        const bulletPoint = `${index + 1}. `;
+        const textWidth = pageWidth - 50;
+        const recommendationLines = pdf.splitTextToSize(recommendation, textWidth - pdf.getTextWidth(bulletPoint));
+  
+        pdf.text(bulletPoint, 20, currentY + 4);
+        pdf.text(recommendationLines, 20 + pdf.getTextWidth(bulletPoint), currentY + 4);
+  
+        currentY += recommendationLines.length * 5 + 3;
+      });
     }
-
-    currentY += 5
-}
-
-
-
+  
+    currentY += 5;
+  };
   // Draw device comparison chart - Corregido para evitar que se corte
   const drawDeviceComparisonChart = (mobileScore: number, desktopScore: number, category: string) => {
     // Calcular la altura total necesaria para todo el gráfico y sus elementos
@@ -733,132 +648,119 @@ const drawAIAnalysisContent = (
     return { mobileScore, desktopScore }
   }
 
-  // Replace the existing drawCircleProgress function with the new styled version
-  // Draw circle progress indicators (with gradient style like the purple example)
-  const drawCircleProgress = (score: number, label: string, x = 30, radius = 15) => {
-    checkSpace(radius * 2 + 15) // Increased space check
-
-    // Calculate score percentage
-    const scorePercentage = Math.round(score * 100)
-
-    // Add label text ABOVE the circle with more spacing
-    pdf.setTextColor(colors.text)
-    pdf.setFontSize(12)
-    pdf.setFont("helvetica", "bold")
-    pdf.text(label, 15, currentY + 6)
-
-    // Move currentY down more to create additional space between text and circle
-    currentY += 15 // Increased from 10 to 15
-
-    // Get context for advanced drawing
-    const ctx = pdf.context2d
-
-    // Create gradient colors based on score
-    let gradientStart, gradientEnd
-
-    if (score >= 0.9) {
-      // Good score (green to teal)
-      gradientStart = "#10b981" // Emerald
-      gradientEnd = "#14b8a6" // Teal
-    } else if (score >= 0.5) {
-      // Average score (amber to orange)
-      gradientStart = "#f59e0b" // Amber
-      gradientEnd = "#f97316" // Orange
-    } else {
-      // Poor score (rose to red)
-      gradientStart = "#e11d48" // Rose
-      gradientEnd = "#dc2626" // Red
-    }
-
-    // Draw full circle background (gray)
-    ctx.beginPath()
-    ctx.arc(x, currentY + radius, radius, 0, Math.PI * 2, false)
-    ctx.fillStyle = "#f1f5f9"
-    ctx.fill()
-
-    // Create gradient for the progress arc
-    const grd = ctx.createLinearGradient(x - radius, currentY + radius, x + radius, currentY + radius)
-    grd.addColorStop(0, gradientStart)
-    grd.addColorStop(1, gradientEnd)
-
-    // Draw progress arc
-    const startAngle = -Math.PI / 2 // Start from top
-    const endAngle = startAngle + score * Math.PI * 2
-
-    // Draw filled arc
-    ctx.beginPath()
-    ctx.moveTo(x, currentY + radius)
-    ctx.arc(x, currentY + radius, radius, startAngle, endAngle, false)
-    ctx.lineTo(x, currentY + radius)
-    ctx.fillStyle = grd
-    ctx.fill()
-
-    // Draw inner white circle to create donut effect
-    ctx.beginPath()
-    ctx.arc(x, currentY + radius, radius * 0.65, 0, Math.PI * 2, false)
-    ctx.fillStyle = "#ffffff"
-    ctx.fill()
-
-    // Add outer decorative circle
-    ctx.beginPath()
-    ctx.arc(x, currentY + radius, radius + 5, startAngle, endAngle, false)
-    ctx.strokeStyle = grd
-    ctx.lineWidth = 1
-    ctx.stroke()
-
-    // Format the score to show only 2 digits if it's a 4-digit number
-    let scoreText = `${scorePercentage}`
-    if (scoreText.length > 3) {
-      scoreText = scoreText.substring(0, 2)
-    }
-    scoreText += "%"
-
-    // Add percentage text in the center
-    pdf.setTextColor(gradientStart)
-    pdf.setFontSize(10)
-    pdf.setFont("helvetica", "bold")
-    const textWidth = pdf.getTextWidth(scoreText)
-    pdf.text(scoreText, x - textWidth / 2, currentY + radius + 3)
-
-    // Add description text to the right of the circle
-    pdf.setTextColor(colors.lightText)
-    pdf.setFontSize(9)
-    pdf.setFont("helvetica", "normal")
-    let description = ""
-    if (label.includes("Mobile ")) {
-      description =
-        "This metric represents the overall performance of the page on mobile devices. " +
-        "A higher score indicates a better experience for mobile users, considering loading speed, " +
-        "interactivity, and visual stability."
-    } else if (label.includes("Desktop ")) {
-      description =
-        "This metric shows the overall performance of the page on desktop computers. " +
-        "A higher score reflects a better experience for desktop users, evaluating loading time, " +
-        "interactivity, and visual stability."
-    } else if (label.includes("On-page Score")) {
-      description =
-        "This score reflects the overall on-page SEO optimization. " +
-        "It considers factors such as meta tags, content structure, internal and external links, " +
-        "and other SEO best practices."
-    }
-
-    // Calculate the available width for the description (right of the circle)
-    const descriptionX = x + radius * 2 + 10 // Position to the right of the circle
-    const descriptionWidth = pageWidth - descriptionX - 15 // Width available for description
-    const descriptionLines = pdf.splitTextToSize(description, descriptionWidth)
-
-    // Position the description text to the right of the circle
-    pdf.text(descriptionLines, descriptionX, currentY + 5)
-
-    // Calculate the height needed for the description or the circle, whichever is taller
-    const descriptionHeight = descriptionLines.length * 5
-    const circleHeight = radius * 2
-
-    // Move down after the taller of the two elements
-    currentY += Math.max(circleHeight, descriptionHeight) + 15 // Increased from 10 to 15 for more spacing
-
-    return scorePercentage / 100 // Return the score for recommendations
+  // Función mejorada para dibujar el círculo de progreso con análisis de IA
+// Modificar la función drawCircleProgress en paste.txt para que no muestre las recomendaciones
+const drawCircleProgress = (score: number, label: string, x = 30, radius = 15) => {
+  checkSpace(radius * 2 + 15);
+  
+  const scorePercentage = Math.round(score * 100);
+  
+  pdf.setTextColor(colors.text);
+  pdf.setFontSize(12);
+  pdf.setFont("helvetica", "bold");
+  pdf.text(label, 15, currentY + 6);
+  
+  currentY += 15;
+  
+  const ctx = pdf.context2d;
+  
+  ctx.beginPath();
+  ctx.arc(x, currentY + radius, radius, 0, Math.PI * 2, false);
+  ctx.fillStyle = "#f1f5f9";
+  ctx.fill();
+  
+  let gradientStart, gradientEnd;
+  if (score >= 0.9) {
+    gradientStart = "#10b981";
+    gradientEnd = "#14b8a6";
+  } else if (score >= 0.5) {
+    gradientStart = "#f59e0b";
+    gradientEnd = "#f97316";
+  } else {
+    gradientStart = "#e11d48";
+    gradientEnd = "#dc2626";
   }
+  
+  const grd = ctx.createLinearGradient(x - radius, currentY + radius, x + radius, currentY + radius);
+  grd.addColorStop(0, gradientStart);
+  grd.addColorStop(1, gradientEnd);
+  
+  const startAngle = -Math.PI / 2;
+  const endAngle = startAngle + score * Math.PI * 2;
+  ctx.beginPath();
+  ctx.moveTo(x, currentY + radius);
+  ctx.arc(x, currentY + radius, radius, startAngle, endAngle, false);
+  ctx.lineTo(x, currentY + radius);
+  ctx.fillStyle = grd;
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.arc(x, currentY + radius, radius * 0.65, 0, Math.PI * 2, false);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.arc(x, currentY + radius, radius + 5, startAngle, endAngle, false);
+  ctx.strokeStyle = grd;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  
+  let scoreText = `${scorePercentage}`;
+  if (scoreText.length > 3) {
+    scoreText = scoreText.substring(0, 2);
+  }
+  scoreText += "%";
+  
+  pdf.setTextColor(gradientStart);
+  pdf.setFontSize(10);
+  pdf.setFont("helvetica", "bold");
+  const textWidth = pdf.getTextWidth(scoreText);
+  pdf.text(scoreText, x - textWidth / 2, currentY + radius + 3);
+  
+  // Extraer categoría y tipo de dispositivo
+  const deviceType = label.toLowerCase().includes("mobile") ? "mobile" : "desktop";
+  let category = label.toLowerCase().replace(`${deviceType} - `, "").replace(/\s+/g, "-");
+  if (label.includes("On-page Score")) {
+    category = "seo";
+  }
+  
+  // Obtener análisis de IA
+  const aiAnalysis = getAIAnalysisForSection(category, deviceType);
+  
+  // Renderizar solo el análisis a la derecha del círculo
+  const descriptionX = x + radius * 2 + 10;
+  const descriptionWidth = pageWidth - descriptionX - 15;
+  
+  if (aiAnalysis && aiAnalysis.analysis) {
+    pdf.setTextColor(colors.lightText);
+    pdf.setFontSize(8);
+    // Mostrar solo el texto del análisis sin etiquetas ni recomendaciones
+    const analysisLines = pdf.splitTextToSize(aiAnalysis.analysis, descriptionWidth);
+    pdf.text(analysisLines, descriptionX, currentY + 5);
+    
+    // Almacenar recomendaciones para la sección de recomendaciones
+    if (aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0) {
+      const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
+      if (!aiAnalysisResult.recommendations[normalizedCategory]) {
+        aiAnalysisResult.recommendations[normalizedCategory] = [];
+      }
+      aiAnalysis.recommendations.forEach((rec) => {
+        if (!aiAnalysisResult.recommendations[normalizedCategory].includes(rec)) {
+          aiAnalysisResult.recommendations[normalizedCategory].push(rec);
+        }
+      });
+    }
+    
+    const analysisHeight = analysisLines.length * 5;
+    const circleHeight = radius * 2;
+    currentY += Math.max(circleHeight, analysisHeight) + 15;
+  } else {
+    currentY += radius * 2 + 15;
+  }
+  
+  return score;
+};
+  
 
   // Draw status icon (check or X)
   const drawStatusIcon = (x: number, isGood: boolean) => {
@@ -1115,8 +1017,6 @@ const drawAIAnalysisContent = (
         mobileScore = drawCircleProgress(data.mobile.score / 100, `Mobile - ${category}`)
         drawMetricsTable(data.mobile.metrics, "Mobile")
         drawIssuesTable(data.mobile.issues, "Mobile")
-        // Añadir análisis de IA para móvil
-        drawAIAnalysis(category, "mobile")
       }
 
       // Desktop data for this category
@@ -1124,8 +1024,6 @@ const drawAIAnalysisContent = (
         desktopScore = drawCircleProgress(data.desktop.score / 100, `Desktop - ${category}`)
         drawMetricsTable(data.desktop.metrics, "Desktop")
         drawIssuesTable(data.desktop.issues, "Desktop")
-        // Añadir análisis de IA para desktop
-        drawAIAnalysis(category, "desktop")
       }
 
       // Add comparison chart if we have both mobile and desktop data
@@ -1133,18 +1031,20 @@ const drawAIAnalysisContent = (
         drawDeviceComparisonChart(data.mobile.score / 100, data.desktop.score / 100, category)
       }
 
+    //  drawSectionHeader("Recomendaciones")
       // Add recommendations based on average score
       const avgScore = (mobileScore + desktopScore) / (mobileScore > 0 && desktopScore > 0 ? 2 : 1)
       drawRecommendations(category, avgScore)
 
       currentY += 10 // Add extra spacing between categories
-    })
+    });
   }
+
 
   // SEO Analysis Section
   if (pageAnalysis.seo) {
     checkSpace(20)
-    drawSectionHeader("SEO Analysis")
+   // drawSectionHeader("SEO Analysis")
     const seoScore = pageAnalysis.seo.page_metrics.onpage_score
     // For on-page score, ensure we only show 2 digits when multiplied by 100
     const formattedSeoScore = Math.round(seoScore * 100)
@@ -1322,8 +1222,8 @@ const drawAIAnalysisContent = (
       currentY += rowHeight
     })
 
-    // Añadir análisis de IA para SEO
-    // drawAIAnalysis('seo', 'desktop');
+    // Añadir recomendaciones para SEO
+    drawRecommendations("seo", seoScore)
   }
 
   // Add conclusion page
