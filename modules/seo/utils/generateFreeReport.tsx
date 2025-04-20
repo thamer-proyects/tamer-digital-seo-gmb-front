@@ -50,21 +50,22 @@ const typography = {
 // Color palette - Based on the design
 const colors = {
   background: "#FFFFFF",
-  primary: "#0D47A1", // Dark blue for headers
-  secondary: "#1E88E5", // Medium blue for subheaders
-  accent: "#FFD700", // Gold for accents
-  text: "#333333", // Main text
-  lightText: "#666666", // Secondary text
-  good: "#0CCE6B", // Good scores (green)
-  average: "#FFA400", // Average scores (amber)
-  poor: "#FF4E42", // Poor scores (red)
-  border: "#E0E0E0", // Borders
-  lightBg: "#F5F7FA", // Light background
-  sectionBg: "#EEF2F7", // Section background
-  headerBg: "#0A2540", // Header background
-  coverBg: "#FFFFFF", // Cover background
-  coverAccent: "#3498DB", // Cover accent
+  primary: "#1665C0",         // Updated to match image blue
+  secondary: "#1E88E5",       // Medium blue for subheaders
+  accent: "#FFD700",          // Gold for accents
+  text: "#666666",            // Main text
+  lightText: "#666666",       // Secondary text
+  good: "#0CCE6B",            // Good scores (green)
+  average: "#FFA400",         // Average scores (amber)
+  poor: "#FF4E42",            // Poor scores (red)
+  border: "#E0E0E0",          // Borders
+  lightBg: "#F5F7FA",         // Light background
+  sectionBg: "#EEF2F7",       // Section background
+  headerBg: "#1665C0",        // Header background - Updated to match image blue
+  coverBg: "#FFFFFF",         // Cover background
+  coverAccent: "#3498DB",     // Cover accent
 };
+
 
 export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisResponse): Promise<void> {
   // Create PDF document
@@ -121,9 +122,7 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
       pdf.line(i, 0, i + pageHeight, pageHeight);
     }
     pdf.setFillColor(colors.background);
-
     pdf.rect(0, 0, pageWidth, pageHeight, "F");
-  
   
     // Top bar with darker shade
     pdf.setFillColor(colors.headerBg);
@@ -144,9 +143,8 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
       const logoY = 30;
       // Shadow
       pdf.setFillColor("#000000");
-
       pdf.roundedRect(logoX + 2, logoY + 2, logoWidth, logoHeight, 5, 5, "F");
- 
+  
       // Logo
       if (pageAnalysis.companyInfo?.logo) {
         pdf.addImage(pageAnalysis.companyInfo.logo, "PNG", logoX, logoY, logoWidth, logoHeight);
@@ -254,9 +252,10 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
       { align: "center" },
     );
   
-    pdf.addPage();
-    pageNumber++;
-  };
+    // REMOVE THESE LINES to fix the blank page issue
+    // pdf.addPage();
+    // pageNumber++;
+  };;
 
   // Draw header on each page
   const drawHeader = () => {
@@ -321,36 +320,36 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
   };
 
 // Enhanced recommendations section with table layout
-const drawRecommendations = (category: string, score: number) => {
+const drawRecommendations = (category: string, _score: number) => {
   checkSpace(30);
 
   // Create a visually distinct recommendations section header with black background
   const ctx = pdf.context2d;
-  ctx.fillStyle = "#000000"; // Black background
+  ctx.fillStyle = "#1665C0"; // Black background
   ctx.fillRect(15, currentY, pageWidth - 30, 10);
 
   pdf.setTextColor("#FFFFFF"); // White text for better contrast
   pdf.setFontSize(typography.fontSize.h3);
   pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-  pdf.text("RECOMMENDATIONS", 25, currentY + 7);
+  pdf.text("Recomendations", 25, currentY + 7);
   currentY += 15;
 
   const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
   let recommendations: string[] = [];
 
   if (aiAnalysisResult.recommendations && aiAnalysisResult.recommendations[normalizedCategory]) {
-    const uniqueRecommendations = Array.from(new Set(aiAnalysisResult.recommendations[normalizedCategory]));
-    recommendations = uniqueRecommendations;
+
+    recommendations = = Array.from(new Set(aiAnalysisResult.recommendations[normalizedCategory]));
   }
 
   // Table headers
   pdf.setFillColor(colors.sectionBg);
-  pdf.rect(20, currentY, pageWidth - 40, 10, "F");
-  pdf.setTextColor("#000000"); // Black text
+  pdf.rect(20, currentY, pageWidth - 30, 10, "F");
+  pdf.setTextColor("#FFFFFF"); // Black text
   pdf.setFontSize(typography.fontSize.bodySmall);
   pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
   pdf.text("Priority", 25, currentY + 7);
-  pdf.text("Recommendation", 70, currentY + 7);
+  pdf.text("Recomendation", 70, currentY + 7);
   currentY += 15;
 
   if (recommendations.length === 0) {
@@ -362,7 +361,7 @@ const drawRecommendations = (category: string, score: number) => {
   } else {
     recommendations.forEach((recommendation, index) => {
       checkSpace(15);
-      
+  
       // Alternating row background
       pdf.setFillColor(index % 2 === 0 ? colors.lightBg : colors.background);
       pdf.rect(20, currentY, pageWidth - 40, 20, "F");
@@ -714,19 +713,41 @@ const drawRecommendations = (category: string, score: number) => {
     // Collect recommendations without rendering analysis or conclusions
     const aiAnalysis = category === "on_page_specific" ? aiAnalysisResult.onPageAnalysis : getAIAnalysisForSection(category, deviceType);
   
-    if (aiAnalysis && aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0) {
-      const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
-      if (!aiAnalysisResult.recommendations[normalizedCategory]) {
-        aiAnalysisResult.recommendations[normalizedCategory] = [];
-      }
-      aiAnalysis.recommendations.forEach((rec) => {
-        if (!aiAnalysisResult.recommendations[normalizedCategory].includes(rec)) {
-          aiAnalysisResult.recommendations[normalizedCategory].push(rec);
-        }
-      });
-    }
+    // Render analysis text to the right of the circle
+    const descriptionX = x + radius * 2 + 10;
+    const descriptionWidth = pageWidth - descriptionX - 15;
   
-    currentY += radius * 2 + 15;
+    if (aiAnalysis && aiAnalysis.analysis) {
+      // Remove the background box completely
+      
+      // Determine the height of the analysis text
+      const analysisLines = pdf.splitTextToSize(aiAnalysis.analysis, descriptionWidth);
+      const analysisHeight = analysisLines.length * 5 + 10; // Add padding
+  
+      // Show the analysis text directly without any box
+      pdf.setTextColor(colors.text);
+      pdf.setFontSize(typography.fontSize.caption);
+      pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
+      pdf.text(analysisLines, descriptionX, currentY + 10);
+  
+      // Store recommendations for the recommendations section
+      if (aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0) {
+        const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
+        if (!aiAnalysisResult.recommendations[normalizedCategory]) {
+          aiAnalysisResult.recommendations[normalizedCategory] = [];
+        }
+        aiAnalysis.recommendations.forEach((rec) => {
+          if (!aiAnalysisResult.recommendations[normalizedCategory].includes(rec)) {
+            aiAnalysisResult.recommendations[normalizedCategory].push(rec);
+          }
+        });
+      }
+  
+      const circleHeight = radius * 2;
+      currentY += Math.max(circleHeight, analysisHeight) + 10;
+    } else {
+      currentY += radius * 2 + 15;
+    }
   
     return score;
   };
@@ -991,13 +1012,15 @@ const drawRecommendations = (category: string, score: number) => {
   };
   // Start the PDF with cover page
   drawCoverPage();
-
-  // Add a new page for the actual content
-  pdf.addPage();
+ // pdf.addPage();
   pageNumber = 2;
   currentY = 25;
 
+  // Add a new page for the actual content
+
+
   // Draw the header on the second page (first content page)
+  pdf.addPage();
   drawHeader();
 
   // Title

@@ -278,11 +278,11 @@ async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 3)
 
 async function makeAIRequest(prompt: string): Promise<AIAnalysisSection> {
   try {
-    const response = await fetchWithRetry("http://145.223.126.1:10000/ai/openai/v1/api/generate", {
+    const response = await fetchWithRetry("http://100/ai/openai/v1/api/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-Key": "sk_api_8f2e71d9b5a4c3e6f7g8h9j0k1l2m3n4",
+        "X-API-Key": "sk_api_8f0k1l2m3n4",
       },
       body: JSON.stringify({
         pattern: { cmd: "generate_content" },
