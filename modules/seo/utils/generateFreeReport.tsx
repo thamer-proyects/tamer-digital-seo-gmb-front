@@ -339,7 +339,7 @@ const drawRecommendations = (category: string, _score: number) => {
 
   if (aiAnalysisResult.recommendations && aiAnalysisResult.recommendations[normalizedCategory]) {
 
-    recommendations = = Array.from(new Set(aiAnalysisResult.recommendations[normalizedCategory]));
+    recommendations = Array.from(new Set(aiAnalysisResult.recommendations[normalizedCategory]));
   }
 
   // Table headers
