@@ -9,10 +9,17 @@ interface EnhancedPageAnalysisResponse extends PageAnalysisResponse {
       {
         analysis: string;
         recommendations: string[];
+        conclusions?: string;
       }
     >;
     fullAnalysis: string;
   };
+  onPageAnalysis: {
+    analysis: string;
+    recommendations: string[];
+    conclusions?: string;
+  };
+
   companyInfo?: {
     logo: string | null;
     name: string;
@@ -43,8 +50,8 @@ const typography = {
 // Color palette - Based on the design
 const colors = {
   background: "#FFFFFF",
-  primary: "#0A2540", // Dark blue for headers
-  secondary: "#3498DB", // Medium blue for subheaders
+  primary: "#0D47A1", // Dark blue for headers
+  secondary: "#1E88E5", // Medium blue for subheaders
   accent: "#FFD700", // Gold for accents
   text: "#333333", // Main text
   lightText: "#666666", // Secondary text
@@ -97,220 +104,197 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     }
   };
 
-  // Implement the cover page with professional design
+  // Función mejorada para crear una portada más profesional
   const drawCoverPage = () => {
-    // Ensure we're on the first page
-    pdf.setPage(1);
-
-    const lightBlue = "#29ABE2";
-    const darkBlue = "#003366"; // Dark blue similar to the image
-    const lightGray = "#D3D3D3";
-    const darkGray = "#555555";
-
-    // Background color (white)
-    pdf.setFillColor(255, 255, 255);
-    pdf.rect(0, 0, pageWidth, pageHeight, "F");
-
+    // Gradient background
     const ctx = pdf.context2d;
+    const gradient = ctx.createLinearGradient(0, 0, 0, pageHeight);
+    gradient.addColorStop(0, colors.primary);
+    gradient.addColorStop(1, colors.coverBg);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, pageWidth, pageHeight);
+  
+    // Subtle diagonal pattern overlay
+    pdf.setDrawColor(colors.coverAccent);
+    pdf.setLineWidth(0.2);
+    for (let i = -pageWidth; i < pageWidth + pageHeight; i += 10) {
+      pdf.line(i, 0, i + pageHeight, pageHeight);
+    }
+    pdf.setFillColor(colors.background);
 
-    // **Graphic Elements**
-
-    // Dark blue triangle top left
-    pdf.setFillColor(darkBlue);
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(pageWidth * 0.4, 0);
-    ctx.lineTo(0, pageHeight * 0.2);
-    ctx.closePath();
-    ctx.fill();
-
-    // Light gray overlapping triangle top left
-    pdf.setFillColor(lightGray);
-    ctx.beginPath();
-    ctx.moveTo(0, 10);
-    ctx.lineTo(pageWidth * 0.35, 10);
-    ctx.lineTo(10, pageHeight * 0.18);
-    ctx.closePath();
-    ctx.fill();
-
-    // Dark blue triangle bottom left
-    pdf.setFillColor(darkBlue);
-    ctx.beginPath();
-    ctx.moveTo(0, pageHeight * 0.8);
-    ctx.lineTo(pageWidth * 0.3, pageHeight);
-    ctx.lineTo(0, pageHeight);
-    ctx.closePath();
-    ctx.fill();
-
-    // Light gray overlapping triangle bottom left
-    pdf.setFillColor(lightGray);
-    ctx.beginPath();
-    ctx.moveTo(10, pageHeight * 0.82);
-    ctx.lineTo(pageWidth * 0.28, pageHeight - 10);
-    ctx.lineTo(10, pageHeight - 10);
-    ctx.closePath();
-    ctx.fill();
-
-    // **Logo in the top right corner**
-    const logoX = pageWidth - 60;
-    const logoY = 30;
-    const circleRadius = 10;
-
-    // Blue circle with thick border
-    ctx.beginPath();
-    ctx.arc(logoX + circleRadius, logoY + circleRadius / 2, circleRadius, 0, Math.PI * 2, false);
-    ctx.fillStyle = lightBlue;
-    ctx.fill();
-    ctx.strokeStyle = darkBlue;
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    // "YOUR LOGO" text
-    pdf.setTextColor(darkGray);
-    pdf.setFontSize(typography.fontSize.body);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("YOUR LOGO", logoX - 50, logoY);
-
-    // "COMPANY NAME" text
-    pdf.setTextColor(darkGray);
-    pdf.setFontSize(typography.fontSize.body);
+    pdf.rect(0, 0, pageWidth, pageHeight, "F");
+  
+  
+    // Top bar with darker shade
+    pdf.setFillColor(colors.headerBg);
+    pdf.rect(0, 0, pageWidth, 15, "F");
+  
+    // Report ID
+    const reportId = `REP-${Date.now().toString().substring(6)}`;
+    pdf.setFontSize(typography.fontSize.caption);
+    pdf.setTextColor(colors.lightText);
     pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    pdf.text("COMPANY NAME", logoX - 50, logoY + 12);
-
-    // **Main Title**
-    const titleX = 25;
-    const titleY = pageHeight * 0.3;
-    const titleFontSize = 48;
-
-    pdf.setTextColor(darkBlue);
-    pdf.setFontSize(titleFontSize);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("WEBSITE", titleX, titleY);
-
-    pdf.setTextColor(lightBlue);
-    pdf.setFontSize(titleFontSize);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("ANALYSIS", titleX, titleY + titleFontSize * 0.8); // Adjusted for second line
-
-    // **Subtitle**
-    pdf.setTextColor(darkGray);
-    pdf.setFontSize(typography.fontSize.h2);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    pdf.text("PERFORMANCE REPORT & RECOMMENDATIONS", titleX, titleY + titleFontSize * 1.2);
-
-    // **Example Text**
-    const loremIpsum = "Comprehensive analysis of your website performance with actionable recommendations to improve user experience and search engine rankings.";
-    pdf.setTextColor(darkGray);
-    pdf.setFontSize(typography.fontSize.body);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    const loremLines = pdf.splitTextToSize(loremIpsum, pageWidth - 50);
-    pdf.text(loremLines, titleX, titleY + titleFontSize * 1.5);
-
-    // **Bottom Icons**
-    const iconY = pageHeight - 30;
-    const iconSpacing = 20;
-    const textSpacing = 5;
-    const iconRadius = 3;
-    const startX = pageWidth / 2 - (iconSpacing * 2 + pdf.getTextWidth("PERFORMANCE") + pdf.getTextWidth("ACCESSIBILITY") + pdf.getTextWidth("SEO") + iconRadius * 6 + textSpacing * 2) / 2;
-    let currentX = startX;
-
-    pdf.setFillColor(darkGray);
-    pdf.circle(currentX + iconRadius, iconY - iconRadius, iconRadius, "F");
-    currentX += iconRadius * 2 + textSpacing;
-    pdf.setTextColor(darkGray);
-    pdf.setFontSize(typography.fontSize.body);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    pdf.text("PERFORMANCE", currentX, iconY);
-    currentX += pdf.getTextWidth("PERFORMANCE") + iconSpacing;
-
-    pdf.setFillColor(darkGray);
-    pdf.circle(currentX + iconRadius, iconY - iconRadius, iconRadius, "F");
-    currentX += iconRadius * 2 + textSpacing;
-    pdf.text("ACCESSIBILITY", currentX, iconY);
-    currentX += pdf.getTextWidth("ACCESSIBILITY") + iconSpacing;
-
-    pdf.setFillColor(darkGray);
-    pdf.circle(currentX + iconRadius, iconY - iconRadius, iconRadius, "F");
-    currentX += iconRadius * 2 + textSpacing;
-    pdf.text("SEO", currentX, iconY);
-  };
-
-  // Fixed drawHeader function to remove the unwanted dots
-  const drawHeader = () => {
-    // White background for the header
-    pdf.setFillColor("#FFFFFF");
-    pdf.rect(0, 0, pageWidth, 20, "F");
-
-    // Decorative line at the bottom of the header
-    pdf.setDrawColor("#E2E8F0");
-    pdf.setLineWidth(0.5);
-    pdf.line(0, 20, pageWidth, 20);
-
-    // Logo
+    pdf.text(`ID: ${reportId}`, pageWidth - 20, 12, { align: "right" });
+  
+    // Logo with shadow effect
     try {
-      const logoWidth = 15;
-      const logoHeight = 15;
-      const logoX = 10;
-      const logoY = 2.5;
+      const logoWidth = 50;
+      const logoHeight = 50;
+      const logoX = pageWidth / 2 - logoWidth / 2;
+      const logoY = 30;
+      // Shadow
+      pdf.setFillColor("#000000");
 
+      pdf.roundedRect(logoX + 2, logoY + 2, logoWidth, logoHeight, 5, 5, "F");
+ 
+      // Logo
       if (pageAnalysis.companyInfo?.logo) {
         pdf.addImage(pageAnalysis.companyInfo.logo, "PNG", logoX, logoY, logoWidth, logoHeight);
+      } else {
+        // Fallback to a modern SEO icon
+        pdf.setFillColor(colors.coverAccent);
+        pdf.circle(pageWidth / 2, logoY + logoHeight / 2, logoWidth / 4, "F");
+        pdf.setDrawColor(colors.background);
+        pdf.setLineWidth(2);
+        pdf.line(pageWidth / 2 - 10, logoY + logoHeight / 2, pageWidth / 2 + 10, logoY + logoHeight / 2);
+        pdf.line(pageWidth / 2, logoY + logoHeight / 2 - 10, pageWidth / 2, logoY + logoHeight / 2 + 10);
       }
-      // Removed the circular elements that were causing the unwanted dots
     } catch (error) {
-      console.error("Error loading logo in header:", error);
+      console.error("Error loading logo:", error);
+      // Fallback icon
+      pdf.setFillColor(colors.secondary);
+      pdf.circle(pageWidth / 2, 55, 20, "F");
+      pdf.setDrawColor(colors.background);
+      pdf.setLineWidth(2);
+      pdf.line(pageWidth / 2 - 10, 55, pageWidth / 2 + 10, 55);
+      pdf.line(pageWidth / 2, 45, pageWidth / 2, 65);
     }
-
-    // Report title
-    pdf.setTextColor("#0F2C52");
-    pdf.setFontSize(typography.fontSize.h3);
+  
+    // Company name with bold, modern typography
+    const companyName = pageAnalysis.companyInfo?.name || "Tamer Digital";
+    pdf.setFontSize(28);
+    pdf.setTextColor(colors.text);
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("Website Performance Report", 30, 13);
-
-    // Analyzed URL
-    pdf.setFontSize(typography.fontSize.caption);
+    pdf.text(companyName, pageWidth / 2, 100, { align: "center" });
+  
+    // Slogan with subtle italic
+    pdf.setFontSize(14);
+    pdf.setTextColor(colors.lightText);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.italic);
+    pdf.text("Web Optimization & SEO Specialists", pageWidth / 2, 115, { align: "center" });
+  
+    // Decorative divider
+    pdf.setDrawColor(colors.accent);
+    pdf.setLineWidth(1.5);
+    pdf.line(pageWidth / 2 - 50, 125, pageWidth / 2 + 50, 125);
+  
+    // Report title in a styled box
+    pdf.setFillColor(colors.secondary);
+    pdf.roundedRect(pageWidth / 2 - 110, 140, 220, 50, 5, 5, "F");
+    pdf.setFontSize(26);
+    pdf.setTextColor(colors.background);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
+    pdf.text("WEB ANALYSIS", pageWidth / 2, 165, { align: "center" });
+    pdf.setFontSize(16);
+    pdf.text("Performance Report", pageWidth / 2, 180, { align: "center" });
+  
+    // Analyzed URL with a modern frame
+    pdf.setFillColor(colors.lightBg);
+    pdf.setDrawColor(colors.coverAccent);
+    pdf.setLineWidth(0.7);
+    pdf.roundedRect(pageWidth / 2 - 100, 200, 200, 35, 3, 3, "FD");
+    pdf.setFontSize(11);
+    pdf.setTextColor(colors.primary);
     pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    pdf.setTextColor("#666666");
-    pdf.text(`URL: ${truncateText(pageAnalysis.url, 60)}`, 30, 18);
-
+    pdf.text("ANALYZED URL:", pageWidth / 2, 215, { align: "center" });
+    pdf.setFontSize(12);
+    pdf.setTextColor(colors.text);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
+    const urlLines = pdf.splitTextToSize(pageAnalysis.url, 180);
+    pdf.text(urlLines, pageWidth / 2, 225, { align: "center" });
+  
     // Generation date
-    const date = new Date().toLocaleDateString();
-    pdf.text(`Generated: ${date}`, pageWidth - 15, 13, { align: "right" });
+    const date = new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    pdf.setFontSize(10);
+    pdf.setTextColor(colors.lightText);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.italic);
+    pdf.text(`Generated on: ${date}`, pageWidth / 2, 250, { align: "center" });
+  
+    // Contact information in a sleek card
+    pdf.setFillColor(colors.headerBg);
+    pdf.setDrawColor(colors.accent);
+    pdf.setLineWidth(0.5);
+    pdf.roundedRect(pageWidth / 2 - 80, pageHeight - 90, 160, 60, 5, 5, "FD");
+    pdf.setFontSize(10);
+    pdf.setTextColor(colors.background);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
+    pdf.text("CONTACT US", pageWidth / 2, pageHeight - 75, { align: "center" });
+    pdf.setFontSize(9);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
+    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com";
+    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890";
+    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com";
+    pdf.text(`Email: ${email}`, pageWidth / 2, pageHeight - 65, { align: "center" });
+    pdf.text(`Phone: ${phone}`, pageWidth / 2, pageHeight - 55, { align: "center" });
+    pdf.text(`Web: ${website}`, pageWidth / 2, pageHeight - 45, { align: "center" });
+  
+    // Footer confidentiality notice
+    pdf.setFillColor(colors.primary);
+    pdf.rect(0, pageHeight - 20, pageWidth, 20, "F");
+    pdf.setFontSize(8);
+    pdf.setTextColor(colors.background);
+    pdf.text(
+      "CONFIDENTIAL - This document contains proprietary and confidential information.",
+      pageWidth / 2,
+      pageHeight - 10,
+      { align: "center" },
+    );
+  
+    pdf.addPage();
+    pageNumber++;
   };
+
+  // Draw header on each page
+  const drawHeader = () => {
+    pdf.setFillColor(colors.headerBg)
+    pdf.rect(0, 0, pageWidth, 15, "F")
+    pdf.setTextColor("#FFFFFF")
+    pdf.setFontSize(14)
+    pdf.setFont("helvetica", "bold")
+    pdf.text("Website Performance Report", 10, 10)
+    pdf.setFontSize(8)
+    pdf.setFont("helvetica", "normal")
+    pdf.text(`URL: ${truncateText(pageAnalysis.url, 60)}`, 10, 14)
+    const date = new Date().toLocaleDateString()
+    pdf.text(`Generated: ${date}`, pageWidth - 10, 10, { align: "right" })
+  }
 
   // Draw footer
   const drawFooter = (pageNum: number, totalPgs: number) => {
-    // Don't draw the footer on the cover page (page 1)
-    if (pageNum === 1) return;
-
-    pdf.setDrawColor(colors.border);
-    pdf.setLineWidth(0.5);
-    pdf.line(10, pageHeight - 10, pageWidth - 10, pageHeight - 10);
-    pdf.setTextColor(colors.lightText);
-    pdf.setFontSize(typography.fontSize.caption);
-    pdf.text(pageAnalysis.companyInfo?.name || "SEO Analysis Report", 10, pageHeight - 5);
-    // Adjust numbering so the cover page doesn't count
-    pdf.text(`Page ${pageNum - 1} of ${totalPgs - 1}`, pageWidth - 10, pageHeight - 5, { align: "right" });
-  };
+    pdf.setDrawColor(colors.border)
+    pdf.setLineWidth(0.5)
+    pdf.line(10, pageHeight - 10, pageWidth - 10, pageHeight - 10)
+    pdf.setTextColor(colors.lightText)
+    pdf.setFontSize(8)
+    pdf.text("Automatically generated report", 10, pageHeight - 5)
+    pdf.text(`Page ${pageNum} of ${totalPgs}`, pageWidth - 10, pageHeight - 5, { align: "right" })
+  }
 
   // Draw section header
   const drawSectionHeader = (title: string) => {
-    checkSpace(15);
-
-    // Gradient for section header
-    const ctx = pdf.context2d;
-    const gradient = ctx.createLinearGradient(10, currentY, pageWidth - 10, currentY);
-    gradient.addColorStop(0, colors.primary);
-    gradient.addColorStop(1, colors.secondary);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(10, currentY, pageWidth - 20, 10);
-
-    pdf.setTextColor("#FFFFFF");
-    pdf.setFontSize(typography.fontSize.h3);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text(title, 15, currentY + 7);
-    currentY += 15;
-  };
+    checkSpace(15)
+    pdf.setFillColor(colors.headerBg)
+    pdf.rect(10, currentY, pageWidth - 20, 10, "F")
+    pdf.setTextColor("#FFFFFF")
+    pdf.setFontSize(12)
+    pdf.setFont("helvetica", "bold")
+    pdf.text(title, 15, currentY + 7)
+    currentY += 15
+  }
 
   const getAIAnalysisForSection = (category: string, deviceType: string) => {
     const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
@@ -340,15 +324,12 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
 const drawRecommendations = (category: string, score: number) => {
   checkSpace(30);
 
-  // Create a visually distinct recommendations section header
+  // Create a visually distinct recommendations section header with black background
   const ctx = pdf.context2d;
-  const gradient = ctx.createLinearGradient(15, currentY, pageWidth - 15, currentY);
-  gradient.addColorStop(0, colors.primary);
-  gradient.addColorStop(1, colors.secondary);
-  ctx.fillStyle = gradient;
+  ctx.fillStyle = "#000000"; // Black background
   ctx.fillRect(15, currentY, pageWidth - 30, 10);
 
-  pdf.setTextColor("#FFFFFF");
+  pdf.setTextColor("#FFFFFF"); // White text for better contrast
   pdf.setFontSize(typography.fontSize.h3);
   pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
   pdf.text("RECOMMENDATIONS", 25, currentY + 7);
@@ -365,7 +346,7 @@ const drawRecommendations = (category: string, score: number) => {
   // Table headers
   pdf.setFillColor(colors.sectionBg);
   pdf.rect(20, currentY, pageWidth - 40, 10, "F");
-  pdf.setTextColor(colors.primary);
+  pdf.setTextColor("#000000"); // Black text
   pdf.setFontSize(typography.fontSize.bodySmall);
   pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
   pdf.text("Priority", 25, currentY + 7);
@@ -386,15 +367,17 @@ const drawRecommendations = (category: string, score: number) => {
       pdf.setFillColor(index % 2 === 0 ? colors.lightBg : colors.background);
       pdf.rect(20, currentY, pageWidth - 40, 20, "F");
       
-      // Priority level (High/Medium/Low based on index)
-      const priority = index < 2 ? "High Priority" : index < 4 ? "MediumPriority" : "Low";
+      // Priority level (High/Medium/Low based on index) - fixing the format
+      const priorityLevel = index < 2 ? "High" : index < 4 ? "Medium" : "Low";
+      const priorityText = priorityLevel + " Priority"; // Proper formatting
+      
       pdf.setTextColor(
-        priority === "High Priority" ? colors.poor :
-        priority === "Medium Priority" ? colors.average :
+        priorityLevel === "High" ? colors.poor :
+        priorityLevel === "Medium" ? colors.average :
         colors.good
       );
       pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-      pdf.text(priority, 25, currentY + 12);
+      pdf.text(priorityText, 25, currentY + 12);
       
       // Recommendation text
       pdf.setTextColor(colors.text);
@@ -660,23 +643,19 @@ const drawRecommendations = (category: string, score: number) => {
   // Modified function to draw the progress circle with AI analysis
   const drawCircleProgress = (score: number, label: string, x = 30, radius = 15) => {
     checkSpace(radius * 2 + 15);
-
     const scorePercentage = Math.round(score * 100);
-
     pdf.setTextColor(colors.text);
     pdf.setFontSize(typography.fontSize.h3);
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
     pdf.text(label, 15, currentY + 6);
-
     currentY += 15;
-
+  
     const ctx = pdf.context2d;
-
     ctx.beginPath();
     ctx.arc(x, currentY + radius, radius, 0, Math.PI * 2, false);
     ctx.fillStyle = "#f1f5f9";
     ctx.fill();
-
+  
     let gradientStart, gradientEnd;
     if (score >= 0.9) {
       gradientStart = "#10b981";
@@ -688,11 +667,11 @@ const drawRecommendations = (category: string, score: number) => {
       gradientStart = "#e11d48";
       gradientEnd = "#dc2626";
     }
-
+  
     const grd = ctx.createLinearGradient(x - radius, currentY + radius, x + radius, currentY + radius);
     grd.addColorStop(0, gradientStart);
     grd.addColorStop(1, gradientEnd);
-
+  
     const startAngle = -Math.PI / 2;
     const endAngle = startAngle + score * Math.PI * 2;
     ctx.beginPath();
@@ -701,91 +680,56 @@ const drawRecommendations = (category: string, score: number) => {
     ctx.lineTo(x, currentY + radius);
     ctx.fillStyle = grd;
     ctx.fill();
-
+  
     ctx.beginPath();
     ctx.arc(x, currentY + radius, radius * 0.65, 0, Math.PI * 2, false);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
-
+  
     ctx.beginPath();
     ctx.arc(x, currentY + radius, radius + 5, startAngle, endAngle, false);
     ctx.strokeStyle = grd;
     ctx.lineWidth = 1;
     ctx.stroke();
-
+  
     let scoreText = `${scorePercentage}`;
     if (scoreText.length > 3) {
       scoreText = scoreText.substring(0, 2);
     }
     scoreText += "%";
-
+  
     pdf.setTextColor(gradientStart);
     pdf.setFontSize(typography.fontSize.body);
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
     const textWidth = pdf.getTextWidth(scoreText);
     pdf.text(scoreText, x - textWidth / 2, currentY + radius + 3);
-
-    // Extract category and device type
+  
+    // Determine category for recommendations
     const deviceType = label.toLowerCase().includes("mobile") ? "mobile" : "desktop";
     let category = label.toLowerCase().replace(`${deviceType} - `, "").replace(/\s+/g, "-");
     if (label.includes("On-page Score")) {
-      category = "seo";
+      category = "on_page_specific";
     }
-
-    // Get AI analysis
-    const aiAnalysis = getAIAnalysisForSection(category, deviceType);
-
-    // Render analysis text to the right of the circle
-    const descriptionX = x + radius * 2 + 10;
-    const descriptionWidth = pageWidth - descriptionX - 15;
-
-    if (aiAnalysis && aiAnalysis.analysis) {
-      // Add a subtle background box for the analysis text
-      pdf.setFillColor("#F8FBFF");
-      pdf.setDrawColor("#D0E1F9");
-      pdf.setLineWidth(0.3);
-      
-      // Determine the height of the analysis text
-      const analysisLines = pdf.splitTextToSize(aiAnalysis.analysis, descriptionWidth);
-      const analysisHeight = analysisLines.length * 5 + 10; // Add padding
-      
-      // Draw the rounded box
-      pdf.roundedRect(descriptionX - 5, currentY - 5, descriptionWidth + 10, analysisHeight, 3, 3, "FD");
-      
-      // Add a title for the analysis
-      pdf.setTextColor(colors.primary);
-      pdf.setFontSize(typography.fontSize.bodySmall);
-      pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-      pdf.text("ANALYSIS:", descriptionX, currentY + 3);
-      
-      // Show the analysis text
-      pdf.setTextColor(colors.text);
-      pdf.setFontSize(typography.fontSize.caption);
-      pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-      pdf.text(analysisLines, descriptionX, currentY + 10);
-
-      // Store recommendations for the recommendations section
-      if (aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0) {
-        const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
-        if (!aiAnalysisResult.recommendations[normalizedCategory]) {
-          aiAnalysisResult.recommendations[normalizedCategory] = [];
-        }
-        aiAnalysis.recommendations.forEach((rec) => {
-          if (!aiAnalysisResult.recommendations[normalizedCategory].includes(rec)) {
-            aiAnalysisResult.recommendations[normalizedCategory].push(rec);
-          }
-        });
+  
+    // Collect recommendations without rendering analysis or conclusions
+    const aiAnalysis = category === "on_page_specific" ? aiAnalysisResult.onPageAnalysis : getAIAnalysisForSection(category, deviceType);
+  
+    if (aiAnalysis && aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0) {
+      const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
+      if (!aiAnalysisResult.recommendations[normalizedCategory]) {
+        aiAnalysisResult.recommendations[normalizedCategory] = [];
       }
-
-      const circleHeight = radius * 2;
-      currentY += Math.max(circleHeight, analysisHeight) + 10;
-    } else {
-      currentY += radius * 2 + 15;
+      aiAnalysis.recommendations.forEach((rec) => {
+        if (!aiAnalysisResult.recommendations[normalizedCategory].includes(rec)) {
+          aiAnalysisResult.recommendations[normalizedCategory].push(rec);
+        }
+      });
     }
-
+  
+    currentY += radius * 2 + 15;
+  
     return score;
   };
-
   // Draw status icon (check or X)
   const drawStatusIcon = (x: number, isGood: boolean) => {
     const iconSize = 3;
@@ -931,54 +875,120 @@ const drawRecommendations = (category: string, score: number) => {
 
   // Draw conclusion page
   const drawConclusionPage = () => {
-    // Background color
-    pdf.setFillColor(colors.coverBg);
+    // Gradient background
+    const ctx = pdf.context2d;
+    const gradient = ctx.createLinearGradient(0, 0, 0, pageHeight);
+    gradient.addColorStop(0, colors.primary);
+    gradient.addColorStop(1, colors.coverBg);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, pageWidth, pageHeight);
+  
+    // Subtle pattern overlay
+    pdf.setDrawColor(colors.coverAccent);
+    pdf.setLineWidth(0.2);
+    for (let i = -pageWidth; i < pageWidth + pageHeight; i += 10) {
+      pdf.line(i, 0, i + pageHeight, pageHeight);
+    }
+    pdf.setFillColor(colors.background);
+
     pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-    // Top bar with gradient
-    const ctx = pdf.context2d;
-    const gradient = ctx.createLinearGradient(0, 0, pageWidth, 0);
-    gradient.addColorStop(0, colors.primary);
-    gradient.addColorStop(1, colors.secondary);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, pageWidth, 40);
+  
+    // Top bar
+    pdf.setFillColor(colors.headerBg);
+    pdf.rect(0, 0, pageWidth, 15, "F");
+    pdf.setTextColor(colors.background);
+    pdf.setFontSize(12);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
+    pdf.text("Final Insights", pageWidth / 2, 10, { align: "center" });
+  
+    // Title with shadow effect
+    pdf.setFontSize(28);
+    pdf.setTextColor("#000000");
 
-    // Title
-    pdf.setFontSize(24);
+    pdf.text("CONCLUSION", pageWidth / 2 + 1, pageHeight / 2 - 39, { align: "center" });
+    
     pdf.setTextColor(colors.primary);
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("CONCLUSION", pageWidth / 2, pageHeight / 2 - 20, { align: "center" });
-
-    // Decorative line
+    pdf.text("CONCLUSION", pageWidth / 2, pageHeight / 2 - 40, { align: "center" });
+  
+    // Decorative divider
     pdf.setDrawColor(colors.accent);
     pdf.setLineWidth(2);
-    pdf.line(pageWidth / 2 - 40, pageHeight / 2 - 10, pageWidth / 2 + 40, pageHeight / 2 - 10);
-
-    // Closing message
+    pdf.line(pageWidth / 2 - 50, pageHeight / 2 - 25, pageWidth / 2 + 50, pageHeight / 2 - 25);
+  
+    // Aggregate AI-generated conclusions
+    let generalConclusion = "";
+    const conclusions: string[] = [];
+  
+    if (aiAnalysisResult.sections) {
+      Object.values(aiAnalysisResult.sections).forEach((section) => {
+        if (section.conclusions) {
+          conclusions.push(section.conclusions);
+        }
+      });
+    }
+  
+    if (aiAnalysisResult.seoAnalysis?.conclusions) {
+      conclusions.push(aiAnalysisResult.seoAnalysis.conclusions);
+    }
+  
+    if (aiAnalysisResult.onPageAnalysis?.conclusions) {
+      conclusions.push(aiAnalysisResult.onPageAnalysis.conclusions);
+    }
+  
+    if (conclusions.length > 0) {
+      generalConclusion = conclusions.join(" ");
+      const maxLength = 600;
+      generalConclusion = generalConclusion.length > maxLength 
+        ? generalConclusion.substring(0, maxLength) + "..." 
+        : generalConclusion;
+    } else {
+      generalConclusion = `
+        This comprehensive analysis highlights key areas for improving your website's performance, accessibility, and SEO.
+        Implementing the recommended changes can significantly enhance user experience and search engine visibility.
+        Contact us for personalized strategies to elevate your digital presence.
+      `;
+    }
+  
+    // Conclusion text in a styled box
+    pdf.setFillColor(colors.lightBg);
+    pdf.setDrawColor(colors.coverAccent);
+    pdf.setLineWidth(0.5);
+    const conclusionLines = pdf.splitTextToSize(generalConclusion.trim(), pageWidth - 60);
+    const conclusionHeight = conclusionLines.length * 6 + 20;
+    pdf.roundedRect(pageWidth / 2 - 100, pageHeight / 2 - 10, 200, conclusionHeight, 5, 5, "FD");
     pdf.setFontSize(typography.fontSize.h2);
-    const closingMessage = `
-      Thank you for using our Website Analysis Report.
-      This report provides actionable insights to help improve your website's performance,
-      accessibility, best practices adherence, and SEO. 
-      For further assistance or a detailed consultation, feel free to contact us.
-    `;
-    const messageLines = pdf.splitTextToSize(closingMessage.trim(), pageWidth - 40);
-
-    pdf.text(messageLines, pageWidth / 2, pageHeight / 2 + 10, { align: "center" });
-
-    // Footer message
-    pdf.setFillColor(colors.primary);
-    pdf.rect(0, pageHeight - 25, pageWidth, 25, "F");
-
-    pdf.setTextColor("#FFFFFF");
-    pdf.setFontSize(typography.fontSize.body);
+    pdf.setTextColor(colors.text);
     pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    pdf.text("CONFIDENTIAL", 15, pageHeight - 10);
-
-    const contactInfo = pageAnalysis.companyInfo?.contactEmail || "contact@example.com";
-    pdf.text(contactInfo, pageWidth - 15, pageHeight - 10, { align: "right" });
+    pdf.text(conclusionLines, pageWidth / 2, pageHeight / 2 + 5, { align: "center" });
+  
+    // Call-to-action contact box
+    pdf.setFillColor(colors.secondary);
+    pdf.setDrawColor(colors.accent);
+    pdf.setLineWidth(0.5);
+    pdf.roundedRect(pageWidth / 2 - 80, pageHeight - 100, 160, 70, 5, 5, "FD");
+    pdf.setFontSize(12);
+    pdf.setTextColor(colors.background);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
+    pdf.text("NEXT STEPS", pageWidth / 2, pageHeight - 85, { align: "center" });
+    pdf.setFontSize(10);
+    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
+    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com";
+    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890";
+    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com";
+    pdf.text("Ready to optimize your website?", pageWidth / 2, pageHeight - 70, { align: "center" });
+    pdf.text(`Email: ${email}`, pageWidth / 2, pageHeight - 60, { align: "center" });
+    pdf.text(`Phone: ${phone}`, pageWidth / 2, pageHeight - 50, { align: "center" });
+    pdf.text(`Web: ${website}`, pageWidth / 2, pageHeight - 40, { align: "center" });
+  
+    // Footer
+    pdf.setFillColor(colors.primary);
+    pdf.rect(0, pageHeight - 20, pageWidth, 20, "F");
+    pdf.setFontSize(8);
+    pdf.setTextColor(colors.background);
+    pdf.text("CONFIDENTIAL", pageWidth / 2, pageHeight - 10, { align: "center" });
   };
-
   // Start the PDF with cover page
   drawCoverPage();
 
@@ -1243,7 +1253,7 @@ const drawRecommendations = (category: string, score: number) => {
     });
 
     // Add recommendations for SEO
-    drawRecommendations("seo", seoScore);
+    drawRecommendations("seo_specific", seoScore);
   }
 
   // Add conclusion page
