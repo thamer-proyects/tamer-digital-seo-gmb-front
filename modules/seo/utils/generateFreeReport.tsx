@@ -97,7 +97,6 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
       }
       return text || "";
     };
-
     // Check if we need a new page
     const checkSpace = (requiredHeight: number) => {
       if (currentY + requiredHeight > pageHeight - 25) {
