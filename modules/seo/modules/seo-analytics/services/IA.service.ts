@@ -1,4 +1,3 @@
-
 import type { PageAnalysisResponse, Metric, Issue } from "../types/analysisResponse";
 
 interface AIAnalysisResponse {
@@ -16,7 +15,7 @@ interface AIAnalysisResponse {
 interface AIAnalysisSection {
   analysis: string;
   recommendations: string[];
-  conclusions?: string; // Nueva propiedad para conclusiones generales
+  conclusions: string; // Propiedad obligatoria para conclusiones generales
 }
 
 interface AIAnalysisResult {
@@ -87,7 +86,7 @@ function generateOnPagePrompt(pageAnalysis: PageAnalysisResponse): string {
   const pageMetrics = seoData.page_metrics;
   const domainInfo = seoData.domain_info;
 
-  const onPageInfo = [`On-page Score: ${Math.round(pageMetrics.onpage_score )}%`].join(". ");
+  const onPageInfo = [`On-page Score: ${Math.round(pageMetrics.onpage_score)}%`].join(". ");
 
   const checksInfo = [
     `CMS: ${domainInfo.cms || "Not detected"}`,
@@ -130,15 +129,17 @@ Recommendations:
 Conclusions: [your conclusions text]"`;
 }
 
-// Función para generar prompts para categorías de velocidad
+// Función corregida para generar prompts para categorías de velocidad
 function generateSpeedPrompt(
   pageAnalysis: PageAnalysisResponse,
   category: string,
   deviceType: "mobile" | "desktop",
 ): string {
-  const normalizedSearchCategory = category.toLowerCase().replace(/\s+/g, "-");
+  const normalizedCategory = category.toLowerCase().replace(/\s+/g, "-");
 
-  if (normalizedSearchCategory === "best-practices") {
+  // Corregido: Búsqueda específica para "best-practices"
+  if (normalizedCategory === "best-practices") {
+    // Buscar con ambas variantes de nombre
     const data = pageAnalysis.speed[deviceType].find(
       (cat) => cat.category === "best-practices" || cat.category === "best practices",
     );
@@ -155,7 +156,7 @@ function generateSpeedPrompt(
       .map((issue: Issue) => `${issue.title}: ${issue.description || "No description"}`)
       .join(". ");
 
-    return `Analyze the following performance data for ${deviceType.toUpperCase()} BEST_PRACTICES and provide:
+    return `Analyze the following performance data for ${deviceType.toUpperCase()} BEST PRACTICES and provide:
 1. ANALYSIS (max 300 words):
 - Key findings and interpretation of metrics
 - Strengths and weaknesses
@@ -166,7 +167,7 @@ function generateSpeedPrompt(
 - Focus on critical issues
 - Consider both technical and business impact
 
-3. GENERAL CONCLUSIONS (max 200 words):
+3. GENERAL CONCLUSIONS (max 100 words):
 - Overall assessment of best practices
 - Summary of critical priorities
 - Expected impact of implementing recommendations
@@ -185,7 +186,7 @@ Recommendations:
 Conclusions: [your conclusions text]"`;
   }
 
-  const data = pageAnalysis.speed[deviceType].find((cat) => cat.category === normalizedSearchCategory);
+  const data = pageAnalysis.speed[deviceType].find((cat) => cat.category === normalizedCategory);
 
   if (!data) {
     return "";
@@ -229,19 +230,20 @@ Recommendations:
 Conclusions: [your conclusions text]"`;
 }
 
+// Función corregida para extraer correctamente las conclusiones
 function parseAIResponse(content: string): AIAnalysisSection {
-  let analysis = content;
-  analysis = analysis.replace(/^(Analysis:)\s*/i, "");
+  // Primero, buscar todas las secciones
+  const analysisMatch = content.match(/^Analysis:([\s\S]*?)(?=Recommendations:|$)/i);
+  const recommendationsMatch = content.match(/Recommendations:([\s\S]*?)(?=Conclusions:|$)/i);
+  const conclusionsMatch = content.match(/Conclusions:([\s\S]*?)$/i);
 
+  // Extraer y limpiar el análisis
+  const analysis = analysisMatch && analysisMatch[1] ? analysisMatch[1].trim() : "";
+
+  // Extraer y procesar las recomendaciones
   const recommendations: string[] = [];
-  const recommendationMatch = content.match(/(Recommendations:)([\s\S]*?)(Conclusions:|$)/i);
-
-  if (recommendationMatch && recommendationMatch[0]) {
-    analysis = analysis.replace(recommendationMatch[0], "").trim();
-  }
-
-  if (recommendationMatch && recommendationMatch[2]) {
-    const recLines = recommendationMatch[2].trim().split(/\n+/);
+  if (recommendationsMatch && recommendationsMatch[1]) {
+    const recLines = recommendationsMatch[1].trim().split(/\n+/);
     for (const line of recLines) {
       const match = line.match(/^\s*\d+\.\s*(.+)$/);
       if (match && match[1]) {
@@ -252,13 +254,13 @@ function parseAIResponse(content: string): AIAnalysisSection {
     }
   }
 
-  const conclusionsMatch = content.match(/(Conclusions:)([\s\S]*)$/i);
-  const conclusions = conclusionsMatch && conclusionsMatch[2] ? conclusionsMatch[2].trim() : "";
+  // Extraer y limpiar las conclusiones
+  const conclusions = conclusionsMatch && conclusionsMatch[1] ? conclusionsMatch[1].trim() : "";
 
   return {
     analysis,
     recommendations,
-    conclusions,
+    conclusions
   };
 }
 
@@ -302,14 +304,14 @@ async function makeAIRequest(prompt: string): Promise<AIAnalysisSection> {
       return {
         analysis: "Unable to generate analysis. Please try again later.",
         recommendations: [],
-        conclusions: "",
+        conclusions: "No conclusions available.",
       };
     }
   } catch (error) {
     return {
       analysis: "Error generating AI analysis",
       recommendations: [],
-      conclusions: "",
+      conclusions: "No conclusions available.",
     };
   }
 }
@@ -321,6 +323,7 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
   const categoryRecommendations: Record<string, string[]> = {};
   let fullAnalysis = "";
 
+  // Inicializar con valores por defecto
   let seoAnalysis: AIAnalysisSection = {
     analysis: "",
     recommendations: [],
@@ -333,6 +336,7 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
     conclusions: "",
   };
 
+  // Análisis SEO específico
   const seoPrompt = generateSEOPrompt(pageAnalysis);
   if (seoPrompt) {
     try {
@@ -345,11 +349,12 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
       seoAnalysis = {
         analysis: "Error generating specific SEO analysis",
         recommendations: [],
-        conclusions: "",
+        conclusions: "No conclusions available.",
       };
     }
   }
 
+  // Análisis On-Page específico
   const onPagePrompt = generateOnPagePrompt(pageAnalysis);
   if (onPagePrompt) {
     try {
@@ -362,11 +367,12 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
       onPageAnalysis = {
         analysis: "Error generating specific On-Page analysis",
         recommendations: [],
-        conclusions: "",
+        conclusions: "No conclusions available.",
       };
     }
   }
 
+  // Procesamiento de categorías de velocidad
   for (const category of speedCategories) {
     const categoryRecs = new Set<string>();
 
@@ -388,7 +394,7 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
         sections[sectionKey] = {
           analysis: `Error generating AI analysis for ${deviceType} ${category}`,
           recommendations: [],
-          conclusions: "",
+          conclusions: "No conclusions available.",
         };
       }
     }
