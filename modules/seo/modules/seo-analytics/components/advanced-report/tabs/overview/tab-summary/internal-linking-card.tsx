@@ -102,7 +102,7 @@ export const InternalLinkingCard = memo(function InternalLinkingCard() {
             onPress={handleViewDetails}
             className="min-w-[120px]"
           >
-            Ir a Internal Linking
+          Ir a Internal Linking
           </Button>
         </div>
 

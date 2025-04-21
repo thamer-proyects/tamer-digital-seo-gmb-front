@@ -20,9 +20,9 @@ const httpStatusData: HttpStatusData[] = [
 ];
 
 const indicators = [
-  { label: 'Páginas con 2xx', value: '85%', trend: '+2.5%', positive: true },
+  { label: 'Pages with 2xx', value: '85%', trend: '+2.5%', positive: true },
   { label: 'Errores (4xx/5xx)', value: '5%', trend: '-1.2%', positive: true },
-  { label: 'Redirecciones 3xx', value: '285', trend: '-15.3%', positive: true },
+  { label: '3xx redirections', value: '285', trend: '-15.3%', positive: true },
 ];
 
 interface CustomTooltipProps {

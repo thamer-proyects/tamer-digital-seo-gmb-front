@@ -35,7 +35,7 @@ const CustomTooltip = ({ active, payload }: any) => {
         />
         <span className="font-medium">{payload[0].payload.name}</span>
       </div>
-      <p className="text-sm text-default-500">Páginas: {payload[0].value}%</p>
+      <p className="text-sm text-default-500">Pages: {payload[0].value}%</p>
     </div>
   );
 };
@@ -48,12 +48,12 @@ export const MarkupOverviewSection = memo(function MarkupOverviewSection({
 
   const distributionData = [
     {
-      name: 'Con marcado',
+      name: 'Marked',
       value: (markupSummary.withMarkup / total) * 100,
       color: COLORS.withMarkup,
     },
     {
-      name: 'Sin marcado',
+      name: 'No marked',
       value: (markupSummary.withoutMarkup / total) * 100,
       color: COLORS.withoutMarkup,
     },
@@ -70,7 +70,7 @@ export const MarkupOverviewSection = memo(function MarkupOverviewSection({
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Distribución de Marcado</h3>
+            <h3 className="text-lg font-medium mb-4">Marking distribution</h3>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -109,7 +109,7 @@ export const MarkupOverviewSection = memo(function MarkupOverviewSection({
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Tipos de Marcado</h3>
+            <h3 className="text-lg font-medium mb-4">Types of Marked</h3>
             <RootHorizontalBarChart
               data={typesChartData}
               height={180}

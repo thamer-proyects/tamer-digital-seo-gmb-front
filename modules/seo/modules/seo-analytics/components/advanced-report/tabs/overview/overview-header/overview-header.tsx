@@ -6,8 +6,11 @@ import { SiteHealthRing } from '../site-health';
 import { TabSummaries } from '../tab-summaries';
 import RootCard from '@/components/ui/root-card';
 import { OverviewHeaderProps } from '@/modules/seo/modules/seo-analytics/types/advancedReportTabs';
-
+import { RecommendationsCallout } from '../recommendations/recommendations-callout';
+import { tabSummariesData } from '@/modules/seo/modules/seo-analytics/mocks/advancedReportTabSummaries';
 export const OverviewHeader = memo(function OverviewHeader({ siteHealth }: OverviewHeaderProps) {
+  const recommendationsData = tabSummariesData.find((summary) => summary.key === 'recommendations');
+  
   const handleTabChange = (key: string) => {
     const tabElement = document.querySelector(`[role="tab"][data-key="${key}"]`) as HTMLElement;
     if (tabElement) {
@@ -17,7 +20,15 @@ export const OverviewHeader = memo(function OverviewHeader({ siteHealth }: Overv
 
   return (
     <div className="space-y-8">
+        {/* Recommendations Section - MOVED TO TOP */}
+        {recommendationsData && (
+         <div className="lg:col-span-8 w-full">
+           <RecommendationsCallout summary={recommendationsData} onViewDetails={handleTabChange} />
+         </div>
+       )}
+   
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
         <div className="lg:col-span-4">
           <SiteHealthRing siteHealth={siteHealth} />
         </div>
@@ -30,20 +41,19 @@ export const OverviewHeader = memo(function OverviewHeader({ siteHealth }: Overv
                   <Activity className="w-8 h-8 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold mb-2">Estado General del Sitio</h2>
-                  <p className="text-default-500">Auditoría SEO y Análisis de Rendimiento</p>
+                  <h2 className="text-2xl font-bold mb-2">General Site Status</h2>
+                  <p className="text-default-500">SEO Audit and Performance Analysis</p>
                 </div>
               </div>
 
               <div className="space-y-4 mb-8">
                 <p className="text-default-600 leading-relaxed">
-                  Este reporte presenta una visión integral del estado de tu sitio web, basado en
-                  métricas SEO on-page y off-page. Cada sección destaca áreas clave que afectan tu
-                  rendimiento en los motores de búsqueda.
+                  This report provides a comprehensive overview of your website's status, based on
+                  on-page and off-page SEO metrics. Each section highlights key areas that impact
+                  your search engine performance.
                 </p>
                 <p className="text-sm text-default-500">
-                  Explora cada sección para obtener recomendaciones detalladas y mejoras
-                  específicas.
+                  Explore each section for detailed recommendations and specific improvements.
                 </p>
               </div>
             </CardBody>

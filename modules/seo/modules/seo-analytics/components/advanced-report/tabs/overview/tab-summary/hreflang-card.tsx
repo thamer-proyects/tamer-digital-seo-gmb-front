@@ -12,23 +12,23 @@ interface HreflangIndicator {
 }
 
 const hreflangData = [
-  { name: 'Páginas con hreflang válido', value: 75, color: '#4CAF50' },
+  { name: 'Pages with valid hreflang', value: 75, color: '#4CAF50' },
   { name: 'Páginas sin hreflang', value: 25, color: '#EF5350' },
 ];
 
 const indicators: HreflangIndicator[] = [
   {
-    label: 'Páginas con hreflang válido',
+    label: 'Pages with valid hreflang',
     value: '75%',
     color: 'text-success-500',
   },
   {
-    label: 'Conflictos detectados',
+    label: 'Conflicts detected',
     value: '23',
     color: 'text-warning-500',
   },
   {
-    label: 'Páginas sin hreflang',
+    label: 'Pages their hrefring',
     value: '25%',
     color: 'text-danger-500',
   },
@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: data.color }} />
         <span className="font-medium">{data.name}</span>
       </div>
-      <p className="text-sm text-default-500">Porcentaje: {data.value}%</p>
+      <p className="text-sm text-default-500">Percentage: {data.value}%</p>
     </div>
   );
 };
@@ -108,7 +108,7 @@ export const HreflangCard = memo(function HreflangCard() {
           <Divider className="mb-4" />
           <div className="">
             <h4 className="text-base font-semibold mb-4">
-              Distribución de Implementación Hreflang
+             Hreflang implementation distribution
             </h4>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">

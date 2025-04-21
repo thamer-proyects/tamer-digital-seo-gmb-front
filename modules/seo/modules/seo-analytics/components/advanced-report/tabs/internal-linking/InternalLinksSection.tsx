@@ -48,7 +48,7 @@ const CustomBarTooltip = ({ active, payload }: any) => {
   return (
     <div className="bg-content1 p-3 rounded-lg shadow-lg border border-default-200">
       <p className="font-medium">{payload[0].payload.url}</p>
-      <p className="text-sm text-default-500">Enlaces entrantes: {payload[0].value}</p>
+      <p className="text-sm text-default-500">Incoming links: {payload[0].value}</p>
     </div>
   );
 };
@@ -64,7 +64,7 @@ const CustomPieTooltip = ({ active, payload }: any) => {
         />
         <span className="font-medium">{payload[0].payload.strength}</span>
       </div>
-      <p className="text-sm text-default-500">Porcentaje: {payload[0].payload.percentage}%</p>
+      <p className="text-sm text-default-500">Percentage: {payload[0].payload.percentage}%</p>
     </div>
   );
 };
@@ -90,7 +90,7 @@ export const InternalLinksSection = memo(function InternalLinksSection({
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Enlaces Internos Entrantes</h3>
+            <h3 className="text-lg font-medium mb-4">Internal internal links</h3>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={incomingLinks} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -115,7 +115,7 @@ export const InternalLinksSection = memo(function InternalLinksSection({
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Distribución de Enlaces</h3>
+            <h3 className="text-lg font-medium mb-4">Link distribution</h3>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -154,11 +154,11 @@ export const InternalLinksSection = memo(function InternalLinksSection({
       <div className="lg:col-span-12">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Páginas Problemáticas</h3>
+            <h3 className="text-lg font-medium mb-4">Problematic pages</h3>
             <Table aria-label="Páginas problemáticas" classNames={{ wrapper: 'shadow-none' }}>
               <TableHeader>
                 <TableColumn>URL</TableColumn>
-                <TableColumn>PROBLEMA</TableColumn>
+                <TableColumn>PROBLEM</TableColumn>
               </TableHeader>
               <TableBody>
                 {problematicPages.map((page, index) => (

@@ -15,49 +15,49 @@ interface TaskGroup {
 
 const taskGroups: TaskGroup[] = [
   {
-    category: 'Marcado y Estructura',
+    category: 'Marked and structure',
     icon: Code2,
     tasks: [
       {
-        title: 'Implementar Schema.org en productos',
-        description: 'Añadir marcado estructurado Product para todas las páginas de productos.',
+        title: 'Implement schema.org in products',
+        description: 'Add structured product marked for all products pages.',
         completed: false,
       },
       {
-        title: 'Corregir errores de validación',
-        description: 'Resolver problemas detectados en la validación de datos estructurados.',
+        title: 'Correct validation errors',
+        description: 'Solve problems detected in structured data validation.',
         completed: true,
       },
     ],
   },
   {
-    category: 'Enlaces Internos',
+    category: 'Internal links',
     icon: Link,
     tasks: [
       {
-        title: 'Optimizar estructura de navegación',
-        description: 'Reducir la profundidad de clic para páginas importantes.',
+        title: 'Optimize navigation structure',
+        description: 'Reduce click depth for important pages.',
         completed: false,
       },
       {
-        title: 'Corregir enlaces rotos',
-        description: 'Actualizar o eliminar enlaces internos que devuelven error 404.',
+        title: 'Correct broken links',
+        description: 'Update or delete internal links that return error 404.',
         completed: true,
       },
     ],
   },
   {
-    category: 'Internacionalización',
+    category: 'Internationalization',
     icon: Globe2,
     tasks: [
       {
-        title: 'Implementar hreflang correctamente',
-        description: 'Asegurar reciprocidad en todas las versiones de idioma.',
+        title: 'Implement Hreflang correctly',
+        description: 'Ensure reciprocity in all language versions.',
         completed: false,
       },
       {
         title: 'Añadir x-default',
-        description: 'Implementar la versión por defecto para usuarios sin coincidencia.',
+        description: 'Implement the default version for users without coincidence.',
         completed: false,
       },
     ],
@@ -67,13 +67,13 @@ const taskGroups: TaskGroup[] = [
     icon: ExternalLink,
     tasks: [
       {
-        title: 'Generar archivo disavow',
-        description: 'Crear y enviar archivo de desautorización para enlaces tóxicos.',
+        title: 'Generate Disavow file',
+        description: 'Create and send disavow file for toxic links.',
         completed: false,
       },
       {
-        title: 'Contactar dominios de calidad',
-        description: 'Iniciar outreach para obtener backlinks de sitios relevantes.',
+        title: 'Contact quality domains',
+        description: 'Start outreach to obtain relevant sites backlinks.',
         completed: false,
       },
     ],

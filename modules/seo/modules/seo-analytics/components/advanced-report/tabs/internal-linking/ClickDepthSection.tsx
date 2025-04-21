@@ -37,7 +37,7 @@ const CustomTooltip = ({ active, payload }: any) => {
         />
         <span className="font-medium">{payload[0].payload.depth}</span>
       </div>
-      <p className="text-sm text-default-500">Páginas: {payload[0].payload.percentage}%</p>
+      <p className="text-sm text-default-500">Pages: {payload[0].payload.percentage}%</p>
     </div>
   );
 };
@@ -56,7 +56,7 @@ export const ClickDepthSection = memo(function ClickDepthSection({
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Distribución de Profundidad</h3>
+            <h3 className="text-lg font-medium mb-4">Depth distribution</h3>
             <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -95,11 +95,11 @@ export const ClickDepthSection = memo(function ClickDepthSection({
       <div className="lg:col-span-6">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Páginas más Profundas</h3>
+            <h3 className="text-lg font-medium mb-4">Deepest pages</h3>
             <Table aria-label="Páginas más profundas" classNames={{ wrapper: 'shadow-none' }}>
               <TableHeader>
                 <TableColumn>URL</TableColumn>
-                <TableColumn>CLICS</TableColumn>
+                <TableColumn>Clicks</TableColumn>
               </TableHeader>
               <TableBody>
                 {navigationDepth.deepestPages.map((page, index) => (

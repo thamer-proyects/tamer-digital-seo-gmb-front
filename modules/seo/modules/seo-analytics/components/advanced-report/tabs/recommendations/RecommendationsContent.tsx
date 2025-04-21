@@ -9,11 +9,11 @@ export const RecommendationsContent = memo(function RecommendationsContent() {
       {/* Header Section */}
       <div className="text-center max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400">
-          Recomendaciones Finales
+        Final recommendations
         </h1>
         <p className="text-default-600">
-          Plan de acción detallado basado en el análisis completo de SEO para mejorar el rendimiento
-          y visibilidad de tu sitio.
+         Detailed Action Plan based on the complete SEO analysis to improve performance
+          and visibility of your site.
         </p>
       </div>
 
@@ -23,7 +23,7 @@ export const RecommendationsContent = memo(function RecommendationsContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Prioridades</h2>
+            <h2 className="text-2xl font-semibold"> Priorities</h2>
           </div>
           <PrioritySection />
         </section>
@@ -32,7 +32,7 @@ export const RecommendationsContent = memo(function RecommendationsContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Plan de Acción</h2>
+            <h2 className="text-2xl font-semibold">Plan of action</h2>
           </div>
           <TasksSection />
         </section>
@@ -41,7 +41,7 @@ export const RecommendationsContent = memo(function RecommendationsContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Enlaces Rápidos</h2>
+            <h2 className="text-2xl font-semibold">Fast links</h2>
           </div>
           <QuickLinksSection />
         </section>

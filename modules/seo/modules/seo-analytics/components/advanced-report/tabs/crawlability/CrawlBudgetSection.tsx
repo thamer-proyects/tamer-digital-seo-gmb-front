@@ -43,7 +43,7 @@ export const CrawlBudgetSection = memo(function CrawlBudgetSection({
       <div className="lg:col-span-8">
         <RootCard className="h-full">
           <CardBody className="p-6">
-            <h3 className="text-lg font-medium mb-4">Distribución del Presupuesto Desperdiciado</h3>
+            <h3 className="text-lg font-medium mb-4">Wasted Budget Distribution</h3>
             <RootHorizontalBarChart
               data={wastedBudgetData}
               height={180}
@@ -58,8 +58,8 @@ export const CrawlBudgetSection = memo(function CrawlBudgetSection({
           <CardBody className="p-6 justify-center">
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium mb-2">Páginas Rastreadas</h3>
-                <p className="text-sm text-default-500 mb-4">Porcentaje de páginas accesibles</p>
+                <h3 className="text-lg font-medium mb-2">Crawled Pages</h3>
+                <p className="text-sm text-default-500 mb-4">Percentage of accessible pages</p>
                 <Progress
                   size="lg"
                   radius="sm"
@@ -78,13 +78,13 @@ export const CrawlBudgetSection = memo(function CrawlBudgetSection({
 
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-default-500">Páginas rastreadas</span>
+                  <span className="text-sm text-default-500">Crawled pages</span>
                   <span className="text-sm font-semibold">
                     {crawlBudget.crawlProgress.crawled}%
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-default-500">Páginas bloqueadas</span>
+                  <span className="text-sm text-default-500">Blocked pages</span>
                   <span className="text-sm font-semibold text-danger">
                     {crawlBudget.crawlProgress.blocked}%
                   </span>

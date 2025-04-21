@@ -12,33 +12,33 @@ interface PriorityIssue {
 
 const priorityIssues: PriorityIssue[] = [
   {
-    title: 'Optimización de Canonicalización',
+    title: 'Canonicalization optimization',
     description:
-      'Múltiples páginas con contenido similar carecen de etiquetas canónicas apropiadas.',
+      'Multiple pages with similar content lack appropriate canon labels.',
     impact: 85,
     category: 'high',
   },
   {
-    title: 'Enlaces Internos Profundos',
-    description: 'Algunas páginas importantes requieren más de 4 clics para ser alcanzadas.',
+    title: 'Deep internal links',
+    description: 'Some important pages require more than 4 clicks to be reached.',
     impact: 75,
     category: 'high',
   },
   {
-    title: 'Implementación de Hreflang',
-    description: 'Falta de reciprocidad en las etiquetas hreflang para versiones internacionales.',
+    title: 'Hreflang implementation',
+    description: 'Lack of reciprocity on Hreflang labels for international versions.',
     impact: 65,
     category: 'medium',
   },
   {
-    title: 'Backlinks de Baja Calidad',
-    description: 'Presencia de enlaces entrantes de dominios con baja autoridad.',
+    title: 'Low quality backlinks',
+    description: 'Presence of domain bonds with low authority.',
     impact: 60,
     category: 'medium',
   },
   {
-    title: 'Marcado Estructurado',
-    description: 'Falta implementación de Schema.org en páginas de productos.',
+    title: 'Structured marking',
+    description: 'Lack of schema.org implementation on product pages.',
     impact: 45,
     category: 'low',
   },

@@ -2,7 +2,7 @@
 import { memo } from 'react';
 import { TabTitle } from './TabTitle';
 import { tabsData } from '../../constants/advancedReport';
-import { Card, CardBody, Tab, Tabs } from '@heroui/react';
+import { Button, Card, CardBody, Tab, Tabs } from '@heroui/react';
 import { AdvancedReportTabContent } from './tab-content/AdvancedReportTabContent';
 
 export const AdvancedReport = memo(function AdvancedReport() {
@@ -28,6 +28,14 @@ export const AdvancedReport = memo(function AdvancedReport() {
               </Tab>
             ))}
           </Tabs>
+          
+        <Button
+          className="fixed bottom-4 right-4 flex items-center gap-2 z-50"
+          color="primary"
+        
+        >
+          Download PDF
+        </Button>
         </CardBody>
       </Card>
     </div>

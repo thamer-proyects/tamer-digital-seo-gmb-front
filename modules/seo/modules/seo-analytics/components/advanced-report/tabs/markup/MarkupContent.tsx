@@ -52,11 +52,11 @@ export const MarkupContent = memo(function MarkupContent() {
     <div className="p-6 space-y-12">
       <div className="text-center max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400">
-          Análisis de Marcado Estructurado
+          Structured marking analysis
         </h1>
         <p className="text-default-600">
-          Optimiza la implementación de datos estructurados para mejorar la visibilidad en los
-          resultados de búsqueda.
+        Optimizes the implementation of structured data to improve visibility in
+          Search results.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ export const MarkupContent = memo(function MarkupContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Resumen de Marcado</h2>
+            <h2 className="text-2xl font-semibold">Marking summary</h2>
           </div>
           <MarkupOverviewSection
             markupSummary={markupData.markupSummary}
@@ -75,7 +75,7 @@ export const MarkupContent = memo(function MarkupContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Datos Estructurados</h2>
+            <h2 className="text-2xl font-semibold">Structured data</h2>
           </div>
           <StructuredDataSection
             structuredData={markupData.structuredData}
@@ -86,7 +86,7 @@ export const MarkupContent = memo(function MarkupContent() {
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="h-8 w-1 bg-primary rounded-full" />
-            <h2 className="text-2xl font-semibold">Beneficios e Impacto</h2>
+            <h2 className="text-2xl font-semibold">Benefits and impact</h2>
           </div>
           <BenefitsSection />
         </section>
