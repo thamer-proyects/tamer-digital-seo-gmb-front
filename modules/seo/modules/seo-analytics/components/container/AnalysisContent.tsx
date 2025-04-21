@@ -32,7 +32,7 @@ const AnalysisContent = () => {
       const enhancedAnalysisResponse = {
         ...freeAnalysisResponse,
         companyInfo: companyInfo,
-      } as EnhancedAnalysisResponse;
+      } as EnhancedPageAnalysisResponse;
 
       // Pass the enhanced data to the PDF generator
       await generateFreeReportPDF(enhancedAnalysisResponse)
