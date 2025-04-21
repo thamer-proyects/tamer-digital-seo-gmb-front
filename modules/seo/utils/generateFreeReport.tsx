@@ -63,7 +63,7 @@ const colors = {
   sectionBg: "#EEF2F7",       // Section background
   headerBg: "#1665C0",        // Header background - Updated to match image blue
   coverBg: "#FFFFFF",         // Cover background
-  coverAccent: "#3498DB",     // Cover accent
+  coverAccent: "#1665C0",     // Cover accent
 };
 
 
@@ -86,176 +86,167 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
   const pageHeight = pdf.internal.pageSize.getHeight();
 
   // Tracking current position and page number
-  let currentY = 25;
-  let pageNumber = 1;
-  let totalPages = 0;
+    let currentY = 25;
+    let pageNumber = 1;
+    let totalPages = 0;
 
-  // Helper functions
-  const truncateText = (text: string, maxLength: number): string => {
-    return text?.length > maxLength ? text.substring(0, maxLength) + "..." : text || "";
-  };
-
-  // Check if we need a new page
-  const checkSpace = (requiredHeight: number) => {
-    if (currentY + requiredHeight > pageHeight - 25) {
-      pdf.addPage();
-      pageNumber++;
-      currentY = 25;
-      drawHeader();
-    }
-  };
+    // Helper functions
+    const truncateText = (text: string, maxLength: number): string => {
+      if (text && text.length > maxLength) {
+        return text.substring(0, maxLength) + "...";
+      }
+      return text || "";
+    };
+    // Check if we need a new page
+    const checkSpace = (requiredHeight: number) => {
+      if (currentY + requiredHeight > pageHeight - 25) {
+        pdf.addPage();
+        pageNumber++;
+        currentY = 25;
+        drawHeader();
+      }
+    };
 
   // Función mejorada para crear una portada más profesional
   const drawCoverPage = () => {
-    // Gradient background
-    const ctx = pdf.context2d;
-    const gradient = ctx.createLinearGradient(0, 0, 0, pageHeight);
-    gradient.addColorStop(0, colors.primary);
-    gradient.addColorStop(1, colors.coverBg);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, pageWidth, pageHeight);
+    // Limpiar fondo
+    pdf.setFillColor("#FFFFFF")
+    pdf.rect(0, 0, pageWidth, pageHeight, "F")
   
-    // Subtle diagonal pattern overlay
-    pdf.setDrawColor(colors.coverAccent);
-    pdf.setLineWidth(0.2);
-    for (let i = -pageWidth; i < pageWidth + pageHeight; i += 10) {
-      pdf.line(i, 0, i + pageHeight, pageHeight);
-    }
-    pdf.setFillColor(colors.background);
-    pdf.rect(0, 0, pageWidth, pageHeight, "F");
+    // Barra lateral azul (más ancha que en el código original)
+    pdf.setFillColor("#0D47A1")
+    pdf.rect(0, 0, pageWidth * 0.25, pageHeight, "F")
   
-    // Top bar with darker shade
-    pdf.setFillColor(colors.headerBg);
-    pdf.rect(0, 0, pageWidth, 15, "F");
+    // Añadir patrón a la barra lateral
+    drawCheckerPattern(0, 0, pageWidth * 0.25, pageHeight, "#0A3B8C", 10)
   
-    // Report ID
-    const reportId = `REP-${Date.now().toString().substring(6)}`;
-    pdf.setFontSize(typography.fontSize.caption);
-    pdf.setTextColor(colors.lightText);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    pdf.text(`ID: ${reportId}`, pageWidth - 20, 12, { align: "right" });
+    // Área para el logo en la parte superior izquierda
+    pdf.setFillColor("#FFFFFF")
+    pdf.setFont("helvetica", "bold")
+    pdf.setFontSize(18)
+    pdf.setTextColor("#333333")
+    pdf.text("LOGO", 30, 60)
+    
   
-    // Logo with shadow effect
-    try {
-      const logoWidth = 50;
-      const logoHeight = 50;
-      const logoX = pageWidth / 2 - logoWidth / 2;
-      const logoY = 30;
-      // Shadow
-      pdf.setFillColor("#000000");
-      pdf.roundedRect(logoX + 2, logoY + 2, logoWidth, logoHeight, 5, 5, "F");
+    // Área rectangular con patrón de transparencia (similar a la imagen)
+    pdf.setFillColor("#F0F0F0")
+    const patternX = pageWidth * 0.35
+    const patternY = 100
+    const patternWidth = pageWidth * 0.4
+    const patternHeight = pageHeight * 0.25
+    pdf.rect(patternX, patternY, patternWidth, patternHeight, "F")
+    drawCheckerPattern(patternX, patternY, patternWidth, patternHeight, "#CCCCCC", 8)
   
-      // Logo
-      if (pageAnalysis.companyInfo?.logo) {
-        pdf.addImage(pageAnalysis.companyInfo.logo, "PNG", logoX, logoY, logoWidth, logoHeight);
-      } else {
-        // Fallback to a modern SEO icon
-        pdf.setFillColor(colors.coverAccent);
-        pdf.circle(pageWidth / 2, logoY + logoHeight / 2, logoWidth / 4, "F");
-        pdf.setDrawColor(colors.background);
-        pdf.setLineWidth(2);
-        pdf.line(pageWidth / 2 - 10, logoY + logoHeight / 2, pageWidth / 2 + 10, logoY + logoHeight / 2);
-        pdf.line(pageWidth / 2, logoY + logoHeight / 2 - 10, pageWidth / 2, logoY + logoHeight / 2 + 10);
+    // Barra de acento azul
+    pdf.setFillColor("#1976D2")
+    pdf.rect(pageWidth - 100, 120, 80, 8, "F")
+  
+    // Sección inferior azul oscuro
+    pdf.setFillColor("#0A2240")
+    pdf.rect(0, pageHeight - 240, pageWidth, 240, "F")
+  
+    // Año
+    pdf.setFontSize(24)
+    pdf.setTextColor("#3498DB")
+    pdf.setFont("helvetica", "normal")
+    pdf.text("2025", 25, pageHeight - 190)
+  
+    // Título COMPANY 
+    pdf.setFontSize(32)
+    pdf.setTextColor("#FFFFFF")
+    pdf.setFont("helvetica", "bold")
+    pdf.text("WEB ANALYSIS", 25, pageHeight - 160)
+  
+    // Subtítulo PROFILE
+    pdf.setFontSize(28)
+    pdf.setTextColor("#3498DB")
+    pdf.setFont("helvetica", "bold")
+    pdf.text("SEO REPORT", 25, pageHeight - 130)
+  
+    // Texto de cita
+    pdf.setFontSize(12)
+    pdf.setTextColor("#FFFFFF")
+    pdf.setFont("helvetica", "italic")
+    const quote = "Optimizando tu presencia digital para alcanzar nuevas audiencias y generar resultados medibles."
+    const quoteLines = pdf.splitTextToSize(quote, 260)
+    pdf.text(quoteLines, 25, pageHeight - 100)
+  
+    // URL analizada con marco decorativo
+    pdf.setFillColor("#F5F9FD")
+    pdf.setDrawColor("#1976D2")
+    pdf.setLineWidth(0.5)
+    pdf.rect(25, pageHeight - 280, 250, 30, "FD")
+    
+    pdf.setFontSize(12)
+    pdf.setTextColor("#0D47A1")
+    pdf.setFont("helvetica", "bold")
+    pdf.text("ANALYZED URL:", 35, pageHeight - 263)
+    
+    pdf.setFontSize(11)
+    pdf.setTextColor("#333333")
+    pdf.setFont("helvetica", "normal")
+    const urlLines = pdf.splitTextToSize(pageAnalysis.url || "example.com", 160)
+    pdf.text(urlLines, 130, pageHeight - 263)
+  
+    // Información de contacto en la parte inferior derecha
+    pdf.setFontSize(10)
+    pdf.setTextColor("#333333")
+    pdf.setFont("helvetica", "normal")
+    
+    const email = pageAnalysis.companyInfo?.contactEmail || "contact@company.com"
+    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890"
+    const website = pageAnalysis.companyInfo?.website || "www.company.com"
+    
+    pdf.text(`Email: ${email}`, pageWidth - 25, pageHeight - 280, { align: "right" })
+    pdf.text(`Phone: ${phone}`, pageWidth - 25, pageHeight - 268, { align: "right" })
+    pdf.text(`Web: ${website}`, pageWidth - 25, pageHeight - 256, { align: "right" })
+  
+    // Función para dibujar patrón de cuadrícula (similares a los que se ven en la imagen)
+    function drawCheckerPattern(
+      x: number, 
+      y: number, 
+      width: number, 
+      height: number, 
+      color: string, 
+      size: number
+    ): void {
+      pdf.setDrawColor(color)
+      pdf.setLineWidth(0.2)
+      
+      // Dibujar líneas horizontales
+      for (let i = 0; i <= height; i += size) {
+        pdf.line(x, y + i, x + width, y + i)
       }
-    } catch (error) {
-      console.error("Error loading logo:", error);
-      // Fallback icon
-      pdf.setFillColor(colors.secondary);
-      pdf.circle(pageWidth / 2, 55, 20, "F");
-      pdf.setDrawColor(colors.background);
-      pdf.setLineWidth(2);
-      pdf.line(pageWidth / 2 - 10, 55, pageWidth / 2 + 10, 55);
-      pdf.line(pageWidth / 2, 45, pageWidth / 2, 65);
+      
+      // Dibujar líneas verticales
+      for (let i = 0; i <= width; i += size) {
+        pdf.line(x + i, y, x + i, y + height)
+      }
     }
   
-    // Company name with bold, modern typography
-    const companyName = pageAnalysis.companyInfo?.name || "Tamer Digital";
-    pdf.setFontSize(28);
-    pdf.setTextColor(colors.text);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text(companyName, pageWidth / 2, 100, { align: "center" });
+    // Report ID (opcional)
+    const reportId = `SEO-${Date.now().toString().substring(6)}`
+    pdf.setFontSize(9)
+    pdf.setTextColor("#666666")
+    pdf.setFont("helvetica", "normal")
+    pdf.text(`ID: ${reportId}`, pageWidth - 20, 22, { align: "right" })
   
-    // Slogan with subtle italic
-    pdf.setFontSize(14);
-    pdf.setTextColor(colors.lightText);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.italic);
-    pdf.text("Web Optimization & SEO Specialists", pageWidth / 2, 115, { align: "center" });
-  
-    // Decorative divider
-    pdf.setDrawColor(colors.accent);
-    pdf.setLineWidth(1.5);
-    pdf.line(pageWidth / 2 - 50, 125, pageWidth / 2 + 50, 125);
-  
-    // Report title in a styled box
-    pdf.setFillColor(colors.secondary);
-    pdf.roundedRect(pageWidth / 2 - 110, 140, 220, 50, 5, 5, "F");
-    pdf.setFontSize(26);
-    pdf.setTextColor(colors.background);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("WEB ANALYSIS", pageWidth / 2, 165, { align: "center" });
-    pdf.setFontSize(16);
-    pdf.text("Performance Report", pageWidth / 2, 180, { align: "center" });
-  
-    // Analyzed URL with a modern frame
-    pdf.setFillColor(colors.lightBg);
-    pdf.setDrawColor(colors.coverAccent);
-    pdf.setLineWidth(0.7);
-    pdf.roundedRect(pageWidth / 2 - 100, 200, 200, 35, 3, 3, "FD");
-    pdf.setFontSize(11);
-    pdf.setTextColor(colors.primary);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    pdf.text("ANALYZED URL:", pageWidth / 2, 215, { align: "center" });
-    pdf.setFontSize(12);
-    pdf.setTextColor(colors.text);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    const urlLines = pdf.splitTextToSize(pageAnalysis.url, 180);
-    pdf.text(urlLines, pageWidth / 2, 225, { align: "center" });
-  
-    // Generation date
+    // Generation date (opcional)
     const date = new Date().toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
-    });
-    pdf.setFontSize(10);
-    pdf.setTextColor(colors.lightText);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.italic);
-    pdf.text(`Generated on: ${date}`, pageWidth / 2, 250, { align: "center" });
+    })
+    
+    pdf.setFontSize(8)
+    pdf.setTextColor("#666666")
+    pdf.setFont("helvetica", "italic")
+    pdf.text(`Generated on: ${date}`, pageWidth - 20, 30, { align: "right" })
   
-    // Contact information in a sleek card
-    pdf.setFillColor(colors.headerBg);
-    pdf.setDrawColor(colors.accent);
-    pdf.setLineWidth(0.5);
-    pdf.roundedRect(pageWidth / 2 - 80, pageHeight - 90, 160, 60, 5, 5, "FD");
-    pdf.setFontSize(10);
-    pdf.setTextColor(colors.background);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("CONTACT US", pageWidth / 2, pageHeight - 75, { align: "center" });
-    pdf.setFontSize(9);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com";
-    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890";
-    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com";
-    pdf.text(`Email: ${email}`, pageWidth / 2, pageHeight - 65, { align: "center" });
-    pdf.text(`Phone: ${phone}`, pageWidth / 2, pageHeight - 55, { align: "center" });
-    pdf.text(`Web: ${website}`, pageWidth / 2, pageHeight - 45, { align: "center" });
-  
-    // Footer confidentiality notice
-    pdf.setFillColor(colors.primary);
-    pdf.rect(0, pageHeight - 20, pageWidth, 20, "F");
-    pdf.setFontSize(8);
-    pdf.setTextColor(colors.background);
-    pdf.text(
-      "CONFIDENTIAL - This document contains proprietary and confidential information.",
-      pageWidth / 2,
-      pageHeight - 10,
-      { align: "center" },
-    );
-  
-    // REMOVE THESE LINES to fix the blank page issue
-    // pdf.addPage();
-    // pageNumber++;
-  };;
+    // Move to next page
+    //pdf.addPage()
+    pageNumber++
+  }
 
   // Draw header on each page
   const drawHeader = () => {
@@ -903,7 +894,7 @@ const drawRecommendations = (category: string, _score: number) => {
     gradient.addColorStop(1, colors.coverBg);
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, pageWidth, pageHeight);
-  
+
     // Subtle pattern overlay
     pdf.setDrawColor(colors.coverAccent);
     pdf.setLineWidth(0.2);
@@ -914,7 +905,7 @@ const drawRecommendations = (category: string, _score: number) => {
 
     pdf.rect(0, 0, pageWidth, pageHeight, "F");
 
-  
+
     // Top bar
     pdf.setFillColor(colors.headerBg);
     pdf.rect(0, 0, pageWidth, 15, "F");
@@ -922,26 +913,25 @@ const drawRecommendations = (category: string, _score: number) => {
     pdf.setFontSize(12);
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
     pdf.text("Final Insights", pageWidth / 2, 10, { align: "center" });
-  
+
     // Title with shadow effect
     pdf.setFontSize(28);
     pdf.setTextColor("#000000");
 
     pdf.text("CONCLUSION", pageWidth / 2 + 1, pageHeight / 2 - 39, { align: "center" });
-    
+
     pdf.setTextColor(colors.primary);
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
     pdf.text("CONCLUSION", pageWidth / 2, pageHeight / 2 - 40, { align: "center" });
-  
+
     // Decorative divider
     pdf.setDrawColor(colors.accent);
     pdf.setLineWidth(2);
     pdf.line(pageWidth / 2 - 50, pageHeight / 2 - 25, pageWidth / 2 + 50, pageHeight / 2 - 25);
-  
+
     // Aggregate AI-generated conclusions
-    let generalConclusion = "";
     const conclusions: string[] = [];
-  
+
     if (aiAnalysisResult.sections) {
       Object.values(aiAnalysisResult.sections).forEach((section) => {
         if (section.conclusions) {
@@ -949,20 +939,22 @@ const drawRecommendations = (category: string, _score: number) => {
         }
       });
     }
-  
+
     if (aiAnalysisResult.seoAnalysis?.conclusions) {
       conclusions.push(aiAnalysisResult.seoAnalysis.conclusions);
     }
-  
+
     if (aiAnalysisResult.onPageAnalysis?.conclusions) {
       conclusions.push(aiAnalysisResult.onPageAnalysis.conclusions);
     }
-  
+
+    let generalConclusion = "";
+
     if (conclusions.length > 0) {
       generalConclusion = conclusions.join(" ");
       const maxLength = 600;
-      generalConclusion = generalConclusion.length > maxLength 
-        ? generalConclusion.substring(0, maxLength) + "..." 
+      generalConclusion = generalConclusion.length > maxLength
+        ? generalConclusion.substring(0, maxLength) + "..."
         : generalConclusion;
     } else {
       generalConclusion = `
@@ -971,7 +963,7 @@ const drawRecommendations = (category: string, _score: number) => {
         Contact us for personalized strategies to elevate your digital presence.
       `;
     }
-  
+
     // Conclusion text in a styled box
     pdf.setFillColor(colors.lightBg);
     pdf.setDrawColor(colors.coverAccent);
@@ -983,7 +975,7 @@ const drawRecommendations = (category: string, _score: number) => {
     pdf.setTextColor(colors.text);
     pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
     pdf.text(conclusionLines, pageWidth / 2, pageHeight / 2 + 5, { align: "center" });
-  
+
     // Call-to-action contact box
     pdf.setFillColor(colors.secondary);
     pdf.setDrawColor(colors.accent);
@@ -1002,7 +994,7 @@ const drawRecommendations = (category: string, _score: number) => {
     pdf.text(`Email: ${email}`, pageWidth / 2, pageHeight - 60, { align: "center" });
     pdf.text(`Phone: ${phone}`, pageWidth / 2, pageHeight - 50, { align: "center" });
     pdf.text(`Web: ${website}`, pageWidth / 2, pageHeight - 40, { align: "center" });
-  
+
     // Footer
     pdf.setFillColor(colors.primary);
     pdf.rect(0, pageHeight - 20, pageWidth, 20, "F");
