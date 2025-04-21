@@ -35,7 +35,6 @@ export function CreateAnalysis() {
                     type="url"
                     placeholder="Ingresa la URL a analizar"
                     label="URL"
-                    <!--startContent={<Search className=" text-gray-400 w-5 h-5" />}-->
                     startContent={<Search className="text-gray-400 w-5 h-5" /> as React.ReactNode}  
                   />
                   {error && <p className="absolute text-red-500 text-sm mt-1">{error}</p>}
