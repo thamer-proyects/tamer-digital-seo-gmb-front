@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import type { PageAnalysisResponse, Metric } from "../modules/seo-analytics/types/analysisResponse";
 import { getAIAnalysis } from "../modules/seo-analytics/services/IA.service";
 
-interface EnhancedPageAnalysisResponse extends PageAnalysisResponse {
+export interface EnhancedPageAnalysisResponse extends PageAnalysisResponse {
   aiAnalysis?: {
     sections: Record<
       string,
