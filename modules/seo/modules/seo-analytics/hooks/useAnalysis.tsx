@@ -57,7 +57,7 @@ export function useAnalysis() {
 
       router.push('/seo/analysis/free');
     } catch (err: any) {
-      setError(err.message || 'Ha ocurrido un error inesperado');
+      setError(err.message || 'An unexpected error has occurred');
     } finally {
       setLoading(false);
       setPercentage(0);
@@ -80,7 +80,7 @@ export function useAnalysis() {
       router.push('/seo/analysis/advanced');
     } catch (err: any) {
       console.log({ err });
-      setError(err.message || 'Ha ocurrido un error inesperado');
+      setError(err.message || 'An unexpected error has occurred');
     } finally {
       setLoading(false);
     }
