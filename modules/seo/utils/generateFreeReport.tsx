@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import type { PageAnalysisResponse, Metric } from "../modules/seo-analytics/types/analysisResponse";
 import { getAIAnalysis } from "../modules/seo-analytics/services/IA.service";
 
-interface EnhancedPageAnalysisResponse extends PageAnalysisResponse {
+export interface EnhancedPageAnalysisResponse extends PageAnalysisResponse {
   aiAnalysis?: {
     sections: Record<
       string,
@@ -114,122 +114,156 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     pdf.rect(0, 0, pageWidth, pageHeight, "F")
   
     // Barra lateral azul (más ancha que en el código original)
-    pdf.setFillColor("#0D47A1")
-    pdf.rect(0, 0, pageWidth * 0.25, pageHeight, "F")
+    pdf.setFillColor("#1665C0")
+    pdf.rect(0, 0, pageWidth * 0.35, pageHeight * 0.7, "F")
   
     // Añadir patrón a la barra lateral
-    drawCheckerPattern(0, 0, pageWidth * 0.25, pageHeight, "#0A3B8C", 10)
+    drawCheckerPattern(0, 0, pageWidth * 0.35, pageHeight * 0.7, "#0A3B8C", 10)
+  
+    // Report ID
+    const reportId = `REP-${Date.now().toString().substring(6)}`
+    pdf.setFontSize(9)
+    pdf.setTextColor("#FFFFFF")
+    pdf.setFont("helvetica", "normal")
+    pdf.text(`ID: ${reportId}`, 15, 15)
   
     // Área para el logo en la parte superior izquierda
+    try {
+      // Logo en la parte superior izquierda
+      const logoWidth = 50
+      const logoHeight = 50
+      const logoX = 30
+      const logoY = 30
+  
+      // Use the uploaded logo if available
+      if (pageAnalysis.companyInfo?.logo) {
+        // Determine the logo format based on data content
+        let logoFormat = 'PNG'; // Default format
+        
+        const logoData = pageAnalysis.companyInfo.logo;
+        
+        if (typeof logoData === 'string') {
+          // If logo is a data URL, try to extract format from it
+          if (logoData.includes('data:image/svg+xml')) {
+            logoFormat = 'SVG';
+          } else if (logoData.includes('data:image/jpeg') || logoData.includes('data:image/jpg')) {
+            logoFormat = 'JPEG';
+          } else if (logoData.includes('data:image/png')) {
+            logoFormat = 'PNG';
+          }
+        }
+        
+        // Add the image with the detected format
+        pdf.addImage(logoData, logoFormat, logoX, logoY, logoWidth, logoHeight)
+      } else {
+        // Fallback to default logo
+        pdf.addImage('https://pplx-res.cloudinary.com/image/upload/v1743881513/user_uploads/kxfXyhGFItaKuNC/logo.jpg', 'JPG', logoX, logoY, logoWidth, logoHeight);
+      }
+    } catch (error) {
+      console.error("Error adding logo:", error)
+      // Fallback if image loading fails
+      pdf.setFillColor("#1665C0")
+      pdf.setFont("helvetica", "bold")
+      pdf.setFontSize(24)
+      pdf.setTextColor("#333333")
+      pdf.text("LOGO", 30, 40)
+    }
+  
+    // Área rectangular blanca (sin patrón de cuadrícula)
     pdf.setFillColor("#FFFFFF")
-    pdf.setFont("helvetica", "bold")
-    pdf.setFontSize(18)
-    pdf.setTextColor("#333333")
-    pdf.text("LOGO", 30, 60)
-    
+    const whiteAreaX = pageWidth * 0.35
+    const whiteAreaY = 0
+    const whiteAreaWidth = pageWidth * 0.65
+    const whiteAreaHeight = pageHeight * 0.7
+    pdf.rect(whiteAreaX, whiteAreaY, whiteAreaWidth, whiteAreaHeight, "F")
   
-    // Área rectangular con patrón de transparencia (similar a la imagen)
-    pdf.setFillColor("#F0F0F0")
-    const patternX = pageWidth * 0.35
-    const patternY = 100
-    const patternWidth = pageWidth * 0.4
-    const patternHeight = pageHeight * 0.25
-    pdf.rect(patternX, patternY, patternWidth, patternHeight, "F")
-    drawCheckerPattern(patternX, patternY, patternWidth, patternHeight, "#CCCCCC", 8)
+    // Barra de acento azul en la esquina superior derecha
+    pdf.setFillColor("#1665C0")
+    pdf.rect(pageWidth - 50, 30, 30, 8, "F")
   
-    // Barra de acento azul
-    pdf.setFillColor("#1976D2")
-    pdf.rect(pageWidth - 100, 120, 80, 8, "F")
-  
-    // Sección inferior azul oscuro
-    pdf.setFillColor("#0A2240")
-    pdf.rect(0, pageHeight - 240, pageWidth, 240, "F")
-  
-    // Año
-    pdf.setFontSize(24)
-    pdf.setTextColor("#3498DB")
-    pdf.setFont("helvetica", "normal")
-    pdf.text("2025", 25, pageHeight - 190)
-  
-    // Título COMPANY 
-    pdf.setFontSize(32)
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFont("helvetica", "bold")
-    pdf.text("WEB ANALYSIS", 25, pageHeight - 160)
-  
-    // Subtítulo PROFILE
+    // Company name y SEO Report en el centro de la parte blanca
+    const companyName = pageAnalysis.companyInfo?.name || "Tamer Digital"
     pdf.setFontSize(28)
-    pdf.setTextColor("#3498DB")
+    pdf.setTextColor("#333333")
     pdf.setFont("helvetica", "bold")
-    pdf.text("SEO REPORT", 25, pageHeight - 130)
+    pdf.text(companyName, whiteAreaX + whiteAreaWidth / 2, 100, { align: "center" })
   
-    // Texto de cita
-    pdf.setFontSize(12)
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFont("helvetica", "italic")
-    const quote = "Optimizando tu presencia digital para alcanzar nuevas audiencias y generar resultados medibles."
-    const quoteLines = pdf.splitTextToSize(quote, 260)
-    pdf.text(quoteLines, 25, pageHeight - 100)
+    // SEO Report
+    pdf.setFontSize(22)
+    pdf.setTextColor("#1665C0")
+    pdf.setFont("helvetica", "bold")
+    pdf.text("SEO REPORT", whiteAreaX + whiteAreaWidth / 2, 130, { align: "center" })
   
-    // URL analizada con marco decorativo
-    pdf.setFillColor("#F5F9FD")
-    pdf.setDrawColor("#1976D2")
-    pdf.setLineWidth(0.5)
-    pdf.rect(25, pageHeight - 280, 250, 30, "FD")
-    
+    // Web Analysis
+    pdf.setFontSize(18)
+    pdf.setTextColor("#666666")
+    pdf.setFont("helvetica", "normal")
+    pdf.text("Web Performance Analysis", whiteAreaX + whiteAreaWidth / 2, 150, { align: "center" })
+  
+    // URL analizada (sin cuadro decorativo)
     pdf.setFontSize(12)
     pdf.setTextColor("#0D47A1")
     pdf.setFont("helvetica", "bold")
-    pdf.text("ANALYZED URL:", 35, pageHeight - 263)
-    
+    pdf.text("ANALYZED URL:", whiteAreaX + whiteAreaWidth / 2, 180, { align: "center" })
+  
     pdf.setFontSize(11)
     pdf.setTextColor("#333333")
     pdf.setFont("helvetica", "normal")
-    const urlLines = pdf.splitTextToSize(pageAnalysis.url || "example.com", 160)
-    pdf.text(urlLines, 130, pageHeight - 263)
+    const urlLines = pdf.splitTextToSize(pageAnalysis.url || "example.com", 200)
+    pdf.text(urlLines, whiteAreaX + whiteAreaWidth / 2, 195, { align: "center" })
   
-    // Información de contacto en la parte inferior derecha
+    // Sección inferior azul oscuro
+    pdf.setFillColor("#0A2240")
+    pdf.rect(0, pageHeight * 0.7, pageWidth, pageHeight * 0.3, "F")
+  
+    // Texto de cita
     pdf.setFontSize(10)
-    pdf.setTextColor("#333333")
+    pdf.setTextColor("#FFFFFF")
+    pdf.setFont("helvetica", "italic")
+    const quote = "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled"
+    const quoteLines = pdf.splitTextToSize(quote, 260)
+    pdf.text(quoteLines, 25, pageHeight * 0.7 + 110)
+  
+    // Información de contacto en la parte azul inferior
+    pdf.setFontSize(12)
+    pdf.setTextColor("#FFFFFF")
+    pdf.setFont("helvetica", "bold")
+    pdf.text("CONTACT INFORMATION", pageWidth - 40, pageHeight * 0.7 + 30, { align: "right" })
+  
+    pdf.setFontSize(10)
+    pdf.setTextColor("#FFFFFF")
     pdf.setFont("helvetica", "normal")
-    
-    const email = pageAnalysis.companyInfo?.contactEmail || "contact@company.com"
+  
+    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com"
     const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890"
-    const website = pageAnalysis.companyInfo?.website || "www.company.com"
-    
-    pdf.text(`Email: ${email}`, pageWidth - 25, pageHeight - 280, { align: "right" })
-    pdf.text(`Phone: ${phone}`, pageWidth - 25, pageHeight - 268, { align: "right" })
-    pdf.text(`Web: ${website}`, pageWidth - 25, pageHeight - 256, { align: "right" })
+    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com"
+  
+    pdf.text(`Email: ${email}`, pageWidth - 40, pageHeight * 0.7 + 45, { align: "center" })
+    pdf.text(`Phone: ${phone}`, pageWidth - 40, pageHeight * 0.7 + 55, { align: "center" })
+    pdf.text(`Web: ${website}`, pageWidth - 40, pageHeight * 0.7 + 65, { align: "center" })
   
     // Función para dibujar patrón de cuadrícula (similares a los que se ven en la imagen)
     function drawCheckerPattern(
-      x: number, 
-      y: number, 
-      width: number, 
-      height: number, 
-      color: string, 
-      size: number
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      color: string,
+      size: number,
     ): void {
       pdf.setDrawColor(color)
       pdf.setLineWidth(0.2)
-      
+  
       // Dibujar líneas horizontales
       for (let i = 0; i <= height; i += size) {
         pdf.line(x, y + i, x + width, y + i)
       }
-      
+  
       // Dibujar líneas verticales
       for (let i = 0; i <= width; i += size) {
         pdf.line(x + i, y, x + i, y + height)
       }
     }
-  
-    // Report ID (opcional)
-    const reportId = `SEO-${Date.now().toString().substring(6)}`
-    pdf.setFontSize(9)
-    pdf.setTextColor("#666666")
-    pdf.setFont("helvetica", "normal")
-    pdf.text(`ID: ${reportId}`, pageWidth - 20, 22, { align: "right" })
   
     // Generation date (opcional)
     const date = new Date().toLocaleDateString("en-US", {
@@ -237,14 +271,13 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
       month: "long",
       day: "numeric",
     })
-    
+  
     pdf.setFontSize(8)
-    pdf.setTextColor("#666666")
+    pdf.setTextColor("#FFFFFF")
     pdf.setFont("helvetica", "italic")
-    pdf.text(`Generated on: ${date}`, pageWidth - 20, 30, { align: "right" })
+    pdf.text(`Generated on: ${date}`, pageWidth - 20, pageHeight - 10, { align: "right" })
   
     // Move to next page
-    //pdf.addPage()
     pageNumber++
   }
 
@@ -1286,5 +1319,5 @@ const drawRecommendations = (category: string, _score: number) => {
   }
 
   // Save PDF
-  pdf.save("website-performance-report.pdf");
+  pdf.save("website-performance-reports.pdf");
 }
