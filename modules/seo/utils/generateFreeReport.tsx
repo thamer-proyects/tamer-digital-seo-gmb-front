@@ -1319,5 +1319,7 @@ const drawRecommendations = (category: string, _score: number) => {
   }
 
   // Save PDF
-  pdf.save("website-performance-reports.pdf");
+
+  pdf.save("website-performance-report.pdf");
 }
+

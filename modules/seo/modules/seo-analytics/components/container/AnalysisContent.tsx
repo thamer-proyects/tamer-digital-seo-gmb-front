@@ -8,7 +8,9 @@ import PagesSpeedInsights from "../free-report/pages-speed-insights/PagesSpeedIn
 import SeoOnPageSummary from "../free-report/seo-onpage-summary/SeoOnPageSummary"
 import Tabs from "@/components/ui/tabs"
 import { Link } from "@heroui/react"
+
 import {EnhancedPageAnalysisResponse, generateFreeReportPDF } from "@/modules/seo/utils/generateFreeReport"
+
 import { useContext } from "react"
 import { LoadingContext } from "@/store/loadingContext"
 import { redirect } from "next/navigation"
@@ -32,7 +34,9 @@ const AnalysisContent = () => {
       const enhancedAnalysisResponse = {
         ...freeAnalysisResponse,
         companyInfo: companyInfo,
-      }as EnhancedPageAnalysisResponse;
+
+      } as EnhancedPageAnalysisResponse;
+
 
       // Pass the enhanced data to the PDF generator
       await generateFreeReportPDF(enhancedAnalysisResponse)
