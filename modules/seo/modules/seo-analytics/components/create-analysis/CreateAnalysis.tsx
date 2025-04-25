@@ -24,6 +24,7 @@ export function CreateAnalysis() {
     console.log('Validation errors:', errors);
   };
 
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <FormProvider {...methods}>
@@ -43,6 +44,7 @@ export function CreateAnalysis() {
               visibility and speed. On-page, off-page, and technical SEO insights in one place.
             </p>
           </div>
+
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
             <div className="relative flex-1">
