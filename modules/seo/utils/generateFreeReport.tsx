@@ -109,176 +109,168 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
 
   // Función mejorada para crear una portada más profesional
   const drawCoverPage = () => {
-    // Limpiar fondo
-    pdf.setFillColor("#FFFFFF")
-    pdf.rect(0, 0, pageWidth, pageHeight, "F")
+    pdf.setFillColor("#FFFFFF");
+    pdf.rect(0, 0, pageWidth, pageHeight, "F");
   
-    // Barra lateral azul (más ancha que en el código original)
-    pdf.setFillColor("#1665C0")
-    pdf.rect(0, 0, pageWidth * 0.35, pageHeight * 0.7, "F")
+    // Left blue section with checker pattern
+    pdf.setFillColor("#1665C0");
+    pdf.rect(0, 0, pageWidth * 0.35, pageHeight * 0.7, "F");
+    drawCheckerPattern(0, 0, pageWidth * 0.35, pageHeight * 0.7, "#0A3B8C", 10);
   
-    // Añadir patrón a la barra lateral
-    drawCheckerPattern(0, 0, pageWidth * 0.35, pageHeight * 0.7, "#0A3B8C", 10)
+    const reportId = `REP-${Date.now().toString().substring(6)}`;
+    pdf.setFontSize(typography.fontSize.caption);
+    pdf.setTextColor("#FFFFFF");
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`ID: ${reportId}`, 15, 15);
   
-    // Report ID
-    const reportId = `REP-${Date.now().toString().substring(6)}`
-    pdf.setFontSize(9)
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFont("helvetica", "normal")
-    pdf.text(`ID: ${reportId}`, 15, 15)
-  
-    // Área para el logo en la parte superior izquierda
+    // Logo placement
     try {
-      // Logo en la parte superior izquierda
-      const logoWidth = 50
-      const logoHeight = 50
-      const logoX = 30
-      const logoY = 30
+      const logoWidth = 50;
+      const logoHeight = 50;
+      const logoX = 30;
+      const logoY = 30;
   
-      // Use the uploaded logo if available
       if (pageAnalysis.companyInfo?.logo) {
-        // Determine the logo format based on data content
-        let logoFormat = 'PNG'; // Default format
-        
-        const logoData = pageAnalysis.companyInfo.logo;
-        
-        if (typeof logoData === 'string') {
-          // If logo is a data URL, try to extract format from it
-          if (logoData.includes('data:image/svg+xml')) {
-            logoFormat = 'SVG';
-          } else if (logoData.includes('data:image/jpeg') || logoData.includes('data:image/jpg')) {
-            logoFormat = 'JPEG';
-          } else if (logoData.includes('data:image/png')) {
-            logoFormat = 'PNG';
-          }
+        const logoUrl = pageAnalysis.companyInfo.logo.toLowerCase();
+        let format = "PNG"; // Default format
+  
+        if (logoUrl.endsWith(".svg")) {
+          format = "SVG";
+        } else if (logoUrl.endsWith(".jpg") || logoUrl.endsWith(".jpeg")) {
+          format = "JPEG";
         }
-        
-        // Add the image with the detected format
-        pdf.addImage(logoData, logoFormat, logoX, logoY, logoWidth, logoHeight)
+  
+        pdf.addImage(pageAnalysis.companyInfo.logo, format, logoX, logoY, logoWidth, logoHeight);
       } else {
-        // Fallback to default logo
-        pdf.addImage('https://pplx-res.cloudinary.com/image/upload/v1743881513/user_uploads/kxfXyhGFItaKuNC/logo.jpg', 'JPG', logoX, logoY, logoWidth, logoHeight);
+        pdf.addImage(
+          'https://pplx-res.cloudinary.com/image/upload/v1743881513/user_uploads/kxfXyhGFItaKuNC/logo.jpg',
+          'JPEG',
+          logoX,
+          logoY,
+          logoWidth,
+          logoHeight
+        );
       }
     } catch (error) {
-      console.error("Error adding logo:", error)
-      // Fallback if image loading fails
-      pdf.setFillColor("#1665C0")
-      pdf.setFont("helvetica", "bold")
-      pdf.setFontSize(24)
-      pdf.setTextColor("#333333")
-      pdf.text("LOGO", 30, 40)
+      console.error("Error adding logo:", error);
+      pdf.setFillColor("#1665C0");
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(24);
+      pdf.setTextColor("#333333");
+      pdf.text("LOGO", 30, 40);
     }
   
-    // Área rectangular blanca (sin patrón de cuadrícula)
-    pdf.setFillColor("#FFFFFF")
-    const whiteAreaX = pageWidth * 0.35
-    const whiteAreaY = 0
-    const whiteAreaWidth = pageWidth * 0.65
-    const whiteAreaHeight = pageHeight * 0.7
-    pdf.rect(whiteAreaX, whiteAreaY, whiteAreaWidth, whiteAreaHeight, "F")
+    // White middle section with checker pattern
+    pdf.setFillColor("#FFFFFF");
+    const whiteAreaX = pageWidth * 0.35;
+    const whiteAreaY = 0;
+    const whiteAreaWidth = pageWidth * 0.65;
+    const whiteAreaHeight = pageHeight * 0.7;
+    pdf.rect(whiteAreaX, whiteAreaY, whiteAreaWidth, whiteAreaHeight, "F");
+    
+    // Add checker pattern to white area (light gray)
+    drawCheckerPattern(whiteAreaX, whiteAreaY, whiteAreaWidth, whiteAreaHeight, "#DDDDDD", 10);
   
-    // Barra de acento azul en la esquina superior derecha
-    pdf.setFillColor("#1665C0")
-    pdf.rect(pageWidth - 50, 30, 30, 8, "F")
+    // Small blue accent rectangle
+    pdf.setFillColor("#1665C0");
+    pdf.rect(pageWidth - 50, 30, 30, 8, "F");
   
-    // Company name y SEO Report en el centro de la parte blanca
-    const companyName = pageAnalysis.companyInfo?.name || "Tamer Digital"
-    pdf.setFontSize(28)
-    pdf.setTextColor("#333333")
-    pdf.setFont("helvetica", "bold")
-    pdf.text(companyName, whiteAreaX + whiteAreaWidth / 2, 100, { align: "center" })
+    // Company name and report title
+    const companyName = pageAnalysis.companyInfo?.name || "Tamer Digital";
+    pdf.setFontSize(28);
+    pdf.setTextColor("#333333");
+    pdf.setFont("helvetica", "bold");
+    pdf.text(companyName, whiteAreaX + whiteAreaWidth / 2, 100, { align: "center" });
   
-    // SEO Report
-    pdf.setFontSize(22)
-    pdf.setTextColor("#1665C0")
-    pdf.setFont("helvetica", "bold")
-    pdf.text("SEO REPORT", whiteAreaX + whiteAreaWidth / 2, 130, { align: "center" })
+    pdf.setFontSize(22);
+    pdf.setTextColor("#1665C0");
+    pdf.setFont("helvetica", "bold");
+    pdf.text("SEO REPORT", whiteAreaX + whiteAreaWidth / 2, 130, { align: "center" });
   
-    // Web Analysis
-    pdf.setFontSize(18)
-    pdf.setTextColor("#666666")
-    pdf.setFont("helvetica", "normal")
-    pdf.text("Web Performance Analysis", whiteAreaX + whiteAreaWidth / 2, 150, { align: "center" })
+    pdf.setFontSize(18);
+    pdf.setTextColor("#666666");
+    pdf.setFont("helvetica", "normal");
+    pdf.text("Web Performance Analysis", whiteAreaX + whiteAreaWidth / 2, 150, { align: "center" });
   
-    // URL analizada (sin cuadro decorativo)
-    pdf.setFontSize(12)
-    pdf.setTextColor("#0D47A1")
-    pdf.setFont("helvetica", "bold")
-    pdf.text("ANALYZED URL:", whiteAreaX + whiteAreaWidth / 2, 180, { align: "center" })
+    // URL section
+    pdf.setFontSize(12);
+    pdf.setTextColor("#0D47A1");
+    pdf.setFont("helvetica", "bold");
+    pdf.text("ANALYZED URL:", whiteAreaX + whiteAreaWidth / 2, 180, { align: "center" });
   
-    pdf.setFontSize(11)
-    pdf.setTextColor("#333333")
-    pdf.setFont("helvetica", "normal")
-    const urlLines = pdf.splitTextToSize(pageAnalysis.url || "example.com", 200)
-    pdf.text(urlLines, whiteAreaX + whiteAreaWidth / 2, 195, { align: "center" })
+    pdf.setFontSize(11);
+    pdf.setTextColor("#333333");
+    pdf.setFont("helvetica", "normal");
+    const urlLines = pdf.splitTextToSize(pageAnalysis.url || "example.com", 200);
+    pdf.text(urlLines, whiteAreaX + whiteAreaWidth / 2, 195, { align: "center" });
   
-    // Sección inferior azul oscuro
-    pdf.setFillColor("#0A2240")
-    pdf.rect(0, pageHeight * 0.7, pageWidth, pageHeight * 0.3, "F")
+    // Bottom dark blue section
+    pdf.setFillColor("#0A2240");
+    pdf.rect(0, pageHeight * 0.7, pageWidth, pageHeight * 0.3, "F");
   
-    // Texto de cita
-    pdf.setFontSize(10)
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFont("helvetica", "italic")
-    const quote = "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled"
-    const quoteLines = pdf.splitTextToSize(quote, 260)
-    pdf.text(quoteLines, 25, pageHeight * 0.7 + 110)
+    // Quote section
+    pdf.setFontSize(10);
+    pdf.setTextColor("#FFFFFF");
+    pdf.setFont("helvetica", "italic");
+    const quote = "On the other hand, we denounce with righteous indignation and dislike men who are so beguiled";
+    const quoteLines = pdf.splitTextToSize(quote, 260);
+    pdf.text(quoteLines, 25, pageHeight * 0.7 + 110);
   
-    // Información de contacto en la parte azul inferior
-    pdf.setFontSize(12)
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFont("helvetica", "bold")
-    pdf.text("CONTACT INFORMATION", pageWidth - 40, pageHeight * 0.7 + 30, { align: "right" })
+    // Contact information - centered as requested
+    pdf.setFontSize(12);
+    pdf.setTextColor("#FFFFFF");
+    pdf.setFont("helvetica", "bold");
+    pdf.text("CONTACT INFORMATION", pageWidth / 2, pageHeight * 0.7 + 30, { align: "center" });
   
-    pdf.setFontSize(10)
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFont("helvetica", "normal")
+    pdf.setFontSize(10);
+    pdf.setTextColor("#FFFFFF");
+    pdf.setFont("helvetica", "normal");
   
-    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com"
-    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890"
-    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com"
+    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com";
+    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890";
+    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com";
   
-    pdf.text(`Email: ${email}`, pageWidth - 40, pageHeight * 0.7 + 45, { align: "center" })
-    pdf.text(`Phone: ${phone}`, pageWidth - 40, pageHeight * 0.7 + 55, { align: "center" })
-    pdf.text(`Web: ${website}`, pageWidth - 40, pageHeight * 0.7 + 65, { align: "center" })
+    pdf.text(`Email: ${email}`, pageWidth / 2, pageHeight * 0.7 + 45, { align: "center" });
+    pdf.text(`Phone: ${phone}`, pageWidth / 2, pageHeight * 0.7 + 55, { align: "center" });
+    pdf.text(`Web: ${website}`, pageWidth / 2, pageHeight * 0.7 + 65, { align: "center" });
   
-    // Función para dibujar patrón de cuadrícula (similares a los que se ven en la imagen)
-    function drawCheckerPattern(
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      color: string,
-      size: number,
-    ): void {
-      pdf.setDrawColor(color)
-      pdf.setLineWidth(0.2)
+    // Current year and report type (like the 2030 COMPANY PROFILE in the example)
+
   
-      // Dibujar líneas horizontales
-      for (let i = 0; i <= height; i += size) {
-        pdf.line(x, y + i, x + width, y + i)
-      }
-  
-      // Dibujar líneas verticales
-      for (let i = 0; i <= width; i += size) {
-        pdf.line(x + i, y, x + i, y + height)
-      }
-    }
-  
-    // Generation date (opcional)
+    // Generation date
     const date = new Date().toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
+    });
   
-    pdf.setFontSize(8)
-    pdf.setTextColor("#FFFFFF")
-    pdf.setFont("helvetica", "italic")
-    pdf.text(`Generated on: ${date}`, pageWidth - 20, pageHeight - 10, { align: "right" })
+    pdf.setFontSize(9);
+    pdf.setTextColor("#FFFFFF");
+    pdf.setFont("helvetica", "italic");
+    pdf.text(`Generated on: ${date}`, pageWidth - 20, pageHeight - 10, { align: "right" });
   
-    // Move to next page
-    pageNumber++
+    pageNumber++;
+  };
+  
+  // Helper function to draw checker pattern
+  function drawCheckerPattern(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    color: string,
+    size: number,
+  ): void {
+    pdf.setDrawColor(color);
+    pdf.setLineWidth(0.2);
+  
+    for (let i = 0; i <= height; i += size) {
+      pdf.line(x, y + i, x + width, y + i);
+    }
+  
+    for (let i = 0; i <= width; i += size) {
+      pdf.line(x + i, y, x + i, y + height);
+    }
   }
 
   // Draw header on each page
@@ -286,10 +278,10 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     pdf.setFillColor(colors.headerBg)
     pdf.rect(0, 0, pageWidth, 15, "F")
     pdf.setTextColor("#FFFFFF")
-    pdf.setFontSize(14)
+    pdf.setFontSize(typography.fontSize.h2)
     pdf.setFont("helvetica", "bold")
     pdf.text("Website Performance Report", 10, 10)
-    pdf.setFontSize(8)
+    pdf.setFontSize(typography.fontSize.caption)
     pdf.setFont("helvetica", "normal")
     pdf.text(`URL: ${truncateText(pageAnalysis.url, 60)}`, 10, 14)
     const date = new Date().toLocaleDateString()
@@ -302,7 +294,7 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     pdf.setLineWidth(0.5)
     pdf.line(10, pageHeight - 10, pageWidth - 10, pageHeight - 10)
     pdf.setTextColor(colors.lightText)
-    pdf.setFontSize(8)
+    pdf.setFontSize(typography.fontSize.caption)
     pdf.text("Automatically generated report", 10, pageHeight - 5)
     pdf.text(`Page ${pageNum} of ${totalPgs}`, pageWidth - 10, pageHeight - 5, { align: "right" })
   }
@@ -313,36 +305,57 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
     pdf.setFillColor(colors.headerBg)
     pdf.rect(10, currentY, pageWidth - 20, 10, "F")
     pdf.setTextColor("#FFFFFF")
-    pdf.setFontSize(12)
+    pdf.setFontSize(typography.fontSize.h3)
     pdf.setFont("helvetica", "bold")
     pdf.text(title, 15, currentY + 7)
     currentY += 15
   }
 
   const getAIAnalysisForSection = (category: string, deviceType: string) => {
-    const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
-    const sectionKey = `${deviceType.toUpperCase()}_${normalizedCategory}`;
-
-    console.log(`Looking for AI analysis for: ${sectionKey}`);
-
-    if (!aiAnalysisResult.sections || !aiAnalysisResult.sections[sectionKey]) {
+    // Try both formats - with underscore and with hyphen
+    const normalizedCategoryUnderscore = category.replace(/-/g, "_").toUpperCase();
+    const normalizedCategoryHyphen = category.toUpperCase(); // Keep hyphens intact
+    
+    const sectionKeyUnderscore = `${deviceType.toUpperCase()}_${normalizedCategoryUnderscore}`;
+    const sectionKeyHyphen = `${deviceType.toUpperCase()}_${normalizedCategoryHyphen}`;
+    
+    console.log(`Looking for AI analysis for: ${sectionKeyUnderscore} or ${sectionKeyHyphen}`);
+  
+    // First try to get the exact analysis with underscore
+    let section = aiAnalysisResult.sections?.[sectionKeyUnderscore];
+    
+    // If not found, try with hyphen format
+    if (!section) {
+      section = aiAnalysisResult.sections?.[sectionKeyHyphen];
+    }
+  
+    // If still not found, look for alternatives
+    if (!section) {
       const alternativeKeys = Object.keys(aiAnalysisResult.sections || {}).filter(
-        (key) => key.includes(deviceType.toUpperCase()) && key.includes(category.toUpperCase().replace(/-/g, "_"))
+        (key) => key.includes(deviceType.toUpperCase()) && 
+                (key.includes(normalizedCategoryUnderscore) || 
+                 key.includes(normalizedCategoryHyphen))
       );
-
+  
+      // If we found an alternative key, use the first valid option
       if (alternativeKeys.length > 0) {
         const alternativeKey = alternativeKeys[0];
         console.log(`Using alternative key: ${alternativeKey}`);
         return aiAnalysisResult.sections[alternativeKey];
       }
-
+  
       console.log(`No analysis found for ${category} ${deviceType}`);
       return null;
     }
-
-    return aiAnalysisResult.sections[sectionKey];
+  
+    // Verify if the found section has analysis, recommendations and conclusions
+    if (!section.analysis || !section.recommendations || !section.conclusions) {
+      console.log(`Incomplete analysis for ${section ? 'found key' : 'null section'}, returning null.`);
+      return null;
+    }
+  
+    return section;
   };
-
 // Enhanced recommendations section with table layout
 const drawRecommendations = (category: string, _score: number) => {
   checkSpace(30);
@@ -418,250 +431,182 @@ const drawRecommendations = (category: string, _score: number) => {
 
   // Draw device comparison chart - Corrected to prevent cutting off
   const drawDeviceComparisonChart = (mobileScore: number, desktopScore: number, category: string) => {
-    // Calculate total height needed for the chart and its elements
-    const totalChartHeight = 250; // Increased to ensure everything fits
+    // Calcular altura necesaria para el gráfico
+    const totalChartHeight = 250;
+    checkSpace(totalChartHeight); // Asegúrate de que esta función esté definida en tu código
 
-    // Check if there's enough space, if not, create a new page
-    checkSpace(totalChartHeight);
+    // Configuración inicial del PDF
+    const pageWidth = pdf.internal.pageSize.getWidth(); // Ancho de la página
 
-    pdf.setTextColor(colors.text);
-    pdf.setFontSize(typography.fontSize.h3);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text(`${category} - Device Comparison`, 15, currentY + 6);
+    // Título del gráfico
+    pdf.setTextColor("#333333"); // Color negro suave para el texto
+    pdf.setFontSize(16); // Tamaño de fuente para el título
+    pdf.setFont("Helvetica", "bold"); // Fuente sans-serif moderna
+    pdf.text(`${category} - Comparación por Dispositivo`, 15, currentY + 6);
     currentY += 20;
 
-    const chartX = 20;
-    const chartY = currentY;
-    const chartWidth = pageWidth - 40;
-    const chartHeight = 60;
+    // **Iconos y puntuaciones**
+    const iconSize = 25; // Tamaño base de los iconos
+    const iconY = currentY;
 
-    pdf.setFillColor("#f8fafc");
+    // Icono móvil
+    pdf.addImage(
+        'https://cdn-icons-png.flaticon.com/512/0/191.png', // URL del icono móvil
+        'PNG',
+        25, // Posición X
+        iconY, // Posición Y
+        iconSize * 0.6, // Ancho (60% del tamaño original)
+        iconSize // Alto
+    );
+    pdf.setTextColor("#34A853"); // Verde para móvil
+    pdf.setFontSize(12);
+    pdf.text(`${Math.round(mobileScore * 100)}%`, 25, iconY + iconSize + 15);
+
+    // Icono desktop
+    pdf.addImage(
+        'https://cdn-icons-png.flaticon.com/512/3474/3474360.png', // URL del icono desktop
+        'PNG',
+        pageWidth - 45, // Posición X (derecha)
+        iconY, // Posición Y
+        iconSize, // Ancho
+        iconSize * 0.8 // Alto (80% del tamaño original)
+    );
+    pdf.setTextColor("#4285F4"); // Azul para desktop
+    pdf.text(`${Math.round(desktopScore * 100)}%`, pageWidth - 45, iconY + iconSize + 15);
+
+    currentY += iconSize + 25; // Espaciado después de los iconos
+
+    // **Configuración del gráfico de línea**
+    const chartX = 20; // Margen izquierdo
+    const chartY = currentY; // Posición Y inicial del gráfico
+    const chartWidth = pageWidth - 40; // Ancho del gráfico
+    const chartHeight = 60; // Altura del gráfico
+
+    // Fondo blanco del gráfico
+    pdf.setFillColor("#ffffff");
     pdf.rect(chartX, chartY, chartWidth, chartHeight, "F");
 
-    pdf.setDrawColor("#e2e8f0");
-    pdf.setLineWidth(0.2);
-
+    // Líneas de la cuadrícula (eje Y)
+    pdf.setDrawColor("#e0e0e0"); // Gris claro para la cuadrícula
+    pdf.setLineWidth(0.3);
     for (let i = 0; i <= 4; i++) {
-      const y = chartY + chartHeight - (i * chartHeight) / 4;
-      pdf.line(chartX, y, chartX + chartWidth, y);
-      pdf.setTextColor("#94a3b8");
-      pdf.setFontSize(typography.fontSize.caption);
-      pdf.text(`${i * 25}%`, chartX - 10, y + 2);
+        const y = chartY + chartHeight - (i * chartHeight / 4);
+        pdf.setLineDashPattern([1, 1], 0); // Líneas punteadas
+        pdf.line(chartX, y, chartX + chartWidth, y);
+        pdf.setTextColor("#94a3b8"); // Gris azulado para etiquetas
+        const text = `${i * 25}%`;
+        const textWidth = pdf.getTextWidth(text);
+        pdf.text(text, chartX - 5 - textWidth / 2, y + 2); // Etiquetas a la izquierda
     }
 
-    const getMobileMetrics = () => {
-      const mobileCategory = pageAnalysis.speed.mobile.find((cat) => cat.category === category);
-      return mobileCategory?.metrics || [];
-    };
-
-    const getDesktopMetrics = () => {
-      const desktopCategory = pageAnalysis.speed.desktop.find((cat) => cat.category === category);
-      return desktopCategory?.metrics || [];
-    };
-
-    const getMetricValue = (metrics: Metric[], metricName: string): number => {
-      const metric = metrics.find((m) => m.name.toLowerCase().includes(metricName.toLowerCase()));
-      return metric ? metric.score / 100 : 0;
+    // **Datos de métricas**
+    const getMobileMetrics = () => pageAnalysis.speed.mobile.find(cat => cat.category === category)?.metrics || [];
+    const getDesktopMetrics = () => pageAnalysis.speed.desktop.find(cat => cat.category === category)?.metrics || [];
+    const getMetricValue = (metrics: Metric[], name: string) => {
+        const metric = metrics.find(m => m.name.toLowerCase().includes(name.toLowerCase()));
+        return (metric?.score ?? 0) / 100; // Normalizar a 0-1
     };
 
     const mobileMetrics = getMobileMetrics();
     const desktopMetrics = getDesktopMetrics();
 
     const metrics = [
-      {
-        name: "Initial",
-        mobile: mobileScore,
-        desktop: desktopScore,
-      },
-      {
-        name: "FCP",
-        mobile: getMetricValue(mobileMetrics, "First Contentful Paint"),
-        desktop: getMetricValue(desktopMetrics, "First Contentful Paint"),
-      },
-      {
-        name: "LCP",
-        mobile: getMetricValue(mobileMetrics, "Largest Contentful Paint"),
-        desktop: getMetricValue(desktopMetrics, "Largest Contentful Paint"),
-      },
-      {
-        name: "TTI",
-        mobile: getMetricValue(mobileMetrics, "Time to Interactive"),
-        desktop: getMetricValue(desktopMetrics, "Time to Interactive"),
-      },
-      {
-        name: "CLS",
-        mobile: getMetricValue(mobileMetrics, "Cumulative Layout Shift"),
-        desktop: getMetricValue(desktopMetrics, "Cumulative Layout Shift"),
-      },
-      {
-        name: "FID",
-        mobile: getMetricValue(mobileMetrics, "First Input Delay"),
-        desktop: getMetricValue(desktopMetrics, "First Input Delay"),
-      },
-      {
-        name: "Overall",
-        mobile: mobileScore,
-        desktop: desktopScore,
-      },
+        { name: "Inicial", mobile: mobileScore, desktop: desktopScore },
+        { name: "FCP", mobile: getMetricValue(mobileMetrics, "First Contentful Paint"), desktop: getMetricValue(desktopMetrics, "First Contentful Paint") },
+        { name: "LCP", mobile: getMetricValue(mobileMetrics, "Largest Contentful Paint"), desktop: getMetricValue(desktopMetrics, "Largest Contentful Paint") },
+        { name: "TTI", mobile: getMetricValue(mobileMetrics, "Time to Interactive"), desktop: getMetricValue(desktopMetrics, "Time to Interactive") },
+        { name: "CLS", mobile: getMetricValue(mobileMetrics, "Cumulative Layout Shift"), desktop: getMetricValue(desktopMetrics, "Cumulative Layout Shift") },
+        { name: "FID", mobile: getMetricValue(mobileMetrics, "First Input Delay"), desktop: getMetricValue(desktopMetrics, "First Input Delay") },
+        { name: "Final", mobile: mobileScore, desktop: desktopScore },
     ];
 
-    metrics.forEach((metric, i) => {
-      const x = chartX + i * (chartWidth / (metrics.length - 1));
-      pdf.line(x, chartY, x, chartY + chartHeight);
-      pdf.setTextColor("#64748b");
-      pdf.setFontSize(typography.fontSize.caption);
-      pdf.text(metric.name, x - 8, chartY + chartHeight + 10);
-    });
-
+    // **Dibujar líneas y puntos**
     const ctx = pdf.context2d;
+    ctx.lineWidth = 2; // Grosor de las líneas
+    const pointRadius = 3; // Radio de los puntos
 
-    // Desktop line
+    // Línea desktop (azul)
     ctx.beginPath();
-    ctx.strokeStyle = "#1E88E5";
-    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = "#4285F4";
     metrics.forEach((metric, i) => {
-      const x = chartX + i * (chartWidth / (metrics.length - 1));
-      const y = chartY + chartHeight - metric.desktop * chartHeight;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        const x = chartX + i * (chartWidth / (metrics.length - 1));
+        const y = chartY + chartHeight - (metric.desktop * chartHeight);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.stroke();
 
-    // Desktop points
+    // Puntos desktop
     metrics.forEach((metric, i) => {
-      const x = chartX + i * (chartWidth / (metrics.length - 1));
-      const y = chartY + chartHeight - metric.desktop * chartHeight;
-      ctx.beginPath();
-      ctx.fillStyle = "#1E88E5";
-      ctx.arc(x, y, 1.5, 0, Math.PI * 2, false); // Reduced size
-      ctx.fill();
+        const x = chartX + i * (chartWidth / (metrics.length - 1));
+        const y = chartY + chartHeight - (metric.desktop * chartHeight);
+        ctx.beginPath();
+        ctx.fillStyle = "#4285F4";
+        ctx.arc(x, y, pointRadius, 0, Math.PI * 2, false);
+        ctx.fill();
     });
 
-    // Mobile line
+    // Línea móvil (verde)
     ctx.beginPath();
-    ctx.strokeStyle = "#0CCE6B";
-    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = "#34A853";
     metrics.forEach((metric, i) => {
-      const x = chartX + i * (chartWidth / (metrics.length - 1));
-      const y = chartY + chartHeight - metric.mobile * chartHeight;
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        const x = chartX + i * (chartWidth / (metrics.length - 1));
+        const y = chartY + chartHeight - (metric.mobile * chartHeight);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.stroke();
 
-    // Mobile points
+    // Puntos móvil
     metrics.forEach((metric, i) => {
-      const x = chartX + i * (chartWidth / (metrics.length - 1));
-      const y = chartY + chartHeight - metric.mobile * chartHeight;
-      ctx.beginPath();
-      ctx.fillStyle = "#0CCE6B";
-      ctx.arc(x, y, 1.5, 0, Math.PI * 2, false); // Reduced size
-      ctx.fill();
+        const x = chartX + i * (chartWidth / (metrics.length - 1));
+        const y = chartY + chartHeight - (metric.mobile * chartHeight);
+        ctx.beginPath();
+        ctx.fillStyle = "#34A853";
+        ctx.arc(x, y, pointRadius, 0, Math.PI * 2, false);
+        ctx.fill();
     });
 
-    // Enhanced legend
+    // **Etiquetas del eje X**
+    pdf.setTextColor("#64748b"); // Gris oscuro para etiquetas
+    pdf.setFontSize(10); // Tamaño pequeño para las etiquetas
+    metrics.forEach((metric, i) => {
+        const x = chartX + i * (chartWidth / (metrics.length - 1));
+        const textWidth = pdf.getTextWidth(metric.name);
+        pdf.text(metric.name, x - textWidth / 2, chartY + chartHeight + 12); // Centradas
+    });
+
+    // **Leyenda**
     const legendY = chartY + chartHeight + 25;
+    pdf.setFillColor("#fafafa"); // Fondo gris claro
+    pdf.roundedRect(chartX, legendY - 5, chartWidth, 15, 2, 2, "F");
 
-    // Legend frame
-    pdf.setFillColor("#fafafa");
-    pdf.setDrawColor("#e0e0e0");
-    pdf.roundedRect(chartX, legendY - 5, chartWidth, 15, 2, 2, "FD");
-
-    // Desktop indicator
     ctx.beginPath();
-    ctx.fillStyle = "#1E88E5"; // Blue color for desktop
-    ctx.arc(chartX + 10, legendY, 3, 0, Math.PI * 2, false);
+    ctx.fillStyle = "#34A853";
+    ctx.arc(chartX + 10, legendY + 2, 3, 0, Math.PI * 2, false);
     ctx.fill();
-
     pdf.setTextColor("#333333");
-    pdf.setFontSize(typography.fontSize.bodySmall);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text(`Desktop: ${Math.round(desktopScore * 100)}%`, chartX + 17, legendY + 3);
+    pdf.text("Móvil", chartX + 17, legendY + 5);
 
-    // Mobile indicator
     ctx.beginPath();
-    ctx.fillStyle = "#0CCE6B"; // Green color for mobile
-    ctx.arc(chartX + 100, legendY, 3, 0, Math.PI * 2, false);
+    ctx.fillStyle = "#4285F4";
+    ctx.arc(chartX + 60, legendY + 2, 3, 0, Math.PI * 2, false);
     ctx.fill();
+    pdf.text("Desktop", chartX + 67, legendY + 5);
 
-    pdf.text(`Mobile: ${Math.round(mobileScore * 100)}%`, chartX + 107, legendY + 3);
-
-    // Improved description
-    pdf.setFillColor("#f5f5f5");
+    // **Descripción**
+    pdf.setFillColor("#f5f5f5"); // Fondo gris muy claro
     pdf.roundedRect(chartX, legendY + 15, chartWidth, 15, 2, 2, "F");
-
-    pdf.setTextColor("#777777");
-    pdf.setFontSize(typography.fontSize.caption);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.italic);
+    pdf.setTextColor("#777777"); // Gris medio para el texto
     pdf.text(
-      "This chart compares performance between mobile and desktop devices. Higher values indicate better performance.",
-      chartX + 15,
-      legendY + 22,
+        "Compara el rendimiento entre móvil y desktop. Valores altos indican mejor rendimiento.",
+        chartX + 15,
+        legendY + 25
     );
 
-    // Metrics explanation table
-    const metricsLegendY = legendY + 35;
-    pdf.setTextColor("#333333");
-    pdf.setFontSize(typography.fontSize.body);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("Metrics Legend:", chartX, metricsLegendY);
-    currentY = metricsLegendY + 5;
-
-    // Create table with borders
-    pdf.setFillColor("#fafafa");
-    pdf.setDrawColor("#e0e0e0");
-    pdf.roundedRect(chartX, currentY, chartWidth, 85, 2, 2, "FD");
-
-    currentY += 5;
-
-    const metricsExplanation = [
-      { abbr: "Initial", desc: "Initial load of the page when the browser begins processing." },
-      {
-        abbr: "FCP",
-        desc: "First Contentful Paint - Time until first content (text, image) is rendered.",
-      },
-      {
-        abbr: "LCP",
-        desc: "Largest Contentful Paint - Time until largest content element is visible.",
-      },
-      {
-        abbr: "TTI",
-        desc: "Time to Interactive - When the page becomes fully interactive for the user.",
-      },
-      {
-        abbr: "CLS",
-        desc: "Cumulative Layout Shift - Measures visual stability during page load (lower is better).",
-      },
-      {
-        abbr: "FID",
-        desc: "First Input Delay - Time from first interaction to browser's response.",
-      },
-      { abbr: "Overall", desc: "Combined score of all performance metrics." },
-    ];
-
-    metricsExplanation.forEach((item, index) => {
-      // Alternating row background
-      if (index % 2 === 1) {
-        pdf.setFillColor("#f5f5f5");
-        pdf.rect(chartX + 5, currentY - 2, chartWidth - 10, 10, "F");
-      }
-
-      // Abbreviation
-      pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-      pdf.setTextColor("#444444");
-      pdf.text(item.abbr + ":", chartX + 10, currentY + 4);
-
-      // Description
-      pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-      pdf.setTextColor("#666666");
-      const descLines = pdf.splitTextToSize(item.desc, chartWidth - 50);
-      pdf.text(descLines, chartX + 40, currentY + 4);
-
-      currentY += 12;
-    });
-
-    currentY += 10;
+    // Actualizar posición Y para el siguiente elemento
+    currentY = legendY + 40;
 
     return { mobileScore, desktopScore };
-  };
+};
 
   // Modified function to draw the progress circle with AI analysis
   const drawCircleProgress = (score: number, label: string, x = 30, radius = 15) => {
@@ -670,7 +615,7 @@ const drawRecommendations = (category: string, _score: number) => {
     pdf.setTextColor(colors.text);
     pdf.setFontSize(typography.fontSize.h3);
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text(label, 15, currentY + 6);
+    pdf.text(label, 25, currentY + 6);
     currentY += 15;
   
     const ctx = pdf.context2d;
@@ -752,7 +697,7 @@ const drawRecommendations = (category: string, _score: number) => {
       pdf.setTextColor(colors.text);
       pdf.setFontSize(typography.fontSize.caption);
       pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-      pdf.text(analysisLines, descriptionX, currentY + 10);
+      pdf.text(analysisLines, descriptionX, currentY + 12);
   
       // Store recommendations for the recommendations section
       if (aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0) {
@@ -920,24 +865,9 @@ const drawRecommendations = (category: string, _score: number) => {
 
   // Draw conclusion page
   const drawConclusionPage = () => {
-    // Gradient background
-    const ctx = pdf.context2d;
-    const gradient = ctx.createLinearGradient(0, 0, 0, pageHeight);
-    gradient.addColorStop(0, colors.primary);
-    gradient.addColorStop(1, colors.coverBg);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, pageWidth, pageHeight);
-
-    // Subtle pattern overlay
-    pdf.setDrawColor(colors.coverAccent);
-    pdf.setLineWidth(0.2);
-    for (let i = -pageWidth; i < pageWidth + pageHeight; i += 10) {
-      pdf.line(i, 0, i + pageHeight, pageHeight);
-    }
-    pdf.setFillColor(colors.background);
-
+    // Set full page background to cover page bottom blue (#0A2240)
+    pdf.setFillColor("#0A2240");
     pdf.rect(0, 0, pageWidth, pageHeight, "F");
-
 
     // Top bar
     pdf.setFillColor(colors.headerBg);
@@ -947,20 +877,14 @@ const drawRecommendations = (category: string, _score: number) => {
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
     pdf.text("Final Insights", pageWidth / 2, 10, { align: "center" });
 
-    // Title with shadow effect
+    // Title
     pdf.setFontSize(28);
-    pdf.setTextColor("#000000");
-
-    pdf.text("CONCLUSION", pageWidth / 2 + 1, pageHeight / 2 - 39, { align: "center" });
-
-    pdf.setTextColor(colors.primary);
+    pdf.setTextColor("#FFFFFF");
     pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("CONCLUSION", pageWidth / 2, pageHeight / 2 - 40, { align: "center" });
+    pdf.text("CONCLUSION", pageWidth / 2, 40, { align: "center" });
 
     // Decorative divider
-    pdf.setDrawColor(colors.accent);
-    pdf.setLineWidth(2);
-    pdf.line(pageWidth / 2 - 50, pageHeight / 2 - 25, pageWidth / 2 + 50, pageHeight / 2 - 25);
+
 
     // Aggregate AI-generated conclusions
     const conclusions: string[] = [];
@@ -985,7 +909,7 @@ const drawRecommendations = (category: string, _score: number) => {
 
     if (conclusions.length > 0) {
       generalConclusion = conclusions.join(" ");
-      const maxLength = 600;
+      const maxLength = 1000;
       generalConclusion = generalConclusion.length > maxLength
         ? generalConclusion.substring(0, maxLength) + "..."
         : generalConclusion;
@@ -993,40 +917,17 @@ const drawRecommendations = (category: string, _score: number) => {
       generalConclusion = `
         This comprehensive analysis highlights key areas for improving your website's performance, accessibility, and SEO.
         Implementing the recommended changes can significantly enhance user experience and search engine visibility.
-        Contact us for personalized strategies to elevate your digital presence.
       `;
     }
 
-    // Conclusion text in a styled box
-    pdf.setFillColor(colors.lightBg);
-    pdf.setDrawColor(colors.coverAccent);
-    pdf.setLineWidth(0.5);
-    const conclusionLines = pdf.splitTextToSize(generalConclusion.trim(), pageWidth - 60);
-    const conclusionHeight = conclusionLines.length * 6 + 20;
-    pdf.roundedRect(pageWidth / 2 - 100, pageHeight / 2 - 10, 200, conclusionHeight, 5, 5, "FD");
+    // Conclusion text centered without box
     pdf.setFontSize(typography.fontSize.h2);
-    pdf.setTextColor(colors.text);
+    pdf.setTextColor("#FFFFFF");
     pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    pdf.text(conclusionLines, pageWidth / 2, pageHeight / 2 + 5, { align: "center" });
-
-    // Call-to-action contact box
-    pdf.setFillColor(colors.secondary);
-    pdf.setDrawColor(colors.accent);
-    pdf.setLineWidth(0.5);
-    pdf.roundedRect(pageWidth / 2 - 80, pageHeight - 100, 160, 70, 5, 5, "FD");
-    pdf.setFontSize(12);
-    pdf.setTextColor(colors.background);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text("NEXT STEPS", pageWidth / 2, pageHeight - 85, { align: "center" });
-    pdf.setFontSize(10);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-    const email = pageAnalysis.companyInfo?.contactEmail || "contact@tamerdigital.com";
-    const phone = pageAnalysis.companyInfo?.contactPhone || "+1 234 567 890";
-    const website = pageAnalysis.companyInfo?.website || "www.tamerdigital.com";
-    pdf.text("Ready to optimize your website?", pageWidth / 2, pageHeight - 70, { align: "center" });
-    pdf.text(`Email: ${email}`, pageWidth / 2, pageHeight - 60, { align: "center" });
-    pdf.text(`Phone: ${phone}`, pageWidth / 2, pageHeight - 50, { align: "center" });
-    pdf.text(`Web: ${website}`, pageWidth / 2, pageHeight - 40, { align: "center" });
+    const conclusionLines = pdf.splitTextToSize(generalConclusion.trim(), pageWidth - 40);
+    const conclusionHeight = conclusionLines.length * 6;
+    const startY = (pageHeight - conclusionHeight) / 2;
+    pdf.text(conclusionLines, pageWidth / 2, startY, { align: "center" });
 
     // Footer
     pdf.setFillColor(colors.primary);

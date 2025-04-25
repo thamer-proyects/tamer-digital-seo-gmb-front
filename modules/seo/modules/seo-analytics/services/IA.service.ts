@@ -136,7 +136,7 @@ function generateSpeedPrompt(
   deviceType: "mobile" | "desktop",
 ): string {
   const normalizedCategory = category.toLowerCase().replace(/\s+/g, "-");
-
+  console.log(`\n[DEBUG] Looking for category: ${normalizedCategory} on ${deviceType}`);
   // Corregido: Búsqueda específica para "best-practices"
   if (normalizedCategory === "best-practices") {
     // Buscar con ambas variantes de nombre
@@ -144,19 +144,21 @@ function generateSpeedPrompt(
       (cat) => cat.category === "best-practices" || cat.category === "best practices",
     );
 
+   // console.log("[DEBUG] Found best-practices data:", data);
+
     if (!data) {
+   //   console.warn(`[WARNING] No data found for best-practices on ${deviceType}`);
       return "";
     }
-
     const metricsInfo = data.metrics
       .map((metric: Metric) => `${metric.name}: ${metric.value} (Score: ${metric.score}%)`)
       .join(". ");
-
+   //   console.log("[DEBUG] Metrics info for best-practices:", metricsInfo);
     const issuesInfo = data.issues
       .map((issue: Issue) => `${issue.title}: ${issue.description || "No description"}`)
       .join(". ");
-
-    return `Analyze the following performance data for ${deviceType.toUpperCase()} BEST PRACTICES and provide:
+    //  console.log("[DEBUG] Issues info for best-practices:", issuesInfo);
+    return `Analyze the following performance data for ${deviceType.toUpperCase()} ${normalizeCategory(category)} BEST PRACTICES and provide:
 1. ANALYSIS (max 300 words):
 - Key findings and interpretation of metrics
 - Strengths and weaknesses
@@ -187,10 +189,11 @@ Conclusions: [your conclusions text]"`;
   }
 
   const data = pageAnalysis.speed[deviceType].find((cat) => cat.category === normalizedCategory);
-
+ // console.log(`[DEBUG] Found data for ${normalizedCategory} on ${deviceType}:`, data);
   if (!data) {
     return "";
   }
+  console.log(`[DEBUG] All categories for ${deviceType}:`, pageAnalysis.speed[deviceType].map(c => c.category));
 
   const metricsInfo = data.metrics
     .map((metric: Metric) => `${metric.name}: ${metric.value} (Score: ${metric.score}%)`)
@@ -341,6 +344,7 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
   if (seoPrompt) {
     try {
       seoAnalysis = await makeAIRequest(seoPrompt);
+   
       sections["SEO_SPECIFIC"] = seoAnalysis;
       fullAnalysis += `\n## SEO Analysis\n${seoAnalysis.analysis}\n\nRecommendations:\n${seoAnalysis.recommendations
         .map((rec, i) => `${i + 1}. ${rec}`)
@@ -385,7 +389,10 @@ export async function getAIAnalysis(pageAnalysis: PageAnalysisResponse): Promise
       const sectionKey = `${deviceType.toUpperCase()}_${normalizeCategory(category)}`;
       try {
         const analysisSection = await makeAIRequest(prompt);
+        console.log(`[DEBUG] AI Response for ${sectionKey}:`, analysisSection);
         sections[sectionKey] = analysisSection;
+        console.log("[DEBUG] Sections keys:", Object.keys(sections));
+
         fullAnalysis += `\n## ${deviceType.toUpperCase()} ${category.toUpperCase()} Analysis\n${analysisSection.analysis}\n\nRecommendations:\n${analysisSection.recommendations
           .map((rec, i) => `${i + 1}. ${rec}`)
           .join("\n")}\n\nConclusions:\n${analysisSection.conclusions}`;
