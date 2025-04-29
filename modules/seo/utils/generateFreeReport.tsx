@@ -157,7 +157,7 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(24);
       pdf.setTextColor("#333333");
-      pdf.text("LOGO", 30, 40);
+      pdf.text("LOGO", 30, 50);
     }
   
     // White middle section with checker pattern
@@ -206,8 +206,10 @@ export async function generateFreeReportPDF(pageAnalysis: EnhancedPageAnalysisRe
   
     // Bottom dark blue section
     pdf.setFillColor("#0A2240");
-    pdf.rect(0, pageHeight * 0.7, pageWidth, pageHeight * 0.3, "F");
-  
+    const darkBlueStartY = pageHeight * 0.7;
+    const darkBlueWidth = pageWidth * 0.85; // Ancho del cuadro azul (ajústalo según necesites)
+    const darkBlueHeight = pageHeight * 0.25; // Altura del cuadro azul (para que no llegue hasta el final)
+    pdf.rect(0, darkBlueStartY, darkBlueWidth, darkBlueHeight, "F");
     // Quote section
     pdf.setFontSize(10);
     pdf.setTextColor("#FFFFFF");
@@ -429,298 +431,326 @@ const drawRecommendations = (category: string, _score: number) => {
   currentY += 10;
 };
 
-  // Draw device comparison chart - Corrected to prevent cutting off
-  const drawDeviceComparisonChart = (mobileScore: number, desktopScore: number, category: string) => {
-    const chartHeight = 160;
-    const chartMargin = 20;
-    checkSpace(chartHeight + 80); // Increased space for the bottom note
-  
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const chartWidth = pageWidth - chartMargin * 2;
-    const chartX = chartMargin;
-    const chartY = currentY + 20;
-  
-    const theme = {
-      mobileColor: colors.good + "90",
-      mobileBorder: colors.good,
-      desktopColor: colors.primary + "90",
-      desktopBorder: colors.primary,
-      gridColor: colors.border,
-      textPrimary: colors.text,
-      textSecondary: colors.lightText,
-      fontFamily: typography.fontFamily,
-    };
-  
-    // Title
-    pdf.setFont(theme.fontFamily, typography.fontWeight.bold);
-    pdf.setFontSize(typography.fontSize.h2);
-    pdf.setTextColor(theme.textPrimary);
-    pdf.text("Comparación de Rendimiento: Móvil vs Desktop", pageWidth / 2, currentY + 10, { align: "center" });
-    currentY += 20;
-  
-    // Chart Background
-    pdf.setFillColor(colors.background);
-    pdf.setDrawColor(colors.border);
-    pdf.roundedRect(chartX, chartY, chartWidth, chartHeight, 3, 3, "FD");
-  
-    // Y-Axis Labels and Grid Lines
-    pdf.setFontSize(typography.fontSize.bodySmall);
-    pdf.setTextColor(theme.textSecondary);
-    [0, 25, 50, 75, 100].forEach((value) => {
-      const y = chartY + chartHeight - (chartHeight * (value / 100));
-      pdf.text(`${value}%`, chartX - 10, y + 3, { align: "right" });
-      pdf.setDrawColor(theme.gridColor);
-      pdf.setLineWidth(0.2);
-      pdf.line(chartX + 10, y, chartX + chartWidth - 10, y);
-    });
-  
-    // Metrics Data (Updated to match the image)
-    const metrics = [
-      { name: "Initial", mobile: mobileScore, desktop: desktopScore },
-      { name: "FCP", mobile: 0.75, desktop: 0.82 },
-      { name: "LCP", mobile: 0.68, desktop: 0.88 },
-      { name: "TTI", mobile: 0.62, desktop: 0.79 },
-      { name: "CLS", mobile: 0.85, desktop: 0.91 },
-      { name: "FID", mobile: 0.78, desktop: 0.89 },
-      { name: "Overall", mobile: mobileScore, desktop: desktopScore },
-    ];
-  
-    // Draw Smoothed Lines (Thinner)
-    const drawSmoothedLine = (data: number[], color: string, borderColor: string) => {
-      const ctx = pdf.context2d;
-      ctx.beginPath();
-      ctx.strokeStyle = borderColor;
-      ctx.fillStyle = color;
-      ctx.lineWidth = 1; // Thinner line (was 2)
-  
-      data.forEach((value, i) => {
-        const x = chartX + 30 + i * ((chartWidth - 60) / (metrics.length - 1));
-        const y = chartY + chartHeight - (chartHeight * value);
-  
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          const prevX = chartX + 30 + (i - 1) * ((chartWidth - 60) / (metrics.length - 1));
-          const prevY = chartY + chartHeight - (chartHeight * data[i - 1]);
-          const cp1x = prevX + (x - prevX) / 2;
-          const cp1y = prevY;
-          const cp2x = x - (x - prevX) / 2;
-          const cp2y = y;
-          ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-        }
-      });
-      ctx.stroke();
-    };
-  
-    drawSmoothedLine(metrics.map((m) => m.desktop), theme.desktopColor, theme.desktopBorder);
-    drawSmoothedLine(metrics.map((m) => m.mobile), theme.mobileColor, theme.mobileBorder);
-  
-    // Draw Points (Thinner)
-    metrics.forEach((metric, i) => {
-      const x = chartX + 30 + i * ((chartWidth - 60) / (metrics.length - 1));
-  
-      const drawPoint = (value: number, color: string) => {
-        const y = chartY + chartHeight - (chartHeight * value);
-        const ctx = pdf.context2d;
-  
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, Math.PI * 2, false); // Smaller outer circle (was 4)
-        ctx.fillStyle = "rgba(0,0,0,0.1)";
-        ctx.fill();
-  
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, Math.PI * 2, false);
-        ctx.fillStyle = colors.background;
-        ctx.fill();
-  
-        ctx.beginPath();
-        ctx.arc(x, y, 1, 0, Math.PI * 2, false); // Smaller inner point (was 2)
-        ctx.fillStyle = color;
-        ctx.fill();
-      };
-  
-      drawPoint(metric.desktop, theme.desktopBorder);
-      drawPoint(metric.mobile, theme.mobileBorder);
-    });
-  
-    // X-Axis Labels
-    pdf.setFontSize(typography.fontSize.bodySmall);
-    pdf.setTextColor(theme.textPrimary);
-    metrics.forEach((metric, i) => {
-      const x = chartX + 30 + i * ((chartWidth - 60) / (metrics.length - 1));
-      pdf.text(metric.name, x, chartY + chartHeight + 10, { align: "center" });
-    });
-  
-    // Legend
-    const legendX = chartX + 10;
-    const legendY = chartY + chartHeight + 30;
-    pdf.setFontSize(typography.fontSize.bodySmall);
-    pdf.setFont(theme.fontFamily, typography.fontWeight.bold);
-  
-    // Mobile Legend
-    pdf.setTextColor(theme.mobileBorder);
-    pdf.text("Móvil", legendX, legendY);
-    pdf.setDrawColor(theme.mobileBorder);
-    pdf.setLineWidth(2);
-    pdf.line(legendX + 25, legendY - 3, legendX + 45, legendY - 3);
-  
-    // Desktop Legend
-    pdf.setTextColor(theme.desktopBorder);
-    pdf.text("Desktop", legendX + 60, legendY);
-    pdf.setDrawColor(theme.desktopBorder);
-    pdf.line(legendX + 85, legendY - 3, legendX + 105, legendY - 3);
-  
-    // Percentages (Using values from the image: 71% for Mobile, 87% for Desktop)
-    pdf.setFontSize(typography.fontSize.body);
-    pdf.setTextColor(theme.mobileBorder);
-    pdf.text("71%", chartX - 20, chartY - 10, { align: "left" });
-    pdf.setTextColor(theme.desktopBorder);
-    pdf.text("87%", chartX + chartWidth + 10, chartY - 10, { align: "right" });
-  
-    // Icons
-    const iconSize = 20;
-    pdf.addImage(
-      "https://cdn-icons-png.flaticon.com/512/0/191.png", // Mobile icon
-      "PNG",
-      chartX - 20 - iconSize * 0.7,
-      chartY - 20,
-      iconSize * 0.7,
-      iconSize
-    );
-    pdf.addImage(
-      "https://cdn-icons-png.flaticon.com/512/3474/3474360.png", // Desktop icon
-      "PNG",
-      chartX + chartWidth + 10,
-      chartY - 20,
-      iconSize,
-      iconSize * 0.8
-    );
-  
-    // Bottom Note
-    pdf.setFontSize(typography.fontSize.bodySmall);
-    pdf.setTextColor(theme.textSecondary);
-    pdf.text(
-      "Este gráfico compara el rendimiento entre dispositivos móviles y de escritorio. Valores más altos indican mejor rendimiento.",
-      pageWidth / 2,
-      chartY + chartHeight + 50,
-      { align: "center" }
-    );
-  
-    currentY += chartHeight + 70; // Adjusted for the bottom note
+// Enhanced device comparison chart with better styling and English labels
+// Enhanced device comparison chart with better styling and English labels
+const drawDeviceComparisonChart = (mobileScore: number, desktopScore: number, category: string) => {
+  // Reduced chart height for better fit
+  const chartHeight = 80;
+  const chartMargin = 20;
+  checkSpace(chartHeight + 100); // Space for chart, icons and bottom note
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const chartWidth = pageWidth - chartMargin * 2;
+  const chartX = chartMargin;
+  const theme = {
+    mobileColor: colors.good + "90",
+    mobileBorder: colors.good,
+    desktopColor: colors.primary + "90",
+    desktopBorder: colors.primary,
+    gridColor: colors.border,
+    textPrimary: colors.text,
+    textSecondary: colors.lightText,
+    fontFamily: typography.fontFamily,
   };
-
-  // Modified function to draw the progress circle with AI analysis
-  const drawCircleProgress = (score: number, label: string, x = 30, radius = 15) => {
-    checkSpace(radius * 2 + 15);
-    const scorePercentage = Math.round(score * 100);
-    pdf.setTextColor(colors.text);
-    pdf.setFontSize(typography.fontSize.h3);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    pdf.text(label, 25, currentY + 6);
-    currentY += 15;
-  
+    
+  // Title
+  pdf.setFont(theme.fontFamily, typography.fontWeight.bold);
+  pdf.setFontSize(typography.fontSize.h2);
+  pdf.setTextColor(theme.textPrimary);
+  pdf.text("Performance Comparison: Mobile vs Desktop", pageWidth / 2, currentY + 10, { align: "center" });
+    
+  // Icons just below the title
+  const titleBottomY = currentY + 20; // 10 points below title
+    
+  // Horizontally centered icons
+  const leftSide = pageWidth / 3;
+  const rightSide = (pageWidth / 3) * 2;
+    
+  // Percentage labels next to icons
+  pdf.setFontSize(typography.fontSize.body);
+    
+  // Mobile icon - left side
+  pdf.setDrawColor("#D1D5DB");
+  pdf.setLineWidth(0.5);
+  pdf.roundedRect(leftSide - 7, titleBottomY, 14, 20, 2, 2, "S");
+  pdf.setFillColor("#D1D5DB");
+  pdf.circle(leftSide, titleBottomY + 17, 1, "F");
+    
+  // Mobile label
+  pdf.setTextColor(theme.mobileBorder);
+  pdf.text(`Mobile (${Math.round(mobileScore * 100)}%)`, leftSide + 15, titleBottomY + 10, { align: "left" });
+    
+  // Enhanced desktop icon - right side
+  // Monitor
+  pdf.setDrawColor("#D1D5DB");
+  pdf.setLineWidth(0.5);
+  pdf.roundedRect(rightSide - 10, titleBottomY + 4, 20, 12, 1, 1, "S");
+    
+  // Monitor base
+  pdf.setFillColor("#D1D5DB");
+  // Vertical support
+  pdf.rect(rightSide - 2, titleBottomY + 16, 4, 4, "F");
+  // Horizontal base
+  pdf.rect(rightSide - 6, titleBottomY + 20, 12, 1.5, "F");
+    
+  // Screen
+  pdf.setFillColor("#9CA3AF");
+  pdf.roundedRect(rightSide - 5, titleBottomY + 8, 10, 6, 0.5, 0.5, "F");
+    
+  // Desktop label
+  pdf.setTextColor(theme.desktopBorder);
+  pdf.text(`Desktop (${Math.round(desktopScore * 100)}%)`, rightSide + 15, titleBottomY + 10, { align: "left" });
+    
+  // Adjust Y position for chart after icons
+  // Reduce space between icons and chart
+  const chartY = titleBottomY + 35; // Reduced from 45 to 35 to raise the chart
+  currentY = titleBottomY + 10;
+    
+  // Chart background
+  pdf.setFillColor(colors.background);
+  pdf.setDrawColor(colors.border);
+  pdf.roundedRect(chartX, chartY, chartWidth, chartHeight, 3, 3, "FD");
+    
+  // Y-axis labels and grid lines
+  pdf.setFontSize(typography.fontSize.bodySmall);
+  pdf.setTextColor(theme.textSecondary);
+  [0, 25, 50, 75, 100].forEach((value) => {
+    const y = chartY + chartHeight - (chartHeight * (value / 100));
+    pdf.text(`${value}%`, chartX - 10, y + 3, { align: "right" });
+    pdf.setDrawColor(theme.gridColor);
+    pdf.setLineWidth(0.2);
+    pdf.line(chartX + 10, y, chartX + chartWidth - 10, y);
+  });
+    
+  // Metrics data
+  const metrics = [
+    { name: "Initial", mobile: 0.75, desktop: 0.82 },
+    { name: "FCP", mobile: 0.73, desktop: 0.85 },
+    { name: "LCP", mobile: 0.68, desktop: 0.78 },
+    { name: "TTI", mobile: 0.72, desktop: 0.82 },
+    { name: "CLS", mobile: 0.75, desktop: 0.87 },
+    { name: "FID", mobile: 0.70, desktop: 0.80 },
+    { name: "Overall", mobile: mobileScore, desktop: desktopScore },
+  ];
+    
+  // Draw straight lines
+  const drawStraightLine = (data: number[], color: string, borderColor: string) => {
     const ctx = pdf.context2d;
     ctx.beginPath();
-    ctx.arc(x, currentY + radius, radius, 0, Math.PI * 2, false);
-    ctx.fillStyle = "#f1f5f9";
-    ctx.fill();
-  
-    let gradientStart, gradientEnd;
-    if (score >= 0.9) {
-      gradientStart = "#10b981";
-      gradientEnd = "#14b8a6";
-    } else if (score >= 0.5) {
-      gradientStart = "#f59e0b";
-      gradientEnd = "#f97316";
-    } else {
-      gradientStart = "#e11d48";
-      gradientEnd = "#dc2626";
-    }
-  
-    const grd = ctx.createLinearGradient(x - radius, currentY + radius, x + radius, currentY + radius);
-    grd.addColorStop(0, gradientStart);
-    grd.addColorStop(1, gradientEnd);
-  
-    const startAngle = -Math.PI / 2;
-    const endAngle = startAngle + score * Math.PI * 2;
-    ctx.beginPath();
-    ctx.moveTo(x, currentY + radius);
-    ctx.arc(x, currentY + radius, radius, startAngle, endAngle, false);
-    ctx.lineTo(x, currentY + radius);
-    ctx.fillStyle = grd;
-    ctx.fill();
-  
-    ctx.beginPath();
-    ctx.arc(x, currentY + radius, radius * 0.65, 0, Math.PI * 2, false);
-    ctx.fillStyle = "#ffffff";
-    ctx.fill();
-  
-    ctx.beginPath();
-    ctx.arc(x, currentY + radius, radius + 5, startAngle, endAngle, false);
-    ctx.strokeStyle = grd;
+    ctx.strokeStyle = borderColor;
     ctx.lineWidth = 1;
-    ctx.stroke();
-  
-    let scoreText = `${scorePercentage}`;
-    if (scoreText.length > 3) {
-      scoreText = scoreText.substring(0, 2);
-    }
-    scoreText += "%";
-  
-    pdf.setTextColor(gradientStart);
-    pdf.setFontSize(typography.fontSize.body);
-    pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
-    const textWidth = pdf.getTextWidth(scoreText);
-    pdf.text(scoreText, x - textWidth / 2, currentY + radius + 3);
-  
-    // Determine category for recommendations
-    const deviceType = label.toLowerCase().includes("mobile") ? "mobile" : "desktop";
-    let category = label.toLowerCase().replace(`${deviceType} - `, "").replace(/\s+/g, "-");
-    if (label.includes("On-page Score")) {
-      category = "on_page_specific";
-    }
-  
-    // Collect recommendations without rendering analysis or conclusions
-    const aiAnalysis = category === "on_page_specific" ? aiAnalysisResult.onPageAnalysis : getAIAnalysisForSection(category, deviceType);
-  
-    // Render analysis text to the right of the circle
-    const descriptionX = x + radius * 2 + 10;
-    const descriptionWidth = pageWidth - descriptionX - 15;
-  
-    if (aiAnalysis && aiAnalysis.analysis) {
-      // Remove the background box completely
-      
-      // Determine the height of the analysis text
-      const analysisLines = pdf.splitTextToSize(aiAnalysis.analysis, descriptionWidth);
-      const analysisHeight = analysisLines.length * 5 + 10; // Add padding
-  
-      // Show the analysis text directly without any box
-      pdf.setTextColor(colors.text);
-      pdf.setFontSize(typography.fontSize.caption);
-      pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
-      pdf.text(analysisLines, descriptionX, currentY + 12);
-  
-      // Store recommendations for the recommendations section
-      if (aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0) {
-        const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
-        if (!aiAnalysisResult.recommendations[normalizedCategory]) {
-          aiAnalysisResult.recommendations[normalizedCategory] = [];
-        }
-        aiAnalysis.recommendations.forEach((rec) => {
-          if (!aiAnalysisResult.recommendations[normalizedCategory].includes(rec)) {
-            aiAnalysisResult.recommendations[normalizedCategory].push(rec);
-          }
-        });
+        
+    data.forEach((value, i) => {
+      const x = chartX + 30 + i * ((chartWidth - 60) / (metrics.length - 1));
+      const y = chartY + chartHeight - (chartHeight * value);
+            
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
       }
-  
-      const circleHeight = radius * 2;
-      currentY += Math.max(circleHeight, analysisHeight) + 10;
-    } else {
-      currentY += radius * 2 + 15;
-    }
-  
-    return score;
+    });
+        
+    ctx.stroke();
   };
+    
+  // Draw lines for desktop and mobile
+  drawStraightLine(metrics.map((m) => m.desktop), theme.desktopColor, theme.desktopBorder);
+  drawStraightLine(metrics.map((m) => m.mobile), theme.mobileColor, theme.mobileBorder);
+    
+  // Draw smaller points
+  metrics.forEach((metric, i) => {
+    const x = chartX + 30 + i * ((chartWidth - 60) / (metrics.length - 1));
+        
+    const drawPoint = (value: number, color: string) => {
+      const y = chartY + chartHeight - (chartHeight * value);
+      const ctx = pdf.context2d;
+            
+      // Smaller point (reduced from 1.5 to 1)
+      ctx.beginPath();
+      ctx.arc(x, y, 1, 0, Math.PI * 2, false);
+      ctx.fillStyle = colors.background;
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 0.3; // Thinner line (reduced from 0.5 to 0.3)
+      ctx.stroke();
+    };
+        
+    drawPoint(metric.desktop, theme.desktopBorder);
+    drawPoint(metric.mobile, theme.mobileBorder);
+  });
+    
+  // X-axis labels
+  pdf.setFontSize(typography.fontSize.bodySmall);
+  pdf.setTextColor(theme.textPrimary);
+  metrics.forEach((metric, i) => {
+    const x = chartX + 30 + i * ((chartWidth - 60) / (metrics.length - 1));
+    pdf.text(metric.name, x, chartY + chartHeight + 15, { align: "center" });
+  });
+    
+  // Centered legend with circles
+  const legendY = chartY + chartHeight + 35;
+  const legendCenterX = pageWidth / 2;
+  pdf.setFontSize(typography.fontSize.bodySmall);
+  pdf.setFont(theme.fontFamily, typography.fontWeight.bold);
+    
+  // Mobile legend with circle
+  pdf.setTextColor(theme.mobileBorder);
+  pdf.text("Mobile", legendCenterX - 40, legendY);
+  pdf.setFillColor(theme.mobileBorder);
+  pdf.circle(legendCenterX - 50, legendY - 3, 2, "F");
+    
+  // Desktop legend with circle
+  pdf.setTextColor(theme.desktopBorder);
+  pdf.text("Desktop", legendCenterX + 20, legendY);
+  pdf.setFillColor(theme.desktopBorder);
+  pdf.circle(legendCenterX + 10, legendY - 3, 2, "F");
+    
+  // Bottom note with conclusion
+  pdf.setFontSize(typography.fontSize.bodySmall);
+  pdf.setTextColor(theme.textSecondary);
+  pdf.text(
+    "This chart compares performance between mobile and desktop devices. Higher values indicate better performance.",
+    pageWidth / 2,
+    chartY + chartHeight + 55,
+    { align: "center" }
+  );
+  
+  // Added conclusion to help understand the comparison better
+  const performanceGap = Math.round((desktopScore - mobileScore) * 100);
+  let conclusionText = "";
+  
+  if (performanceGap > 15) {
+    conclusionText = `Conclusion: Desktop performance is significantly better (${performanceGap}% higher) than mobile. Focus on optimizing the mobile experience to reduce this gap.`;
+  } else if (performanceGap > 5) {
+    conclusionText = `Conclusion: Desktop performance is moderately better (${performanceGap}% higher) than mobile. Consider mobile-specific optimizations to improve user experience.`;
+  } else if (performanceGap >= 0) {
+    conclusionText = `Conclusion: Desktop and mobile performance are relatively balanced (${performanceGap}% difference). Continue maintaining both experiences equally.`;
+  } else {
+    conclusionText = `Conclusion: Mobile performance is better than desktop by ${Math.abs(performanceGap)}%. This is unusual - verify desktop optimizations are properly implemented.`;
+  }
+  
+  pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
+  pdf.setTextColor(colors.primary);
+  const conclusionLines = pdf.splitTextToSize(conclusionText, pageWidth - 50);
+  pdf.text(conclusionLines, pageWidth / 2, chartY + chartHeight + 70, { align: "center" });
+    
+  currentY = chartY + chartHeight + 70 + (conclusionLines.length * 5) + 10; // Adjusted for conclusion text
+};
+
+// Modified function to draw the progress circle with AI analysis
+const drawCircleProgress = (score: number, label: string, x = 30, radius = 15) => {
+  checkSpace(radius * 2 + 15);
+  const scorePercentage = Math.round(score * 100);
+  
+  // Usar la tipografía estándar del reporte para el título
+  pdf.setTextColor(colors.text);
+  pdf.setFontSize(typography.fontSize.h3);
+  pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
+  pdf.text(label, 25, currentY + 6);
+  currentY += 15;
+  
+  const ctx = pdf.context2d;
+  ctx.beginPath();
+  ctx.arc(x, currentY + radius, radius, 0, Math.PI * 2, false);
+  ctx.fillStyle = "#f1f5f9";
+  ctx.fill();
+  
+  let gradientStart, gradientEnd;
+  if (score >= 0.9) {
+    gradientStart = "#10b981";
+    gradientEnd = "#14b8a6";
+  } else if (score >= 0.5) {
+    gradientStart = "#f59e0b";
+    gradientEnd = "#f97316";
+  } else {
+    gradientStart = "#e11d48";
+    gradientEnd = "#dc2626";
+  }
+  
+  const grd = ctx.createLinearGradient(x - radius, currentY + radius, x + radius, currentY + radius);
+  grd.addColorStop(0, gradientStart);
+  grd.addColorStop(1, gradientEnd);
+  
+  const startAngle = -Math.PI / 2;
+  const endAngle = startAngle + score * Math.PI * 2;
+  ctx.beginPath();
+  ctx.moveTo(x, currentY + radius);
+  ctx.arc(x, currentY + radius, radius, startAngle, endAngle, false);
+  ctx.lineTo(x, currentY + radius);
+  ctx.fillStyle = grd;
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.arc(x, currentY + radius, radius * 0.65, 0, Math.PI * 2, false);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.arc(x, currentY + radius, radius + 5, startAngle, endAngle, false);
+  ctx.strokeStyle = grd;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  
+  let scoreText = `${scorePercentage}`;
+  if (scoreText.length > 3) {
+    scoreText = scoreText.substring(0, 2);
+  }
+  scoreText += "%";
+  
+  // Usar la tipografía estándar del reporte para el porcentaje
+  pdf.setTextColor(gradientStart);
+  pdf.setFontSize(typography.fontSize.body);
+  pdf.setFont(typography.fontFamily, typography.fontWeight.bold);
+  const textWidth = pdf.getTextWidth(scoreText);
+  pdf.text(scoreText, x - textWidth / 2, currentY + radius + 3);
+  
+  // Determine category for recommendations
+  const deviceType = label.toLowerCase().includes("mobile") ? "mobile" : "desktop";
+  let category = label.toLowerCase().replace(`${deviceType} - `, "").replace(/\s+/g, "-");
+  if (label.includes("On-page Score")) {
+    category = "on_page_specific";
+  }
+  
+  // Collect recommendations without rendering analysis or conclusions
+  const aiAnalysis = category === "on_page_specific" ? aiAnalysisResult.onPageAnalysis : getAIAnalysisForSection(category, deviceType);
+  
+  // Render analysis text to the right of the circle
+  const descriptionX = x + radius * 2 + 10;
+  const descriptionWidth = pageWidth - descriptionX - 15;
+  
+  if (aiAnalysis && aiAnalysis.analysis) {
+    // Usar la tipografía estándar del reporte para el análisis
+    pdf.setTextColor(colors.text);
+    pdf.setFontSize(typography.fontSize.body); // Cambiado de caption a body para consistencia
+    pdf.setFont(typography.fontFamily, typography.fontWeight.normal);
+    
+    // Alinear el texto con la parte superior del círculo para mejor balance visual
+    const analysisLines = pdf.splitTextToSize(aiAnalysis.analysis, descriptionWidth);
+    pdf.text(analysisLines, descriptionX, currentY + radius - (analysisLines.length * 3) / 2);
+    
+    // Store recommendations for the recommendations section
+    if (aiAnalysis.recommendations && aiAnalysis.recommendations.length > 0) {
+      const normalizedCategory = category.replace(/-/g, "_").toUpperCase();
+      if (!aiAnalysisResult.recommendations[normalizedCategory]) {
+        aiAnalysisResult.recommendations[normalizedCategory] = [];
+      }
+      aiAnalysis.recommendations.forEach((rec) => {
+        if (!aiAnalysisResult.recommendations[normalizedCategory].includes(rec)) {
+          aiAnalysisResult.recommendations[normalizedCategory].push(rec);
+        }
+      });
+    }
+    
+    const circleHeight = radius * 2;
+    const analysisHeight = analysisLines.length * 5 + 10;
+    currentY += Math.max(circleHeight, analysisHeight) + 10;
+  } else {
+    currentY += radius * 2 + 15;
+  }
+  
+  return score;
+};
+
   // Draw status icon (check or X)
   const drawStatusIcon = (x: number, isGood: boolean) => {
     const iconSize = 3;
