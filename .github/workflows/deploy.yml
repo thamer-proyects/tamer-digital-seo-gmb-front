@@ -50,5 +50,5 @@ jobs:
         with:
           folder: deploy-files
           branch: gh-pages
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_GITHUB_TOKEN }}
           clean: true
