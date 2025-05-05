@@ -1,0 +1,54 @@
+name: Deploy Next.js App to GitHub Pages
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Export static files
+        run: npm run export
+        
+      - name: List out directory (for debugging)
+        run: ls -la out/
+        
+      - name: Prepare deployment files
+        run: |
+          # Create temporary folder for deployment files
+          mkdir -p deploy-files
+          
+          # Copy build files to deployment folder
+          cp -r out/* deploy-files/
+          
+          # Create .nojekyll file to prevent Jekyll processing
+          touch deploy-files/.nojekyll
+          
+          # List files to verify
+          echo "Files ready for deployment:"
+          ls -la deploy-files/
+      
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: deploy-files
+          branch: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+          clean: true
